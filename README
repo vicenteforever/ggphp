@@ -5,3 +5,12 @@ ggphp framework
 简单又不太简单
 敏捷性
 包容性
+
+实现:
+MVC(模型 视图 控制器)
+url rewriter & router
+多国语言
+抽象存储层(实现database file memcache session等存储实现)
+灵活的配置系统
+字段抽象层
+安全过滤
