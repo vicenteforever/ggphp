@@ -3,5 +3,3 @@ define("APP_DIR", dirname(__FILE__));
 require("../ggphp_core/gg.php");
 $app = app();
 $app::start();
-
-?>
