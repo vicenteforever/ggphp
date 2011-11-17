@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 应用类
+ * 应用类封装test
  * @author goodzsq@gmail.com
  */
 class GG_App {
