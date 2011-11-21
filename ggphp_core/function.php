@@ -85,6 +85,9 @@ function pdo($dbname='default'){
 		$config = config('database', $dbname);
 		try{
 			$pdo[$dbname] = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
+			if(!empty($config['charset'])){
+				$pdo[$dbname]->exec("SET names '{$config['charset']}'");
+			}
 		}catch(PDOException $exception){
 			throw new Exception(t("连接数据库失败") . $exception->getMessage());
 		}

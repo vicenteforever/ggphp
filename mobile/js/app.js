@@ -1,8 +1,15 @@
 Ext.define('Movie', {
 	extend: 'Ext.data.Model',
 	fields: [
-		{ name: 'title', type: 'string' },
-		{ name: 'url', type: 'string' },
+		{ name: 'id', type: 'string' },
+		{ name: 'aliasname', type: 'string' },
+		{ name: 'subkind', type: 'string' },
+		{ name: 'region', type: 'string' },
+		{ name: 'language', type: 'string' },
+		{ name: 'year', type: 'string' },
+		{ name: 'recommend', type: 'string' },
+		{ name: 'rank', type: 'string' },
+		{ name: 'dir', type: 'string' },
 	]
 });
 
@@ -10,7 +17,7 @@ var moviestore = Ext.create('Ext.data.Store', {
 	model: 'Movie',
 	proxy: {
 		type: 'ajax',
-		url : 'ajax/movie',
+		url : 'ajax/movielist',
 		reader: 'json'
 	},
 	autoLoad: true
@@ -22,7 +29,23 @@ Ext.application({
 	name:'Sencha',
 
 	launch:function(){
-		this.home = Ext.create('Ext.Panel', {
+
+		Ext.create('dms.Detail', {
+			id:'detail',
+			listeners:{
+				hideanimationstart:function(){
+					this.parentList.deselectAll();
+				}
+			}
+		});
+
+		Ext.create('Ext.Panel', {
+			id:'test',
+			html:'hello world',
+		});
+
+
+		var home = Ext.create('Ext.Panel', {
 			title:'首页',
 			iconCls:'home',
 			items:[{
@@ -37,7 +60,7 @@ Ext.application({
 			}],
 			scroll:true
 		});
-		this.movie = Ext.create('Ext.Panel', {
+		var movie = Ext.create('Ext.Panel', {
 			title:'电影',
 			iconCls:'home',
 			layout:'fit',
@@ -57,13 +80,20 @@ Ext.application({
 				id:'movielist',
 				xtype:'list',
 				title:'movie list',
-				itemTpl:'{title}<br>{url}',
+				itemTpl:'<div style="float:left"><h1>{aliasname} {recommend}</h1><p>{year} {region} {language } {subkind} {memo}</p></div><div align=right style="border:1px solid red;width:50px;height:50px;float:right" onclick="alert(123)"></div>',
 				store:moviestore,
-				listener:{itemtap:function(){console.log(123)}},
+				listeners:{
+					itemtap:function(list, idx, item, e){
+						var detail = Ext.getCmp('detail')
+						detail.parentList = list;
+						detail.setWidth(document.width/2);
+						detail.load(list.getStore(idx).getAt(idx).data.id);
+						detail.show();
+					}
+				},
 			}],
-			scroll:true
 		});
-		this.video = Ext.create('Ext.Panel', {
+		var video = Ext.create('Ext.Panel', {
 			title:'视频',
 			iconCls:'home',
 			items:[{
@@ -76,7 +106,7 @@ Ext.application({
 			}],
 			scroll:true
 		});
-		this.music = Ext.create('Ext.Panel', {
+		var music = Ext.create('Ext.Panel', {
 			title:'音乐',
 			iconCls:'home',
 			items:[{
@@ -89,7 +119,7 @@ Ext.application({
 			}],
 			scroll:true
 		});
-		this.smarthome = Ext.create('Ext.Panel', {
+		var smarthome = Ext.create('Ext.Panel', {
 			title:'智能',
 			iconCls:'home',
 			items:[{
@@ -102,10 +132,12 @@ Ext.application({
 			}],
 			scroll:true
 		});
-		this.tab = Ext.create("Ext.TabPanel", {
+
+
+		var tab = Ext.create("Ext.TabPanel", {
 			fullscreen:true,
 			tabBarPosition:'bottom',
-			items:[this.movie, this.video, this.music, this.smarthome,],
+			items:[movie, video, music, smarthome],
 		});
 
 	}
