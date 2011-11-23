@@ -60,4 +60,19 @@ class GG_Response{
 			'content' => $content,
 		));
 	}
+
+	function gzip($data){
+		if(!extension_loaded("zlib")) throw new Exception('php isnot support zlib');
+		if(strstr($_SERVER["HTTP_ACCEPT_ENCODING"],"gzip")){
+			header("Content-Type: text/javascript");
+			header("Content-Encoding: gzip");
+			header("Vary: Accept-Encoding");
+			header("Content-Length: ".strlen($data));
+			return $data;
+		}
+		else{
+			//return gzdecode($data);
+		}
+	}
+
 }

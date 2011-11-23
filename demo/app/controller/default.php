@@ -3,7 +3,8 @@
 class Controller_Default {
 
 	function doIndex(){
-		echo uri();
+		//echo gzencode('hello world');
+		echo GG_Response::gzip(file_get_contents());
 	}
 
 	function doVideo(){
