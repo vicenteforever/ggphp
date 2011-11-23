@@ -108,13 +108,19 @@ class GG_Request {
 	 * @return string
 	 */
 	function uri() {
-		if (isset($_SERVER["REQUEST_URI"])) {
-			if(util_string::is_utf8($_SERVER["REQUEST_URI"]))
-				return $_SERVER["REQUEST_URI"];
-			else
-				return utf8($_SERVER["REQUEST_URI"]);
+		static $uri;
+		if(!isset($uri)){
+			if (isset($_SERVER["REQUEST_URI"])) {
+				if(util_string::is_utf8($_SERVER["REQUEST_URI"]))
+					$uri = $_SERVER["REQUEST_URI"];
+				else
+					$uri = utf8($_SERVER["REQUEST_URI"]);
+			}
+			else{
+				$uri = '';
+			}
 		}
-		return null;
+		return $uri;
 	}
 
 	/**
