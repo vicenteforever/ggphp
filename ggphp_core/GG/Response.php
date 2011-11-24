@@ -64,4 +64,9 @@ class GG_Response{
 			'content' => $content,
 		));
 	}
+
+	function gzip($data, $contenttype){
+		return view('gzip', array('content'=>$data, 'Content-Type'=>$contenttype));
+	}
+
 }

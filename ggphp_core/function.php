@@ -24,7 +24,6 @@ function storage($storage, $group){
 	static $storage_object;
 	$key = $storage.$group;
 	if(!isset($storage_object[$key])){
-		echo 'create storage object'.$key.'<br>';
 		try{
 			$adapter = 'storage_adapter_'.$storage;
 			$storage_object[$key] = new $adapter($group);
@@ -35,7 +34,7 @@ function storage($storage, $group){
 	return $storage_object[$key];
 }
 
-/*
+/**
  * 读取系统配置信息
  * 将应用目录下的配置文件与框架的配置合并 应用目录的配置优先于框架的配置 并将配置数据缓存
  * @param string $file 配置名称
@@ -73,7 +72,7 @@ function config($file, $key=''){
 	}
 }
 
-/*
+/**
  * 获取pdo数据库对象
  * @param string $dbname 数据库配置文件config/database.php中的配置名称
  * @return mixed
@@ -95,7 +94,7 @@ function pdo($dbname='default'){
 	return $pdo[$dbname];
 }
 
-/*
+/**
  * 加载视图
  * @param string $viewName
  * @param array $data
@@ -205,7 +204,7 @@ function t($str, $language=null){
 		return $str;
 }
 
-/*
+/**
  * 启用session
  * 可保证仅调用一次session_start函数
  * @return array
@@ -218,16 +217,9 @@ function use_session(){
 	}
 }
 
-/*********************获取全局变量、参数***************************/
-
-function param($key){
-	return GG_Request::param($key);
-}
-
-/*********************错误、调试***************************/
-
-/*
- * 错误处理
+/**
+ * 显示错误页面
+ * @param $errorMessage
  */
 function error($errorMessage){
 	echo view('error', array('errorMessage'=>$errorMessage));
@@ -235,9 +227,7 @@ function error($errorMessage){
 }
 
 
-/*********************编码相关***************************/
-
-/*
+/**
  * gbk转utf-8编码
  */
 function utf8($str){
@@ -247,7 +237,7 @@ function utf8($str){
 		return iconv('gbk', 'utf-8', $str);
 }
 
-/*
+/**
  * utf-8转gbk编码
  */
 function gbk($str){
@@ -257,33 +247,53 @@ function gbk($str){
 		return $str;
 }
 
+/**
+ * 获取提交的参数
+ * @return mix
+ */
+function param($key){
+	return GG_Request::param($key);
+}
 
-/*********************路径信息***************************/
-
+/**
+ * 获取uri
+ * @return string
+ */
 function uri(){
-	static $uri;
-	if(!isset($uri)){
-		$uri = GG_Request::uri();
-	}
-	return $uri;
+	return GG_Request::uri();
 }
 
+/**
+ * 获取pathinfo
+ * @return string
+ */
 function path(){
-	static $path;
-	if(!isset($path)){
-		$path = GG_Request::path();
-	}
-	return $path;
+	return GG_Request::path();
 }
 
+/**
+ * 获取完整路径信息
+ * @return string
+ */
 function full_path(){
 	return GG_Request::fullPath();
 }
 
+/**
+ * 获取当前应用的baseurl
+ * @return string
+ */
 function base_url(){
 	return GG_Request::baseUrl();
 }
 
+/**
+ * 生成url
+ * @param string $controller
+ * @param string $action
+ * @param string $path
+ * @return string
+ */
 function make_url($controller='', $action='', $path=''){
 	if(param('GG_REWRITE')){
 		$url = base_url().trim("$controller/$action/$path", '/');
