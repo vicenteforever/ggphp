@@ -3,7 +3,7 @@
 class Controller_Default {
 
 	function doIndex(){
-		echo GG_Response::xml('http://www.google.com');
+		echo 'hello world';
 	}
 
 	function doVideo(){

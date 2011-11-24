@@ -41,6 +41,10 @@ class GG_Response{
 		return view('json', $data);
 	}
 
+	function jsonp($data, $callback){
+		return $callback.'('.view('json', $data).')';
+	}
+
 	function redirect($url){
 		return view('redirect', array('url'=>$url));
 	}
