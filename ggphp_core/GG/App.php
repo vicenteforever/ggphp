@@ -73,6 +73,7 @@ class GG_App {
 		if(empty($this->_action))
 			$this->_action = config('app', 'default_action');
 	}
+
 	/**
 	 * 解析pathinfo
 	 */
