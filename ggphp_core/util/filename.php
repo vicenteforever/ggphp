@@ -1,11 +1,12 @@
 <?php
 /**
+ * 文件名处理常用函数
  * @author goodzsq@gmail.com
  */
 class util_filename {
 
 	/**
-	 * ��ȡ�ļ���չ��
+	 * 获取文件扩展名
 	 * @param string $filename
 	 * @return string
 	 */
@@ -15,7 +16,7 @@ class util_filename {
 	}
 
 	/**
-	 * ��ȡ�ϼ�Ŀ¼
+	 * 获取上级目录
 	 * @param string $filename
 	 * @return string
 	 */
@@ -25,7 +26,7 @@ class util_filename {
 	}
 
 	/**
-	 * �ж��ļ������Ƿ�Ϸ�
+	 * 检查文件名称是否有效，不保护非法字符
 	 * @param string $filename
 	 * @return bool
 	 */

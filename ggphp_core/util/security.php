@@ -1,10 +1,15 @@
 <?php
 /**
- * ��ȫ��
- *
+ * 安全类常用函数
+ * @author goodzsq@gmail.com
  */
 class util_security {
 
+	/**
+	 * 移除xss攻击代码
+	 * @param string $val
+	 * @return string 
+	 */
 	function remove_xss($val) {
 		// remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
 		// this prevents some character re-spacing such as <java\0script>
@@ -59,7 +64,11 @@ class util_security {
 		return $val;
 	}
 
-
+	/**
+	 * 转换ubb代码
+	 * @param string $Text
+	 * @return string 
+	 */
 	function ubb($Text) {
 		$Text=trim($Text);
 		//$Text=htmlspecialchars($Text);
@@ -88,7 +97,7 @@ class util_security {
 		$Text=preg_replace("/\[i\](.+?)\[\/i\]/is","<i>\\1</i>",$Text);
 		$Text=preg_replace("/\[u\](.+?)\[\/u\]/is","<u>\\1</u>",$Text);
 		$Text=preg_replace("/\[b\](.+?)\[\/b\]/is","<b>\\1</b>",$Text);
-		$Text=preg_replace("/\[quote\](.+?)\[\/quote\]/is"," <div class='quote'><h5>����:</h5><blockquote>\\1</blockquote></div>", $Text);
+		$Text=preg_replace("/\[quote\](.+?)\[\/quote\]/is"," <div class='quote'><h5>引用:</h5><blockquote>\\1</blockquote></div>", $Text);
 		$Text=preg_replace("/\[code\](.+?)\[\/code\]/eis","highlight_code('\\1')", $Text);
 		$Text=preg_replace("/\[php\](.+?)\[\/php\]/eis","highlight_code('\\1')", $Text);
 		$Text=preg_replace("/\[sig\](.+?)\[\/sig\]/is","<div class='sign'>\\1</div>", $Text);

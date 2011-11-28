@@ -1,13 +1,14 @@
 <?php
 
 /**
+ * å­—ç¬¦ä¸²å¸¸ç”¨å‡½æ•°
  * @author goodzsq@gmail.com
  */
 class util_string {
 
 	/**
-	 * ÅÐ¶Ï×Ö·û´®ÊÇ·ñÊÇUTF8¸ñÊ½
-	 * @param string $string ÊäÈë×Ö·û´®
+	 * åˆ¤æ–­å­—ç¬¦ä¸²æ˜¯å¦ä¸ºutf8
+	 * @param string $string ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½
 	 * @return bool
 	 */
 	static function is_utf8($string){
@@ -24,7 +25,7 @@ class util_string {
 	}
 
 	/**
-	 * ¸ñÊ½»¯ÏÔÊ¾Êý×Ö
+	 * æ ¼å¼åŒ–æ˜¾ç¤ºè®¡ç®—æœºå­˜å‚¨å•ä½
 	 * @param integer $size
 	 * @return string
 	 */
@@ -39,7 +40,7 @@ class util_string {
 	}
 
 	/**
-	 * Éú³ÉÎ¨Ò»ID
+	 * ç”Ÿæˆç»å¯¹å”¯ä¸€çš„id
 	 * @return string
 	 */
 	static function token(){
