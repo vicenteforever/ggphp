@@ -45,7 +45,7 @@ function storage($storage, $group){
 function config($file, $key=''){
 	static $data;
 	if(!isset($data[$file])){
-		$appConfigFile = APP_DIR.DS.'APP'.DS.'config'.DS.$file.'.php';
+		$appConfigFile = APP_DIR.DS.'src'.DS.'config'.DS.$file.'.php';
 		if(file_exists($appConfigFile)){
 			$appConfig = include($appConfigFile);
 		}
@@ -109,9 +109,9 @@ function view($view=null, $data=null){
 		throw new Exception('invalid view'.$view);
 
 	ob_start();
-	$path = APP_DIR.DS.'app'.DS.'views'.DS.app()->getController().DS.$view.".php";
+	$path = APP_DIR.DS.'src'.DS.'views'.DS.app()->getController().DS.$view.".php";
 	if (!file_exists($path)){
-		$path = APP_DIR.DS.'app'.DS.'views'.DS.$view.".php";
+		$path = APP_DIR.DS.'src'.DS.'views'.DS.$view.".php";
 		if (!file_exists($path)){
 			$path = GG_DIR.DS.'views'.DS.$view.".php";
 		}
@@ -186,7 +186,7 @@ function t($str, $language=null){
 		if(!preg_match("/^[_0-9a-zA-Z]+$/", $language))
 			throw new Exception('invalid language:'.$language);
 		echo "load $language <br>";
-		$file = APP_DIR.DS.'app'.DS.'language'.DS.$language.'.php';
+		$file = APP_DIR.DS.'src'.DS.'language'.DS.$language.'.php';
 		if(file_exists($file))
 			$appdata = include($file);
 		else

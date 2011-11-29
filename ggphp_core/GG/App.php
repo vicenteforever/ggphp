@@ -88,7 +88,7 @@ class GG_App {
 			//控制器和方法均为空 均设为默认值
 			$args = array($defaultController, $defaultAction);
 		}
-		elseif(file_exists(APP_DIR.DS.'app'.DS.'controller'.DS.$args[0].'.php')){
+		elseif(file_exists(APP_DIR.DS.'src'.DS.'controller'.DS.$args[0].'.php')){
 			//路径中的控制器存在 very good
 			if(empty($args[1])){
 				$args[1] = $defaultAction;

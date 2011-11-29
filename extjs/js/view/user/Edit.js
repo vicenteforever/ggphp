@@ -13,20 +13,20 @@ Ext.define('AM.view.user.Edit', {
 				{
 					xtype: 'textfield',
 					name: 'name',
-					fieldLabel: 'Name',
+					fieldLabel: 'Name'
 				},
 				{
 					xtype:'textfield',
 					name: 'email',
-					fieldLabel: 'Email',
+					fieldLabel: 'Email'
 				}
-			],
+			]
 		}];
 
 		this.buttons = [
 			{
 				text: 'Save',
-				action: 'save',
+				action: 'save'
 			},
 			{
 				text: 'Cancel',
@@ -36,8 +36,6 @@ Ext.define('AM.view.user.Edit', {
 		];
 
 		this.callParent(arguments);
-	},
-
-
+	}
 
 });
