@@ -1,12 +1,13 @@
 Ext.application({
-	name: 'extjs',
+	name: 'AM',
+
+	appFolder: 'js',
+	controllers:['Users'],
+
 	launch: function(){
 		Ext.create('Ext.container.Viewport', {
 			layout: 'fit',
-			items:[{
-				title: 'Hello Ext',
-				html: 'Hello Ext Application',
-			}]
+			items:[{xtype: 'userlist'}]
 		});
 	}
 });

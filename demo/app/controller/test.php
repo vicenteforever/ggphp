@@ -15,5 +15,6 @@ class controller_test {
 		print_r( storage($adapter, 'default')->load('test'));
 		util_banchmark::end('aaa');
 		print_r( util_banchmark::result());
+		util_
 	}
 }
