@@ -1,3 +1,5 @@
+.light_1{margin:5px;float:left;width:100px;height:100px;background-image:url(../images/light_on.png)}
+.light_0{margin:5px;float:left;width:100px;height:100px;background-image:url(../images/light_off.png)}
 iframe{display:none};
 .bigstar50, .bigstar45, .bigstar40, .bigstar35, .bigstar30, .bigstar25, .bigstar20, .bigstar15, .bigstar10, .bigstar05, .bigstar00 {
 background: url(../images/all_bigstars.gif) no-repeat;

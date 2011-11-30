@@ -32,7 +32,7 @@ Ext.define('dms.Detail', {
 				xtype: 'carousel',
 				flex: 1,
 				items: [
-					{ id:'detail1', xtype: 'panel',html:'aaa',scroll:true},
+					{ items:[{}], id:'detail1', xtype: 'panel',html:'aaa',scroll:true},
 				]
 			},
 			{

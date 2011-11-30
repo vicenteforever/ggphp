@@ -3,7 +3,7 @@
 class Controller_Default{
 
 	function doIndex(){
-		echo 'sencha touch';
+		GG_Response::redirect(base_url().'main.html');
 	}
 
 	function doMain(){

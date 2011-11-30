@@ -2,7 +2,7 @@
 $config['default'] = array(
 	'DSN' => 'mysql:host=localhost;dbname=dmc',
 	'username' => 'root',
-	'password' => '',
+	'password' => 'root',
 	'driver_opts' => array(),
 	'charset' => 'utf8',
 );

@@ -4,11 +4,12 @@ class model_movielist{
 
 	function load(){
 		$result = array();
-		$rs = pdo()->query('select id,aliasname,subkind,region,language,year,recommend,rank,dir from video order by copytime desc limit 0, 300');
+		$rs = pdo()->query('select id,aliasname,subkind,region,language,year,recommend,rank,dir from video order by copytime desc limit 0, 200');
 		foreach($rs as $row){
 			$row['year'] = substr($row['year'], 0,4);
 			$row['recommend'] = self::getScore($row['recommend']);
 			$row['rank'] = self::getRank($row['rank']);
+			$row['pic'] = file_exists(gbk($row['dir']).DS.'a1.jpg')?"cover/icon/{$row['id']}.jpg":'images/movie.png';
 			$result[] = $row;
 		}
 		return $result;
