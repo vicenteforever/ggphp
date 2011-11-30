@@ -26,6 +26,9 @@ class GG_App {
 	static function start(){
 		$app = self::instance();
 		if(!$app->parseFromConfig()){
+			if(config('app', 'only_use_router')){
+				error('the router not allow:'.path());
+			}
 			if(param('GG_REWRITE')){
 				$app->parseFromPath();
 			}
@@ -46,7 +49,7 @@ class GG_App {
 		$actionName = config('app', 'action_prefix').$action;
 		$controller = new $controllerName;
 		if(method_exists($controller, $actionName)){
-			$result = $controller->$actionName();
+			echo $controller->$actionName();
 		}
 	}
 
@@ -56,8 +59,14 @@ class GG_App {
 		foreach($config as $k=>$v){
 			if(preg_match($k, $path, $match)){
 				$this->_controller = $v['controller'];
-				$this->_action = $v['action'];
 				array_shift($match);
+				if(empty($this->_action)){
+					$this->_action = array_shift($match);
+				}
+				else{
+					$this->_action = $v['action'];
+				}
+
 				$_REQUEST['arg'] = $match;
 				return true;
 			}
