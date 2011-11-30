@@ -5,10 +5,7 @@ Ext.define('AM.store.Users', {
 	
 	proxy:{
 		type: 'ajax',
-		api:{
-			read:'/ggphp/extjs/user/list',
-			update:'js/data/updateUsers.json'
-		},
+		url: 'user/list',
 		reader:{
 			type:'json',
 			root:'users',

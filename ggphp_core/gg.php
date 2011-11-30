@@ -35,7 +35,7 @@ function __autoload($className){
 		throw new Exception('invalid autoload');
 
 	$basepath = str_replace('_', DS, $className);
-	$path = APP_DIR.DS.'app'.DS.$basepath.".php";
+	$path = APP_DIR.DS.'src'.DS.$basepath.".php";
 	if(file_exists($path)){
 		include($path);
 	}
