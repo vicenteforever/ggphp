@@ -90,7 +90,7 @@ $user->load();
 
 
 -视图(view)-
-可直接使用php作为模板文件放到APP_DIR/app/views目录下
+可直接使用php作为模板文件放到APP_DIR/app/view目录下
 框架将$data变量传递给模板文件，模板中可以直接使用此变量
 例如<?php echo $data['title']?>
 调用模板的方式为：
@@ -101,9 +101,9 @@ $data['body'] = view('body', $bodydata);
 $data['footer'] = view('footer');
 echo view('html', $data);
 模板搜索次序规则：
-1.APP_DIR/app/views/{current_controller_name}/{template_name}.php
-2.APP_DIR/app/views/{template_name}.php
-3.GG_DIR/views/{template_name}.php
+1.APP_DIR/app/view/{current_controller_name}/{template_name}.php
+2.APP_DIR/app/view/{template_name}.php
+3.GG_DIR/view/{template_name}.php
 另外php模板可使用框架全部功能，当然你还可以使用你最熟悉的模板系统将其集成到框架中来。
 
 

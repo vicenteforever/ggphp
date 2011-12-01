@@ -109,11 +109,12 @@ function view($view=null, $data=null){
 		throw new Exception('invalid view'.$view);
 
 	ob_start();
-	$path = APP_DIR.DS.'src'.DS.'views'.DS.app()->getController().DS.$view.".php";
+	$modulePath = app()->getModulePath(app()->getController());
+	$path = $modulePath.DS.'view'.DS.$view.'.php';
 	if (!file_exists($path)){
-		$path = APP_DIR.DS.'src'.DS.'views'.DS.$view.".php";
+		$path = APP_DIR.DS.'src'.DS.'view'.DS.$view.".php";
 		if (!file_exists($path)){
-			$path = GG_DIR.DS.'views'.DS.$view.".php";
+			$path = GG_DIR.DS.'view'.DS.$view.".php";
 		}
 		if (!file_exists($path)){
 			app()->log('view not exists:'.$view);
@@ -121,6 +122,7 @@ function view($view=null, $data=null){
 			return '';
 		}
 	}
+	app()->log('load view:'.$path);
 	include($path);
 	return ob_get_clean();
 }

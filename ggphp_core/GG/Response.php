@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Response¶ÔÏó·â×°
+ * Responseï¿½ï¿½ï¿½ï¿½ï¿½×°
  */
 class GG_Response{
 
-	function script($addfile=null){
+	static function script($addfile=null){
 		static $script;
 		if(isset($addfile)){
 			$script[$addfile] = $addfile;
@@ -15,7 +15,7 @@ class GG_Response{
 		}
 	}
 
-	function css($addfile=null){
+	static function css($addfile=null){
 		static $css;
 		if(isset($addfile)){
 			$css[$addfile] = $addfile;
@@ -25,39 +25,39 @@ class GG_Response{
 		}
 	}
 
-	function html($title, $content){
+	static function html($title, $content){
 		return view('html', array('title'=>$title, 'content'=>$content));
 	}
 
-	function download($filename, $content){
+	static function download($filename, $content){
 		return view('download', array('filename'=>$filename, 'content'=>$content));
 	}
 
-	function error($errorMessage){
+	static function error($errorMessage){
 		return view('error', array('errorMessage'=>$errorMessage));
 	}
 
-	function json($data){
+	static function json($data){
 		return view('json', $data);
 	}
 
-	function jsonp($data, $callback){
+	static function jsonp($data, $callback){
 		return $callback.'('.view('json', $data).')';
 	}
 
-	function redirect($url){
+	static function redirect($url){
 		return view('redirect', array('url'=>$url));
 	}
 
-	function rss($data){
+	static function rss($data){
 		return view('rss', $data);
 	}
 
-	function xml($data){
+	static function xml($data){
 		return view('xml', $data);
 	}
 
-	function mail($address, $title, $content){
+	static function mail($address, $title, $content){
 		return view('mail', array(
 			'address' => $address,
 			'title' => $title,
@@ -65,7 +65,7 @@ class GG_Response{
 		));
 	}
 
-	function gzip($data, $contenttype){
+	static function gzip($data, $contenttype){
 		return view('gzip', array('content'=>$data, 'Content-Type'=>$contenttype));
 	}
 
