@@ -18,7 +18,6 @@
 class util_banchmark{
 
 	private static $banchmark;
-	
 	/**
 	 * 标记起始点
 	 * @param string $label 开始点标签
@@ -41,13 +40,13 @@ class util_banchmark{
 	 * 格式化显示性能测试结果
 	 * @return string 
 	 */
-	static function formatResult(){
+	static function report(){
 		$buffer = '';
 		foreach(self::$banchmark as $key=>$value){
 			$time = $value['endTime'] - $value['startTime'];
 			$time = sprintf('%f', $time);
 			$memory = $value['endMemory'] - $value['startMemory'];
-			$buffer .= "[$key] time:$time memory:$memory <br>";
+			$buffer .= "[$key] time:$time ms, memory:".util_string::size_hum_read($memory)." <br>";
 		}
 		return $buffer;
 	}

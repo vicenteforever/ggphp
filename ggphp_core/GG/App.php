@@ -25,6 +25,7 @@ class GG_App {
 	 */
 	static function start(){
 		$app = self::instance();
+		$app->log('application start');
 		if(!$app->parseFromConfig()){
 			if(config('app', 'only_use_router')){
 				error('the router not allow:'.path());
@@ -45,11 +46,12 @@ class GG_App {
 		if(!preg_match("/^[_0-9a-zA-Z]+$/", $action))
 			throw new Exception('invalid action:'.$action);
 
-		$controllerName = 'Controller_'.$controller;
+		$controllerName = 'module_'.$controller.'_controller';
 		$actionName = config('app', 'action_prefix').$action;
-		$controller = new $controllerName;
-		if(method_exists($controller, $actionName)){
-			echo $controller->$actionName();
+		$classObject = new $controllerName;
+		if(method_exists($classObject, $actionName)){
+			$this->log("exec router: $controller :: $action ()");
+			echo $classObject->$actionName();
 		}
 	}
 
@@ -59,12 +61,10 @@ class GG_App {
 		foreach($config as $k=>$v){
 			if(preg_match($k, $path, $match)){
 				$this->_controller = $v['controller'];
+				$this->_action = $v['action'];
 				array_shift($match);
 				if(empty($this->_action)){
 					$this->_action = array_shift($match);
-				}
-				else{
-					$this->_action = $v['action'];
 				}
 
 				$_REQUEST['arg'] = $match;
@@ -93,26 +93,26 @@ class GG_App {
 		$defaultAction = config('app', 'default_action');
 		$defaultController = config('app', 'default_controller');
 		$prefix = config('app', 'action_prefix');
+		//控制器和方法均为空 均设为默认值
 		if(empty($args[0])){
-			//控制器和方法均为空 均设为默认值
 			$args = array($defaultController, $defaultAction);
 		}
-		elseif(file_exists(APP_DIR.DS.'src'.DS.'controller'.DS.$args[0].'.php')){
-			//路径中的控制器存在 very good
+		//路径中的控制器存在 very good
+		else if(class_exists("module_{$args[0]}_controller")){
 			if(empty($args[1])){
 				$args[1] = $defaultAction;
 			}
-			elseif(!method_exists('controller_'.$args[0], $prefix.$args[1])){
+			elseif(!method_exists('module_'.$args[0].'_controller', $prefix.$args[1])){
 				array_splice($args, 1, 0, $defaultAction);
 			}
 		}
+		//args[0]不为空但不是控制器
 		else{
-			//args[0]不为空但是不是控制器
 			array_unshift($args, $defaultController);
 			if(empty($args[1])){
 				$args[1] = $defaultAction;
 			}
-			elseif(!method_exists('controller_'.$args[0], $prefix.$args[1])){
+			elseif(!method_exists('module_'.$args[0].'_controller', $prefix.$args[1])){
 				array_splice($args, 1, 0, $defaultAction);
 			}
 		}
@@ -129,6 +129,19 @@ class GG_App {
 		return $this->_controller;
 	}
 
+	function getModulePath($module){
+		static $path;
+		if(!isset($path[$module])){
+			$path[$module] = APP_DIR.DS.'src'.DS.'module'.DS.$module;
+			if(!is_dir($path[$module])){
+				$path[$module] = GG_DIR.DS.'module'.DS.$module;
+				if(!is_dir($path[$module])){
+					$path[$module] = '';
+				}
+			}
+		}
+		return $path[$module];
+	}
 	/**
 	 * 获取控制器方法
 	 */
@@ -140,14 +153,14 @@ class GG_App {
 	 * 记录系统日志
 	 * @param string $message
 	 */
-	function log($message, $storage=null){
-		if(!isset($storage)) $storage = config('app', 'log_storage');
-		if(empty($storage)) return;
-		$today = date('Y-m-d');
-		$adapter = storage($storage, 'log');
-		$data = $adapter->load($today);
-		$data[] = date('Y-m-d H:i:s') . ' ' . $message;
-		storage($storage, 'log')->save($today, $data);
+	function log($message=null){
+		static $log=array();
+		if(isset($message)){
+			$log[] = array('time'=>microtime(true), 'message'=>$message);
+		}
+		else{
+			return $log;
+		}
 	}
 
 }
