@@ -6,8 +6,4 @@ class module_default_controller{
 		GG_Response::redirect(base_url().'main.html');
 	}
 
-	function doMain(){
-		echo view();
-	}
-
 }

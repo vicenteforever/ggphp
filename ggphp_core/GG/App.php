@@ -163,4 +163,23 @@ class GG_App {
 		}
 	}
 
+	/**
+	 * 报告程序运行情况
+	 */
+	function report(){
+		$result = '';
+		$this->log('application end');
+		$log = $this->log();
+		$time = $log[0]['time'];
+		foreach($log as $k=>$v){
+			$timespan = sprintf("%.4f", $v['time'] - $time);
+			$time = $v['time'];
+			$result .= "[{$timespan}] {$v['message']} <br/>";
+		}
+		$total =  sprintf("%.4f", $time - $log[0]['time']);
+		$result .= "程序运行时间:$total ms, memory:".util_string::size_hum_read(memory_get_usage())." <br>";
+
+		return $result;
+	}
+
 }

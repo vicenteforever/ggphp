@@ -10,16 +10,7 @@
 <?php o($data['content'])?>
 <hr/>
 <pre><?php
-app()->log('application end');
-$log = app()->log();
-$time = $log[0]['time'];
-foreach($log as $k=>$v){
-	$timespan = sprintf("%.4f", $v['time'] - $time);
-	$time = $v['time'];
-	echo "[{$timespan}] {$v['message']} <br/>";
-}
-$total =  sprintf("%.4f", $time - $log[0]['time']);
-echo "程序运行时间:$total ms, memory:".util_string::size_hum_read(memory_get_usage())." <br>";
+echo app()->report();
 ?></pre>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-class controller_zip{
+class module_zip_controller{
 
 	function doIndex(){
 		echo 'zip controller';

@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Default{
+class module_default_controller{
 
 	function doIndex(){
 		echo 'default controller';
