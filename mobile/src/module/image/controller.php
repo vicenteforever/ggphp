@@ -1,6 +1,6 @@
 <?php
 
-class controller_image {
+class module_image_controller {
 
 	function doIndex(){
 		echo 'image application';

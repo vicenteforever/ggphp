@@ -1,5 +1,5 @@
 <?php
-class controller_ajax{
+class module_ajax_controller{
 
 	function doMovieList(){
 		$list = model_movielist::load();

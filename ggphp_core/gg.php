@@ -45,7 +45,8 @@ function __autoload($className){
 			include($path);
 		}
 		else{
-			throw new Exception(t('class not exists')."[:($className)]");
+			app()->log('class not exists:'.$className);
+			//throw new Exception(t('class not exists')."[:($className)]");
 		}
 	}
 }

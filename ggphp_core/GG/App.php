@@ -98,8 +98,7 @@ class GG_App {
 			$args = array($defaultController, $defaultAction);
 		}
 		//路径中的控制器存在 very good
-		elseif(file_exists(APP_DIR.DS.'src'.DS.'module'.DS.$args[0].DS.'controller.php')
-			|| file_exists(GG_DIR.DS.'module'.DS.$args[0].DS.'controller.php')){
+		else if(class_exists("module_{$args[0]}_controller")){
 			if(empty($args[1])){
 				$args[1] = $defaultAction;
 			}
