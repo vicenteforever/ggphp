@@ -3,7 +3,7 @@
 class module_default_controller {
 
 	function doIndex(){
-		return GG_Response::redirect('doc');
+		return 'default_controller';
 	}
 
 	function doDoc(){

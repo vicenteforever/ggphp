@@ -3,7 +3,7 @@
 class module_image_controller {
 
 	function doIndex(){
-		return GG_Response::redirect('doc');
+		return 'image controller';
 	}
 	
 	function doDoc(){

@@ -1,5 +1,5 @@
 ggphp framework
-设计哲学：
+设计原则：
 仅提供框架结构和思路，除了一些基本的规则，具体项目不耦合与核心框架，没有过多的框架限制，可以根据你自己的需求自由扩展
 
 ggphp框架基本规则：
@@ -9,8 +9,8 @@ ggphp框架基本规则：
 -项目应用目录-
 每个具体的项目应用目录可放在你的wwwroot下的任意位置，项目目录在程序中用常量APP_DIR表示，建立一个新项目可用blank目录复制出一份。
 
--app：
-每个项目目录下都应该有app目录存放您的程序文件(php)，根据.htaccess存取规则，不可以被客户直接调用。
+-APP_DIR/src：
+每个应用目录下都应该有src目录存放您的程序文件(php)，根据.htaccess存取规则，该目录不可以被客户直接调用。
 
 -项目入口文件-：
 项目目录下的index.php为项目的单一入口文件，如果把项目文件放于其他目录，需要修改index.php文件指定框架的目录位置：require("您的位置/ggphp_core/gg.php");。
@@ -25,9 +25,13 @@ url重写配置，可实现简洁url，当web服务器找不到url对应的文�
 第三方类库通常不以上一条的命名规则，若实现这些类库的加载，可以考虑一下两种方式：1.直接include加载。2.建立一个以规则命名的类工厂，返回加载的类。例如
 定义：
 class mylib_image{
-	function load(){
-		$dir = dirname(__FILE__);
-		include($dir.DS."easyphpthumbnail.class.php");
+	static function load(){
+		static $loaded;
+		if(!isset($loaded)){
+			$loaded = true;
+			$dir = dirname(__FILE__);
+			include($dir.DS."easyphpthumbnail.class.php");
+		}
 		return new easyphpthumbnail();
 	}
 }
@@ -35,24 +39,26 @@ class mylib_image{
 $image = mylib_image::load();
 
 
--控制器->方法(controller->action) -
-每个url调用都会有一个控制器->方法来负责执行。接收控制器必须存放于应用目录/app/controller目录,类名称前缀为controller_ 控制器的方法默认的前缀是'do'，也可以在config/app.php中改为其他前缀。
-例如：有这样一个控制器和方法
-路径:appname/app/controller/blog.php
-class controller_blog{
+-模块(控制器)->方法(controller->action) -
+每个应用分为若干个模块，每个url调用都会用一个模块控制器->方法来负责执行。
+一个模块都是module目录下的一个子目录，一个模块控制器文件名为controller.php,类名称为module_模块名称_controller，可以在url中直接调用的模块控制器的方法默认的前缀是'do'，也可以在config/app.php中改为其他前缀。该方法返回的值将输出到浏览器。
+框架目录下的模块对于每个应用都有效，每个应用下的模块只对当前应用有效。模块可以从框架目录挪到应用目录或者从应用目录挪到框架目录。
+例如：有这样一个模块控制器和方法
+路径:appname/src/module/blog/controller.php
+class module_blog_controller{
 	function doView(){
 		$id = param(1);
-		echo "current blog id: {$id}";
+		return "current blog id: {$id}";
 	}
 }
 
 -url规则-
-一个url对应的是一个控制器->控制器方法的执行，
+一个url对应的是一个模块控制器->控制器方法的执行，
 有如下几种url调用方式：
-1.简洁url: http://{主机名称}/{应用路径}/{控制器名称}/{控制器方法名称}/参数1/.../参数n
+1.简洁url: http://{主机名称}/{应用路径}/{模块名称}/{模块控制器方法名称}/参数1/.../参数n
 此例中：http://localhost/myapp/blog/view/1 
 
-2.传统url:http://{主机名称}/{应用路径}/index.php?controller={控制器名称}&action={控制器方法名称}
+2.传统url:http://{主机名称}/{应用路径}/index.php?controller={模块名称}&action={模块控制器方法名称}
 此例中: http://localhost/myapp/index.php?controller=blog&action=view&arg[]=1
 注意：若要与简洁url兼容的方式以序号获取参数，需要在url中这样表示&arg[]=param1&arg[]=param2
 

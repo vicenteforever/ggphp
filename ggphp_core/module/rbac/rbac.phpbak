@@ -1,0 +1,50 @@
+<?php
+
+class module_rbac_user {
+
+	static function loadUser($uid){
+		static $user;
+		if(!isset($user[$uid])){
+			$user[$uid] = storage('file', 'user')->load($uid);
+		}
+		return $user['uid'];
+	}
+
+	static function getCurrentUser(){
+		return self::loadUser($_SESSION['uid']);
+	}
+
+	/**
+	 * 获取指定角色具有的权限列表
+	 * @param string $role
+	 * @return array();
+	 */
+	static function getPerm($role){
+		static $perm;
+		if(!isset($perm[$role])){
+			$perm[$role] = storage('file', 'role')->load($role);
+		}
+		return $perm[$role];
+	}
+
+	/**
+	 * 检查用户是否具有指定的权限
+	 * @param string $perm 权限字符串
+	 * @param array $user 用户对象
+	 * @return bool 如果具有指定权限返回true
+	 */
+	static function userAccess($perm, $user=null){
+		if(!isset($user)) $user = self::getCurrentUser();
+		//super user has all privilege
+		if($user['uid'] == 1){
+			return true;
+		}
+
+		$result = false;
+		foreach($user['rid'] as $rid){
+			$role = self::getPerm($rid)
+			$result = $result || $role['perm'][$perm];
+		}
+		return $result;
+	}
+}

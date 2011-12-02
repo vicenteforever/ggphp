@@ -1,6 +1,6 @@
 <?php
 
-class module_user_controller{
+class module_rbac_controller{
 
 	function __construct(){
 		//$perm = new module_user_perm();
@@ -8,7 +8,7 @@ class module_user_controller{
 	}
 
 	function doIndex(){
-	
+		return 'rbac controller';
 	}
 
 	function doDoc(){
@@ -27,7 +27,7 @@ class module_user_controller{
 		//@todo:用户列表
 	}
 
-	function doCreate(){
+	function doRegister(){
 	
 	}
 

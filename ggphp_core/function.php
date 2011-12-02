@@ -314,3 +314,7 @@ function make_url($controller='', $action='', $path=''){
 	}
 	return $url;
 }
+
+function user_access($perm){
+	return module_user_model::userAccess($perm);
+}
