@@ -1,5 +1,6 @@
 <?php
 return array(
+	'app_name' => 'ggphp',				//应用程序名称
 	'only_use_router' => false,			//只允许使用路由方式config/router.php(以一种非常安全的白名单式验证url输入)
 	'debug' => true,					//调试模式
 	'app_title' => 'GGPHP',				//应用程序名称

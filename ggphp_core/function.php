@@ -10,7 +10,7 @@
  * @return app
  */
 function app(){
-	return GG_App::instance();
+	return core_app::instance();
 }
 
 /**
@@ -254,7 +254,7 @@ function gbk($str){
  * @return mix
  */
 function param($key){
-	return GG_Request::param($key);
+	return core_request::param($key);
 }
 
 /**
@@ -262,7 +262,7 @@ function param($key){
  * @return string
  */
 function uri(){
-	return GG_Request::uri();
+	return core_request::uri();
 }
 
 /**
@@ -270,7 +270,7 @@ function uri(){
  * @return string
  */
 function path(){
-	return GG_Request::path();
+	return core_request::path();
 }
 
 /**
@@ -278,7 +278,7 @@ function path(){
  * @return string
  */
 function full_path(){
-	return GG_Request::fullPath();
+	return core_request::fullPath();
 }
 
 /**
@@ -286,7 +286,7 @@ function full_path(){
  * @return string
  */
 function base_url(){
-	return GG_Request::baseUrl();
+	return core_request::baseUrl();
 }
 
 /**
@@ -315,6 +315,7 @@ function make_url($controller='', $action='', $path=''){
 	return $url;
 }
 
-function user_access($perm){
-	return module_user_model::userAccess($perm);
+function html($content, $title=null){
+	if(!isset($title)) $title = config('app', 'app_name');
+	return view('html', array('content'=>$content, 'title'=>$title));
 }
