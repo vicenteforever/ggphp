@@ -25,7 +25,7 @@ class module_rbac_loader {
 		}
 		else{
 			return $data;
-                }
+		}
 	}
 
 	/**

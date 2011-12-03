@@ -1,6 +1,6 @@
 <?php
 
-class field_str extends field_object {
+class field_string extends field_object {
 
 	public $type = 'varchar';
 	public $length = 255;
