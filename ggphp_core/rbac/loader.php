@@ -67,18 +67,19 @@ class rbac_loader {
 			$module = array();
 			$core_module = scandir(GG_DIR);
 			foreach($core_module as $row){
-				if($row!='.' && $row!='..'){
+				if($row!='.' && $row!='..' && is_dir(GG_DIR.DS.$row)){
 					$module[$row] = GG_DIR;
 				}
 			}
 
-			$app_module = scandir(APP_DIR.'src');
+			$app_module = scandir(APP_DIR.DS.'src');
 			foreach($app_module as $row){
-				if($row!='.' && $row!='..'){
+				if($row!='.' && $row!='..' && is_dir(APP_DIR.DS.'src'.DS.$row)){
 					$module[$row] = APP_DIR;
 				}
 			}
 		}
+
 		return $module;
 	}
 

@@ -1,6 +1,6 @@
 <?php
 
-class rabc_model{
+class structure_model{
 
 	private $_modelId;
 	private $_modelName;
@@ -8,7 +8,9 @@ class rabc_model{
 	private $_data;
 	private $_storage;
 
-	function __construct($id, $name){
+	function __construct($id, $name=null){
+		if(!isset($name)) $name = $id;
+
 		$this->_modelId = $id;
 		$this->_modelName = $name;
 		$this->_storage = storage('file', 'rbac');
@@ -68,7 +70,3 @@ class rabc_model{
 	}
 
 }
-
-$group = rbac_model('group', '用户组');
-$group->addField('id', 'string', 'ID', array('primary'=>true));
-$group->addField('name', 'string', '名称');
