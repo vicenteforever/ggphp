@@ -1,14 +1,18 @@
 <?php
 
-class field_string extends field_object {
+class structure_field_string {
 
 	public $type = 'varchar';
 	public $length = 255;
+	public $name;
+	public $label;
+	public $required;
+	public $number;
+	public $index;
 
-	function isValidFormat($value){
+	function check($value){
 		if(strlen($value)> $this->length){
-			$this->error = "{$this->label} must little then {$this->length}";
-			return false;
+			return "{$this->label} must little then {$this->length}";
 		}
 		return true;
 	}

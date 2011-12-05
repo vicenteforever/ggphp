@@ -103,6 +103,19 @@ function o($str){
 }
 
 /**
+ * print_r aliasname
+ */
+ function printr($obj, $return=false){
+	$buf = '<pre>';
+	$buf .= print_r($obj, true);
+	$buf .= '</pre>';
+	if($return)
+		return $buf;
+	else
+		echo $buf;
+ }
+
+/**
  * 启用session
  * 可保证仅调用一次session_start函数
  * @return array

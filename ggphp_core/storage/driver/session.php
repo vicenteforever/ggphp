@@ -4,7 +4,7 @@
  * @author goodzsq@gmail.com
  * session存储适配器器
  */
-class storage_adapter_session{
+class storage_driver_session{
 
 	private $_group;
 

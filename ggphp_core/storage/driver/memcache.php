@@ -4,7 +4,7 @@
  * @author goodzsq@gmail.com
  * memcache存储适配器器
  */
-class storage_adapter_memcache{
+class storage_driver_memcache{
 
 	private $_memcache;
 

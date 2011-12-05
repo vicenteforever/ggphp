@@ -4,7 +4,7 @@
  * @author goodzsq@gmail.com
  * 文件存储适配器器
  */
-class storage_adapter_file{
+class storage_driver_file{
 
 	private $_dir;
 	function __construct($dir){

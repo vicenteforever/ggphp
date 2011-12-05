@@ -4,7 +4,7 @@
  * @author goodzsq@gmail.com
  * 数据库存储适配器
  */
-class storage_adapter_pdo{
+class storage_driver_pdo{
 
 	private $_db;
 	private $_tablename;
