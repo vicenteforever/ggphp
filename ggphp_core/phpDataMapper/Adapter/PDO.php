@@ -36,6 +36,7 @@ abstract class phpDataMapper_Adapter_PDO implements phpDataMapper_Adapter_Interf
     {
     	if($host instanceof PDO) {
     		$this->connection = $host;
+			$this->database = $database;
     	} else {
 			$this->host = $host;
 			$this->database = $database;

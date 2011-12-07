@@ -1,8 +1,10 @@
 <?php
 $config['default'] = array(
 	'DSN' => 'mysql:host=localhost;dbname=test',
+	'host' => 'localhost',
+	'database' => 'test',
 	'username' => 'root',
-	'password' => 'root',
+	'password' => '',
 	'driver_opts' => array(),
 );
 

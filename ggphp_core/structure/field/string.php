@@ -6,8 +6,8 @@ class structure_field_string {
 	public $length = 255;
 	public $name;
 	public $label;
-	public $required;
-	public $number;
+	public $required=false;
+	public $number=1;
 	public $index;
 
 	function check($value){
