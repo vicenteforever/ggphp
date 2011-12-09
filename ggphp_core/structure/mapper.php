@@ -1,25 +1,49 @@
 <?php
 
-class structure_mapper extends phpDataMapper_Base{
+class structure_mapper extends phpDataMapper_Base {
+	
+	protected  $_helper;
 
-	public function __construct($name, $db='default'){
-		$config = config("schema/$name");
-		if(is_array($config)){
-			foreach($config as $k=>$v){
-				$this->$k = $v;
-			}
+	public function __construct($schemaName) {
+		$helper = new structure_helper($schemaName);
+		foreach($helper->field() as $fieldName=>$field){
+			$this->_datasource = $helper->schema();
+			$arr = array();
+			$arr['type'] = $field->type;
+			$arr['default'] = $field->default;
+			$arr['length'] = $field->length;
+			$arr['required'] = $field->required;
+			$arr['null'] = $field->null;
+			$arr['unsigned'] = $field->unsigned;
+			$arr['primary'] = $field->primary;
+			$arr['index'] = $field->index;
+			$arr['unique'] = $field->unique;
+			$arr['serial'] = $field->serial;
+			$arr['relation'] = $field->relation;
+			$this->$fieldName = $arr;
 		}
-		$dbconfig = config('database', $db);
-		$adapter = new phpDataMapper_Adapter_Mysql(pdo($db), $dbconfig['database']);
-		parent::__construct($adapter);
+		$this->_helper = $helper;
+		parent::__construct($helper->adapter());
 	}
 	
-	public function debug()
-	{
-		$buf = "<p>Executed " . $this->queryCount() . " queries:</p>";
-		$buf .= "<pre>\n";
-		$buf .= print_r(self::$_queryLog, true);
-		$buf .= "</pre>\n";
-		return $buf;
-	}	
+	/**
+	 * get helper object
+	 * @return structure_helper
+	 */
+	public function helper(){
+		return $this->_helper;
+	}
+
+	public function validate(phpDataMapper_Entity $entity){
+		$error = $this->_helper->validate($entity);
+		if(empty($error)){
+			return true;
+		}
+		else{
+			foreach($error as $field=>$msg){
+				$this->error($field, $msg);
+			}
+		}
+	}
+
 }

@@ -1,10 +1,6 @@
 <?php
 return array(
-	'_datasource' => 'user',
-	'id' => array('type'=>'int', 'primary'=>true, 'serial'=>true),
-	'email' => array('type'=>'email', 'required'=>true),
-	'title' => array('type'=>'string', 'required'=>true),
-	'body' => array('type' => 'text', 'required' => true),
-	'status' => array('type' => 'string', 'default' => 'draft'),
-	'date_created' => array('type' => 'datetime'),
+	array('name'=>'id', 'label'=> 'ID', 'field'=>'int', 'primary'=>true, 'serial'=>true),
+	array('name'=>'name', 'label'=> '名称', 'field'=>'string', 'required'=>true, 'length'=>20),
+	array('name'=>'test123', 'label'=> '测试自动', 'field'=>'text', 'hidden'=>true),
 );

@@ -23,7 +23,7 @@ class phpDataMapper_Adapter_Mysql extends phpDataMapper_Adapter_PDO
 	protected $_fieldTypeMap = array(
 		'string' => array(
 			'adapter_type' => 'varchar',
-			'length' => 255
+			//'length' => 255
 			),
 		'email' => array(
 			'adapter_type' => 'varchar',
