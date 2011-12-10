@@ -1,27 +1,29 @@
-ggphp framework
-设计原则：
+h1. ggphp framework
+
+h2. 设计原则：
 仅提供框架结构和思路，除了一些基本的规则，具体项目不耦合与核心框架，没有过多的框架限制，可以根据你自己的需求自由扩展
 
-ggphp框架基本规则：
--系统框架核心目录-
+h2. ggphp框架基本规则：
+
+h3. 系统框架核心目录
 核心目录名为ggphp_core ，可放于系统任意位置，所有项目共用此目录，系统框架的根目录在程序中用常量GG_DIR表示，如果想实现所有应用通用的模块，请将代码放在此目录下。根据.htaccess存取规则，框架目录下的文件不可以被用户直接访问。
 
--项目应用目录-
+h3. 项目应用目录
 每个具体的项目应用目录可放在你的wwwroot下的任意位置，项目目录在程序中用常量APP_DIR表示，建立一个新项目可用blank目录复制出一份。
 
--APP_DIR/src：
+h3. APP_DIR/src：
 每个应用目录下都应该有src目录存放您的程序文件(php)，根据.htaccess存取规则，该目录不可以被客户直接调用。
 
--项目入口文件-：
+h3. 项目入口文件-：
 项目目录下的index.php为项目的单一入口文件，如果把项目文件放于其他目录，需要修改index.php文件指定框架的目录位置：require("您的位置/ggphp_core/gg.php");。
 
--项目根目录下的.htaccess文件-：
+h3. 项目根目录下的.htaccess文件-：
 url重写配置，可实现简洁url，当web服务器找不到url对应的文件，就会调用index.php进入程序，如果存在资源，可直接调用该资源，利用这一特性可实现高性能的缩略图缓存等特性。
 
--命名空间和类的自动装载-：
+h3. 命名空间和类的自动装载-：
 开发一个多人合作的大型应用，命名空间是一个很重要的特性。ggpph使用PEAR的类命名规则，根据类文件所在目录进行命名：类名 = 子目录_子目录_类名称，具有以上方式命名的类能够自动装载，无需手动调用include或者require。例如：当调用类名为storage_adapter_file的时候根据autoload的规则，框架首先搜索APP_DIR/app/storage/adapter/file.php文件，并include进来。若该文件不存在，再次搜寻GG_DIR/storage/adapter/file.php文件关于该类的实现。
 
--第三方类库的加载-
+h3. 第三方类库的加载-
 第三方类库通常不以上一条的命名规则，若实现这些类库的加载，可以考虑一下两种方式：1.直接include加载。2.建立一个以规则命名的类工厂，返回加载的类。例如
 定义：
 class mylib_image{
@@ -39,7 +41,7 @@ class mylib_image{
 $image = mylib_image::load();
 
 
--模块(控制器)->方法(controller->action) -
+h3. 模块(控制器)->方法(controller->action) -
 每个应用分为若干个模块，每个url调用都会用一个模块控制器->方法来负责执行。
 一个模块都是module目录下的一个子目录，一个模块控制器文件名为controller.php,类名称为module_模块名称_controller，可以在url中直接调用的模块控制器的方法默认的前缀是'do'，也可以在config/app.php中改为其他前缀。该方法返回的值将输出到浏览器。
 框架目录下的模块对于每个应用都有效，每个应用下的模块只对当前应用有效。模块可以从框架目录挪到应用目录或者从应用目录挪到框架目录。
@@ -52,7 +54,7 @@ class module_blog_controller{
 	}
 }
 
--url规则-
+h3. url规则-
 一个url对应的是一个模块控制器->控制器方法的执行，
 有如下几种url调用方式：
 1.简洁url: http://{主机名称}/{应用路径}/{模块名称}/{模块控制器方法名称}/参数1/.../参数n
@@ -77,13 +79,13 @@ http://localhost/myapp/view 对应执行 controller_default->doView()方法
 
 若要进行SEO优化，建议使用简洁url和url路由。
 
--框架核心函数库-
-为了简化代码量，框架中会经常使用的函数调用包装成简介的函数放在GG_DIR/function.php中，具体函数请查看源文件。
+h3. 框架核心函数库
+为了简化代码书写，框架中会经常使用的函数调用包装成简短的函数放在GG_DIR/function.php中，具体函数请查看源文件。
 
--项目函数库-
+h3. 项目函数库
 对于项目在开发过程中经常使用的函数调用，可以包装成简洁的函数放到APP_DIR/app/function.php中，该文件存在的话，系统会自动加载该文件
 
--模型(model)-
+h3. 模型(model)
 以类命名规则命名类名称和相应目录文件存放即可，无其他限制
 例如：
 文件：APP_DIR/app/model/user.php
@@ -95,7 +97,7 @@ $user = new model_user();
 $user->load();
 
 
--视图(view)-
+h3. 视图(view)
 可直接使用php作为模板文件放到APP_DIR/app/view目录下
 框架将$data变量传递给模板文件，模板中可以直接使用此变量
 例如<?php echo $data['title']?>
@@ -113,7 +115,7 @@ echo view('html', $data);
 另外php模板可使用框架全部功能，当然你还可以使用你最熟悉的模板系统将其集成到框架中来。
 
 
--灵活的配置文件-
+h3. 灵活的配置文件
 配置文件同样分为和当前应用配置和框架基本配置，例如数据库的配置文件为APP_DIR/app/config/database.php 和 GG_DIR/config/database.php
 一个配置文件需要返回一个关联数组，读取配置的时候会将应用的配置与框架配置的进行关联数组合并，两个配置针对同一配置项目都进行设置的时候以应用配置为优先。
 通常情况下只读的配置文件直接使用php数组返回：
@@ -141,28 +143,18 @@ $defaultAction = config('app', 'default_action');
 $config = config('database', 'test')
 $pdo = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
 
--数据库-
+h3. 数据库
 使用pdo函数进行数据库链接 pdo($config_dbname)
 例如：
 pdo()->query($sql); //使用默认的default段数据库库配置
 pdo('test')->query($sql);//使用配置中的test段配置连接数据库
 pdo函数可多次调用，每个指定的配置仅在第一次调用的时候进行连接。其余的调用仅仅返回第一次创建的pdo对象。比设计模式中的单例模式更灵活。
 
--多语言-
+h3. 多语言
 翻译文件：GG_DIR/language/{语言代码}.php 和 APP_DIR/language/{语言代码}.php
 与配置文件类似，若存在相同的条目，应用目录的翻译优先于框架目录的翻译
 翻译函数：t($str, $language);
 若不指定第二个参数,系统会读取当前会话中的当前语言变量来进行翻译。当前语言优先级为参数中的param('lang') > $_SESSION['lang'] > {浏览器当前语言}
 
-
-
-
-
-实现:
-MVC(模型 视图 控制器)
-url rewriter & router
-多国语言
-抽象存储层(实现database file memcache session等存储实现)
-灵活的配置系统
-字段抽象层
-安全过滤
+h3. ORM
+集成phpDataMapper,并扩展字段类，提供字段校验 widget生成等。
