@@ -4,7 +4,7 @@ $config['default'] = array(
 	'host' => 'localhost',
 	'database' => 'test',
 	'username' => 'root',
-	'password' => '',
+	'password' => 'root',
 	'driver_opts' => array(),
 );
 

@@ -1,6 +1,6 @@
 <?php
 
-class field_type {
+class field_base {
 	public $name;
 	public $label;
 	public $type = 'string';
@@ -47,7 +47,7 @@ class field_type {
 	/**
 	 * 生成widget部件的html
 	 */
-	function widget_input_hidden($value='') {
+	function widget_hidden($value='') {
 		return "<input type=\"hidden\" name=\"{$this->name}\" value=\"{$value}\" />";
 	}
 	

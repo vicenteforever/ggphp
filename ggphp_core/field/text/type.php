@@ -1,6 +1,6 @@
 <?php
 
-class field_text_type extends field_type {
+class field_text_type extends field_base {
 
 	public $type = 'text';
 

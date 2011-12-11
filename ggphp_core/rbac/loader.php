@@ -58,46 +58,4 @@ class rbac_loader {
 		}
 	}
 
-	/**
-	 * 模块列表
-	 */
-	function module(){
-		static $module;
-		if(!isset($module)){
-			$module = array();
-			$core_module = scandir(GG_DIR);
-			foreach($core_module as $row){
-				if($row!='.' && $row!='..' && is_dir(GG_DIR.DS.$row)){
-					$module[$row] = GG_DIR;
-				}
-			}
-
-			$app_module = scandir(APP_DIR.DS.'src');
-			foreach($app_module as $row){
-				if($row!='.' && $row!='..' && is_dir(APP_DIR.DS.'src'.DS.$row)){
-					$module[$row] = APP_DIR;
-				}
-			}
-		}
-
-		return $module;
-	}
-
-	/**
-	 * 权限列表
-	 */
-	function action($module){
-		static $perm;
-		if(!isset($perm[$module])){
-			$controller = $module.'_controller';
-			$methods = get_class_methods($controller);
-			$perm[$module] = array();
-			foreach($methods as $method){
-				if(strpos($method, config('app', 'action_prefix')) === 0){
-					$perm[$module][] = $method;
-				}
-			}
-		}
-		return $perm[$module];
-	}
 }

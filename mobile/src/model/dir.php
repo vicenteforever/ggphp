@@ -8,7 +8,7 @@ class model_dir{
 		if(is_dir($root)){
 			$list = scandir($root);
 			foreach($list as $row){
-				$ext = util_filename::file_ext($row);
+				$ext = util_file::file_ext($row);
 				$title = utf8($row);
 				$file = utf8($root.DS.$row);
 				if(is_dir(gbk($file)) && $row!='.' && $row!='..'){

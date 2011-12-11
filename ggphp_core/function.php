@@ -105,14 +105,11 @@ function o($str){
 /**
  * print_r aliasname
  */
- function printr($obj, $return=false){
+ function trace($obj){
 	$buf = '<pre>';
 	$buf .= print_r($obj, true);
 	$buf .= '</pre>';
-	if($return)
-		return $buf;
-	else
-		echo $buf;
+	return $buf;
  }
 
 /**

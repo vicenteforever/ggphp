@@ -1,11 +1,11 @@
 <?php
-
-class structure_mapper extends phpDataMapper_Base {
+include_once(GG_DIR.'/lib/phpDataMapper/Base.php');
+class orm_mapper extends phpDataMapper_Base {
 	
 	protected  $_helper;
 
 	public function __construct($schemaName) {
-		$helper = new structure_helper($schemaName);
+		$helper = new orm_helper($schemaName);
 		foreach($helper->field() as $fieldName=>$field){
 			$this->_datasource = $helper->schema();
 			$arr = array();
@@ -28,7 +28,7 @@ class structure_mapper extends phpDataMapper_Base {
 	
 	/**
 	 * get helper object
-	 * @return structure_helper
+	 * @return orm_helper
 	 */
 	public function helper(){
 		return $this->_helper;

@@ -3,7 +3,7 @@
  * 文件名处理常用函数
  * @author goodzsq@gmail.com
  */
-class util_filename {
+class util_file {
 
 	/**
 	 * 获取文件扩展名
@@ -30,8 +30,24 @@ class util_filename {
 	 * @param string $filename
 	 * @return bool
 	 */
-	static function isValidFileName($filename) {
+	static function valid($filename) {
 		/* don't allow .. and allow any "word" character \ / */
 		return preg_match('/^(((?:\.)(?!\.))|\w)+$/', $filename);
+	}
+
+	static function subdir($dir){
+		$result = array();
+		if(is_dir($dir)){
+			$list = scandir($dir);
+			foreach($list as $file){
+				if($file!='.' && $file!='..'){
+					$path = $dir.DS.$file;
+					if(is_dir($path)){
+						$result[$file] = $path;
+					}
+				}
+			}
+		}
+		return $result;
 	}
 }

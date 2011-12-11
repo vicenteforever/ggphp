@@ -1,13 +1,13 @@
 <?php
 
-class structure_controller{
+class orm_controller{
 
 	function doIndex(){
-		return html('structure 数据结构管理模块');
+		return html('ORM data mapper');
 	}
 
 	function doTest(){
-		$mapper = new structure_mapper('user');
+		$mapper = new orm_mapper('user');
 		$t = $mapper->all();
 		$buf = '';
 		//foreach($t as $row){

@@ -1,9 +1,8 @@
 <?php
-
-class structure_helper {
+class orm_helper {
 	protected $_fields;
 	protected $_schema;
-	protected $_adapter;
+
 	function __construct($schemaName){
 		$this->_schema = $schemaName;
 		if(!is_array($this->_fields)) $this->_fields = array();
@@ -18,11 +17,8 @@ class structure_helper {
 			$fieldObject = new $fieldType($v);
 			$this->_fields[$v['name']] = $fieldObject;
 		}
-		$database = config('database', 'default');
-
-		$this->_adapter = new phpDataMapper_Adapter_Mysql(pdo(), $database['database']);
 	}
-	
+
 	function field($fieldName = null){
 		if(isset($fieldName)){
 			if(isset($this->_fields[$fieldName])){
@@ -90,6 +86,14 @@ class structure_helper {
 	}
 	
 	function adapter(){
-		return $this->_adapter;
+		static $adapter;
+		if(!isset($adapter)){
+			include(GG_DIR.'/lib/phpDataMapper/Adapter/PDO.php');
+			include(GG_DIR.'/lib/phpDataMapper/Adapter/Mysql.php');
+			$database = config('database', 'default');
+			$adapter = new phpDataMapper_Adapter_Mysql(pdo(), $database['database']);
+		}
+		return $adapter;
+
 	}
 }

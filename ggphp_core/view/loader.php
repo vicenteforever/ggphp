@@ -17,12 +17,12 @@ class view_loader{
 			throw new Exception('invalid view'.$view);
 
 		ob_start();
-		$modulePath = app()->getModulePath(app()->getController());
-		$path = $modulePath.DS.'template'.DS.$view.'.php';
+		$modulePath = core_module::path(app()->getController());
+		$path = str_replace('/', DS, "{$modulePath}/template/{$view}.php");
 		if (!file_exists($path)){
-			$path = APP_DIR.DS.'src'.DS.'template'.DS.$view.".php";
+			$path = APP_DIR.str_replace('/', DS, "/src/template/{$view}.php");
 			if (!file_exists($path)){
-				$path = GG_DIR.DS.'view'.DS.'template'.DS.$view.".php";
+				$path = GG_DIR.str_replace('/', DS, "/view/template/{$view}.php");
 			}
 			if (!file_exists($path)){
 				app()->log('view not exists:'.$view);

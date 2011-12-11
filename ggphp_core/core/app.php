@@ -129,19 +129,6 @@ class core_app {
 		return $this->_controller;
 	}
 
-	function getModulePath($module){
-		static $path;
-		if(!isset($path[$module])){
-			$path[$module] = APP_DIR.DS.'src'.DS.$module;
-			if(!is_dir($path[$module])){
-				$path[$module] = GG_DIR.DS.$module;
-				if(!is_dir($path[$module])){
-					$path[$module] = '';
-				}
-			}
-		}
-		return $path[$module];
-	}
 	/**
 	 * 获取控制器方法
 	 */

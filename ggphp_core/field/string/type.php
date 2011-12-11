@@ -1,6 +1,6 @@
 <?php
 
-class field_string_type extends field_type {
+class field_string_type extends field_base {
 
 	public $type = 'string';
 	public $length = 255;
