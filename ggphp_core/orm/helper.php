@@ -94,6 +94,6 @@ class orm_helper {
 			$adapter = new phpDataMapper_Adapter_Mysql(pdo(), $database['database']);
 		}
 		return $adapter;
-
 	}
+
 }

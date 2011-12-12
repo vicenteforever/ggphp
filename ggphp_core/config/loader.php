@@ -20,13 +20,15 @@ class config_loader{
 			else{
 				$appConfig = array();
 			}
-			$ggConfigFile =GG_DIR.DS.'config'.DS.$file.'.php';
+			$ggConfigFile = GG_DIR.DS.'config'.DS.$file.'.php';
 			if(file_exists($ggConfigFile)){
 				$ggConfig = include($ggConfigFile);
 			}
 			else{
 				$ggConfig = array();
 			}
+			if(!is_array($appConfig)) $appConfig = array();
+			if(!is_array($ggConfig)) $ggConfig = array();
 			$data[$file] = array_merge($ggConfig, $appConfig);
 		}
 		if(empty($key)){
