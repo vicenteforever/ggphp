@@ -1,11 +1,11 @@
 <?php
 
-class field_email extends field_object {
+class field_email_type extends field_type {
 
 	public $type = 'varchar';
 	public $length = 255;
 
-	function isValidFormat($value){
+	function validate($value){
 		if(strlen($value)>$this->length){
 			$this->error = "{$this->label}的长度必须小于{$this->length}";
 			return false;
@@ -15,6 +15,10 @@ class field_email extends field_object {
 			return false;
 		}
 		return true;
+	}
+
+	public function widget_input($value){
+		return "<label>{$this->label}</label> <input type=\"text\" name=\"{$this->name}\" value=\"{$value}\" />";
 	}
 
 }
