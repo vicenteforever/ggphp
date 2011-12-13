@@ -12,7 +12,7 @@ function app(){
  * 翻译
  */
 function t($str, $language=null){
-	return language_loader::translate($str, $language);
+	return core_language::translate($str, $language);
 }
 
 /**
@@ -70,7 +70,7 @@ function pdo($dbname='default'){
  * 加载视图
  */
 function view($view=null, $data=null){
-	return view_loader::load($view, $data);
+	return core_view::php($view, $data);
 }
 
 /**

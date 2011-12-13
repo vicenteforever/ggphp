@@ -156,7 +156,9 @@ $defaultAction = config('app', 'default_action');
 $config = config('database', 'test')
 $pdo = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
 
-h2. 数据库
+h2. 常用函数
+
+h3. 数据库
 
 使用pdo函数进行数据库链接 pdo($config_dbname)
 例如：
@@ -164,14 +166,54 @@ pdo()->query($sql); //使用默认的default段数据库库配置
 pdo('test')->query($sql);//使用配置中的test段配置连接数据库
 pdo函数可多次调用，每个指定的配置仅在第一次调用的时候进行连接。其余的调用仅仅返回第一次创建的pdo对象。比设计模式中的单例模式更灵活。
 
-h2. 多语言
+h2. 系统模块
 
-翻译文件：GG_DIR/language/{语言代码}.php 和 APP_DIR/language/{语言代码}.php
+h3. 核心模块core
+
+# app
+
+# module
+
+# view
+
+# request
+
+# response
+
+# language 翻译文件：GG_DIR/language/{语言代码}.php 和 APP_DIR/language/{语言代码}.php
 与配置文件类似，若存在相同的条目，应用目录的翻译优先于框架目录的翻译
 翻译函数：t($str, $language);
 若不指定第二个参数,系统会读取当前会话中的当前语言变量来进行翻译。当前语言优先级为参数中的param('lang') > $_SESSION['lang'] > {浏览器当前语言}
 
-h2. ORM
+h3. ORM
 
 集成phpDataMapper,并扩展字段类，提供字段校验 widget生成等。
 @todo:
+
+h3. NOSQL
+
+非关系数据库的数据存储方案包括 file, database, memcache, mongodb等等
+
+h3. RBAC
+
+基于角色的权限认证系统
+
+h3. Util
+
+常用函数集 banchmark file security string
+
+h3. Lib
+
+集成的第三方类库 phpDataMapper easyphpthumbnail smarty textile
+
+h3. Image
+
+图像处理
+
+h3. Default
+
+系统默认控制器
+
+h3. 自定义字段
+
+datetime email image int password string text

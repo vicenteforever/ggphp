@@ -1,6 +1,6 @@
 <?php
 
-class language_loader{
+class core_language{
 
 	static function get_language(){
 		static $language;

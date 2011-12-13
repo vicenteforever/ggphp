@@ -7,12 +7,7 @@ class test_controller{
 	}
 
 	function doTest(){
-		$mapper = new structure_mapper('user');
-		$entity = $mapper->get();
-		$entity->name = 'sdf';
-		$mapper->save($entity);
-		$result = printr($mapper->errors());
-		return html($mapper->helper()->form('save', $entity));
+		return html('unit test');
 	}
 
 	function doConfig(){
@@ -22,6 +17,12 @@ class test_controller{
 
 	function doTranslate(){
 		return html(t('hello world'), 'translate test');
+	}
+
+	function doSmarty(){
+		$smarty = core_view::smarty();
+		$smarty->assign('name', 'hello world');
+		$smarty->display('index.tpl');
 	}
 
 }

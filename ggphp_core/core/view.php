@@ -1,14 +1,14 @@
 <?php
 
-class view_loader{
+class core_view{
 
 	/**
-	 * 加载视图
+	 * 加载php视图
 	 * @param string $viewName
 	 * @param array $data
 	 * @return string
 	 */
-	function load($view=null, $data=null){
+	function php($view=null, $data=null){
 		if(empty($view)){
 			$view = app()->getAction();
 		}
@@ -33,6 +33,18 @@ class view_loader{
 		app()->log('load view:'.$path);
 		include($path);
 		return ob_get_clean();
+	}
+
+	/**
+	 * 加载smarty视图
+	 */
+	function smarty(){
+		$modulePath = core_module::path(app()->getController());
+		$path = str_replace('/', DS, "{$modulePath}/template/");
+		require_once(GG_DIR.'/lib/Smarty-3.1.6/libs/Smarty.class.php');
+		$smarty = new Smarty();
+		$smarty->setTemplateDir($path);
+		return $smarty;
 	}
 
 }
