@@ -22,4 +22,5 @@ class nosql_controller {
         return html(trace($config->load('app')));
     }
 
+
 }

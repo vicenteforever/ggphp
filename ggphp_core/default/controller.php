@@ -9,4 +9,5 @@ class default_controller {
 	function doDoc(){
 		return html(view('document'));
 	}
+
 }

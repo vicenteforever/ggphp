@@ -1,191 +1,193 @@
 <?php
 /**
- * ÇëÇó¶ÔÏóµÄ·â×°
+ * httpè¯·æ±‚ç±»
+ * @package core
  */
 class core_request {
 
-	/**
-	 * µÃµ½µ±Ç°¿Í»§¶ËµÄIP
-	 * 
-	 * @return string µ±Ç°¿Í»§¶ËµÄIP
-	 */
-	function ip() {
-		static $ip;
-		if(!isset($ip)){
-			if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
-				$ip = getenv("HTTP_CLIENT_IP");
-			}
-			elseif (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown")) {
-				$ip = getenv("HTTP_X_FORWARDED_FOR");
-			}
-			elseif (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown")) {
-				$ip = getenv("REMOTE_ADDR");
-			}
-			elseif (isset($_SERVER["REMOTE_ADDR"]) && $_SERVER["REMOTE_ADDR"] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown")) {
-				$ip = $_SERVER["REMOTE_ADDR"];
-			}
-			else {
-				$ip = "0.0.0.0";
-			}
-		}
-		return $ip;
-	}
+    /**
+     * èŽ·å–å®¢æˆ·ç«¯ipåœ°å€
+     * @staticvar string $ip
+     * @return string 
+     */
+    function ip() {
+        static $ip;
+        if (!isset($ip)) {
+            if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
+                $ip = getenv("HTTP_CLIENT_IP");
+            } elseif (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown")) {
+                $ip = getenv("HTTP_X_FORWARDED_FOR");
+            } elseif (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown")) {
+                $ip = getenv("REMOTE_ADDR");
+            } elseif (isset($_SERVER["REMOTE_ADDR"]) && $_SERVER["REMOTE_ADDR"] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown")) {
+                $ip = $_SERVER["REMOTE_ADDR"];
+            } else {
+                $ip = "0.0.0.0";
+            }
+        }
+        return $ip;
+    }
 
-	/**
-	 * È¡µÃÇëÇóµÄ·½·¨
-	 * GET, POST, PUT ...
-	 * @return string|null
-	 */
-	function method() {
-		if (isset($_SERVER["REQUEST_METHOD"])) {
-			return $_SERVER["REQUEST_METHOD"];
-		}
-		return null;
-	}
+    /**
+     * èŽ·å–å®¢æˆ·ç«¯è¯·æ±‚æ–¹æ³• get post
+     * @return string
+     */
+    function method() {
+        if (isset($_SERVER["REQUEST_METHOD"])) {
+            return $_SERVER["REQUEST_METHOD"];
+        }
+        return null;
+    }
 
-	/**
-	 * È¡µÃ²ÎÊýÖµ
-	 * @param string $key ²ÎÊýÃû
-	 * @return mixed
-	 */
-	function param($key) {
-		if(is_integer($key)){
-			if(isset($_REQUEST['arg'][$key])){
-				return $_REQUEST['arg'][$key];
-			}
-			else{
-				return null;
-			}
-		}
-		else{
-			if(isset($_REQUEST[$key]))
-				return $_REQUEST[$key];
-			else
-				return null;
-		}
-	}
+    /**
+     * èŽ·å–è¯·æ±‚å‚æ•°å€¼
+     * @param string $key
+     * @return string 
+     */
+    function param($key) {
+        if (is_integer($key)) {
+            if (isset($_REQUEST['arg'][$key])) {
+                return $_REQUEST['arg'][$key];
+            } else {
+                return null;
+            }
+        } else {
+            if (isset($_REQUEST[$key]))
+                return $_REQUEST[$key];
+            else
+                return null;
+        }
+    }
 
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÎªGET·½·¨
-	 * @return boolean
-	 */
-	function isGet() {
-		return self::method() == "GET";
-	}
-	
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÎªPOST·½·¨
-	 * @return boolean
-	 */ 
-	function isPost() {
-		return self::method() == "POST";
-	}
-	
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÎªPUT·½·¨
-	 * @return boolean
-	 */
-	function isPut() {
-		return self::method == "PUT";
-	}
-	
-	/**
-	 * È¡µÃÕýÔÚÖ´ÐÐµÄ½Å±¾
-	 * @return string
-	 */
-	function script() {
-		if (isset($_SERVER["SCRIPT_NAME"])) {
-			return $_SERVER["SCRIPT_NAME"];
-		}
-		if (isset($_SERVER["PHP_SELF"])) {
-			return $_SERVER["PHP_SELF"];
-		}
-		return null;
-	}
-	
-	/**
-	 * È¡µÃURI
-	 * @return string
-	 */
-	function uri() {
-		static $uri;
-		if(!isset($uri)){
-			if (isset($_SERVER["REQUEST_URI"])) {
-				if(util_string::is_utf8($_SERVER["REQUEST_URI"]))
-					$uri = $_SERVER["REQUEST_URI"];
-				else
-					$uri = utf8($_SERVER["REQUEST_URI"]);
-			}
-			else{
-				$uri = '';
-			}
-		}
-		return $uri;
-	}
+    /**
+     * åˆ¤æ–­è¯·æ±‚æ˜¯å¦ä¸ºgetæ–¹æ³•
+     * @return bool
+     */
+    function isGet() {
+        return self::method() == "GET";
+    }
 
-	/**
-	 * È¡µÃBaseUrl
-	 * @return string
-	 */
-	function baseUrl(){
-		static $baseurl;
-		if(!isset($baseurl)){
-			$baseurl = rtrim(str_replace('/index.php', '', $_SERVER["SCRIPT_NAME"]), '/').'/';
-		}
-		return $baseurl;
-	}
+    /**
+     * åˆ¤æ–­è¯·æ±‚æ˜¯å¦ä¸ºpostæ–¹æ³•
+     * @return bool 
+     */
+    function isPost() {
+        return self::method() == "POST";
+    }
 
-	function fullPath(){
-		static $fullpath;
-		if(!isset($fullpath)){
-			$fullpath = self::baseUrl().self::path();
-		}
-		return $fullpath;
-	}
+    /**
+     * åˆ¤æ–­è¯·æ±‚æ˜¯å¦ä¸ºputæ–¹æ³•
+     * @return bool 
+     */
+    function isPut() {
+        return self::method == "PUT";
+    }
 
-	/**
-	 * »ñÈ¡ÇëÇóÂ·¾¶
-	 * @return string
-	 */
-	function path(){
-		static $path;
-		if(!isset($path)){
-			$path = trim(self::server("PATH_INFO"), '/');
-		}
-		return $path;
-	}
+    /**
+     * èŽ·å–è¯·æ±‚è„šæœ¬åç§°
+     * @return string 
+     */
+    function script() {
+        if (isset($_SERVER["SCRIPT_NAME"])) {
+            return $_SERVER["SCRIPT_NAME"];
+        }
+        if (isset($_SERVER["PHP_SELF"])) {
+            return $_SERVER["PHP_SELF"];
+        }
+        return null;
+    }
 
-	/**
-	 * È¡µÃÊäÈë
-	 * @return string
-	 */
-	function input() {
-		return file_get_contents("php://input");
-	}
+    /**
+     * èŽ·å–è¯·æ±‚çš„uri
+     * @staticvar string $uri
+     * @return string 
+     */
+    function uri() {
+        static $uri;
+        if (!isset($uri)) {
+            if (isset($_SERVER["REQUEST_URI"])) {
+                if (util_string::is_utf8($_SERVER["REQUEST_URI"]))
+                    $uri = $_SERVER["REQUEST_URI"];
+                else
+                    $uri = utf8($_SERVER["REQUEST_URI"]);
+            }
+            else {
+                $uri = '';
+            }
+        }
+        return $uri;
+    }
 
-	/**
-	 * È¡µÃ$_SERVERÖÐµÄ²ÎÊýÖµ
-	 * @return string|null
-	 */
-	function server($param) {
-		return isset($_SERVER[$param])?$_SERVER[$param]:null;
-	}
+    /**
+     * èŽ·å–åº”ç”¨ç¨‹åºçš„baseurl
+     * @staticvar string $baseurl
+     * @return string 
+     */
+    function baseUrl() {
+        static $baseurl;
+        if (!isset($baseurl)) {
+            $baseurl = rtrim(str_replace('/index.php', '', $_SERVER["SCRIPT_NAME"]), '/') . '/';
+        }
+        return $baseurl;
+    }
 
+    /**
+     * èŽ·å–å®Œæ•´çš„è¯·æ±‚è·¯å¾„
+     * @staticvar string $fullpath
+     * @return string 
+     */
+    function fullPath() {
+        static $fullpath;
+        if (!isset($fullpath)) {
+            $fullpath = self::baseUrl() . self::path();
+        }
+        return $fullpath;
+    }
 
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÎªAJAXÇëÇó
-	 * @return boolean
-	 */
-	function isAjax() {
-		return self::server("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest";
-	}
-	
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÎªFlashÇëÇó
-	 * @return boolean
-	 */
-	function isFlash() {
-		return $self::server("HTTP_USER_AGENT") == "Shockwave Flash";
-	}
+    /**
+     * èŽ·å–è·¯å¾„ä¿¡æ¯
+     * @staticvar string $path
+     * @return string 
+     */
+    function path() {
+        static $path;
+        if (!isset($path)) {
+            $path = trim(self::server("PATH_INFO"), '/');
+        }
+        return $path;
+    }
+
+    /**
+     * èŽ·å–æäº¤çš„rawæ•°æ®
+     * @return type 
+     */
+    function input() {
+        return file_get_contents("php://input");
+    }
+
+    /**
+     * èŽ·å–serverä¸­çš„å˜é‡
+     * @param string $param
+     * @return string 
+     */
+    function server($param) {
+        return isset($_SERVER[$param]) ? $_SERVER[$param] : null;
+    }
+
+    /**
+     * åˆ¤æ–­è¯·æ±‚æ˜¯å¦ä¸ºajaxè¯·æ±‚
+     * @return bool 
+     */
+    function isAjax() {
+        return self::server("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest";
+    }
+
+    /**
+     * åˆ¤æ–­è¯·æ±‚æ˜¯å¦ä¸ºflashè¯·æ±‚
+     * @return bool 
+     */
+    function isFlash() {
+        return $self::server("HTTP_USER_AGENT") == "Shockwave Flash";
+    }
 
 }
