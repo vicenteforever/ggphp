@@ -1,7 +1,7 @@
 <?php
-
 /**
  * 字符串常用函数
+ * @package util
  * @author goodzsq@gmail.com
  */
 class util_string {

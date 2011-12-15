@@ -2,15 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php o($data['title'])?></title>
+<title><?php echo $data['title']?></title>
 </head>
 
 <body>
-<h1><?php o($data['title'])?></h1>
-<?php o($data['content'])?>
-<hr/>
-<pre><?php
-echo app()->report();
-?></pre>
+<h1><?php echo $data['title']?></h1>
+<?php echo $data['content']?>
 </body>
 </html>

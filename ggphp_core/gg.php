@@ -31,8 +31,10 @@ else{
 
 
 function __autoload($className){
-	if(!preg_match("/^[_0-9a-zA-Z]+$/", $className))
-		throw new Exception('invalid autoload');
+	if(!preg_match("/^[_0-9a-zA-Z]+$/", $className)){
+		app()->log('invalid autoload:'.$className);
+		return;
+	}
 
 	$basepath = str_replace('_', DS, $className);
 	$path = APP_DIR.DS.'src'.DS.$basepath.".php";
@@ -46,7 +48,7 @@ function __autoload($className){
 		}
 		else{
 			app()->log('class not exists:'.$className);
-			//throw new Exception(t('class not exists')."[:($className)]");
+			return;
 		}
 	}
 }

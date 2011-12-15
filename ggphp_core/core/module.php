@@ -13,7 +13,7 @@ class core_module {
     static function all() {
         static $modules;
         if (!isset($modules)) {
-            $modules = array_merge(util_file::subdir(GG_DIR), util_file::subdir(APP_DIR));
+            $modules = array_merge(util_file::subdir(GG_DIR), util_file::subdir(APP_DIR.DS.'src'));
         }
         return $modules;
     }

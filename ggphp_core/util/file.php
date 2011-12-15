@@ -1,6 +1,7 @@
 <?php
 /**
  * 文件名处理常用函数
+ * @package util
  * @author goodzsq@gmail.com
  */
 class util_file {

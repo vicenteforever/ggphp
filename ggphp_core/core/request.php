@@ -41,22 +41,35 @@ class core_request {
 
     /**
      * 获取请求参数值
-     * @param string $key
+     * @param string $key 参数名称
+	 * @param bool $isFilter 是否使用过滤器
      * @return string 
      */
-    function param($key) {
+    function param($key, $isFilter) {
+		$value = '';
         if (is_integer($key)) {
             if (isset($_REQUEST['arg'][$key])) {
-                return $_REQUEST['arg'][$key];
+                $value = $_REQUEST['arg'][$key];
             } else {
                 return null;
             }
         } else {
             if (isset($_REQUEST[$key]))
-                return $_REQUEST[$key];
+                $value = $_REQUEST[$key];
             else
                 return null;
         }
+		//echo $isFilter;
+		if($isFilter){
+			$input_filters = config('app', 'input_filters');
+			foreach($input_filters as $filter){
+				$value = util_filter::$filter($value);
+			}
+			return $value;
+		}
+		else{
+			return $value;
+		}
     }
 
     /**

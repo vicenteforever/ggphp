@@ -1,7 +1,7 @@
 <?php
-
 /**
  * 程序性能测试 计算同一个标签从开始点到结束点的运行事件和内存使用，可以设置多个标签
+ * @package util
  * @author goodzsq@gmail.com
  * @example
  * <code>
