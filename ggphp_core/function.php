@@ -5,21 +5,21 @@
  * @author goodzsq@gmail.com
  */
 function app() {
-	return core_app::instance();
+    return core_app::instance();
 }
 
 /**
  * 翻译
  */
 function t($str, $language=null) {
-	return core_language::translate($str, $language);
+    return core_language::translate($str, $language);
 }
 
 /**
  * 读取配置
  */
 function config($file, $key='') {
-	return config_loader::load($file, $key);
+    return config_loader::load($file, $key);
 }
 
 /**
@@ -27,12 +27,12 @@ function config($file, $key='') {
  * @staticvar unittest_case $test
  * @return unittest_case 
  */
-function test(){
-	static $test;
-	if(!isset($test)){
-		$test = new unittest_case();
-	}
-	return $test;
+function test() {
+    static $test;
+    if (!isset($test)) {
+        $test = new unittest_case();
+    }
+    return $test;
 }
 
 /**
@@ -43,17 +43,17 @@ function test(){
  * @example storage('database', 'log_table')->save('2000-01-01 00:00:00', '新世纪开始');
  */
 function storage($storage, $group) {
-	static $storage_object;
-	$key = $storage . $group;
-	if (!isset($storage_object[$key])) {
-		try {
-			$adapter = 'storage_adapter_' . $storage;
-			$storage_object[$key] = new $adapter($group);
-		} catch (Exception $e) {
-			throw new Exception(t('storage not exists') . ":[{$storage}]");
-		}
-	}
-	return $storage_object[$key];
+    static $storage_object;
+    $key = $storage . $group;
+    if (!isset($storage_object[$key])) {
+        try {
+            $adapter = 'storage_adapter_' . $storage;
+            $storage_object[$key] = new $adapter($group);
+        } catch (Exception $e) {
+            throw new Exception(t('storage not exists') . ":[{$storage}]");
+        }
+    }
+    return $storage_object[$key];
 }
 
 /**
@@ -62,28 +62,28 @@ function storage($storage, $group) {
  * @return mixed
  */
 function pdo($dbname='default') {
-	static $pdo;
-	if (empty($dbname))
-		$dbname = 'default';
-	if (!isset($pdo[$dbname])) {
-		$config = config('database', $dbname);
-		try {
-			$pdo[$dbname] = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
-			if (!empty($config['charset'])) {
-				$pdo[$dbname]->exec("SET names '{$config['charset']}'");
-			}
-		} catch (PDOException $exception) {
-			throw new Exception(t("连接数据库失败") . $exception->getMessage());
-		}
-	}
-	return $pdo[$dbname];
+    static $pdo;
+    if (empty($dbname))
+        $dbname = 'default';
+    if (!isset($pdo[$dbname])) {
+        $config = config('database', $dbname);
+        try {
+            $pdo[$dbname] = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
+            if (!empty($config['charset'])) {
+                $pdo[$dbname]->exec("SET names '{$config['charset']}'");
+            }
+        } catch (PDOException $exception) {
+            throw new Exception(t("连接数据库失败") . $exception->getMessage());
+        }
+    }
+    return $pdo[$dbname];
 }
 
 /**
  * 加载视图
  */
 function view($view=null, $data=null) {
-	return core_view::php($view, $data);
+    return core_view::php($view, $data);
 }
 
 /**
@@ -92,18 +92,18 @@ function view($view=null, $data=null) {
  * @return memcache
  */
 function memcache($config) {
-	static $memcache;
-	if (!isset($memcache[$config])) {
-		$memcache[$config] = new Memcache();
-		$cfg = config('memcache', $config);
-		if (empty($cfg)) {
-			throw new Exception(t('memcache config not found:') . "[$config]");
-		}
-		if (!$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
-			throw new Exception(t('memcache server fail'));
-		}
-	}
-	return $memcache[$config];
+    static $memcache;
+    if (!isset($memcache[$config])) {
+        $memcache[$config] = new Memcache();
+        $cfg = config('memcache', $config);
+        if (empty($cfg)) {
+            throw new Exception(t('memcache config not found:') . "[$config]");
+        }
+        if (!$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
+            throw new Exception(t('memcache server fail'));
+        }
+    }
+    return $memcache[$config];
 }
 
 /**
@@ -113,30 +113,28 @@ function memcache($config) {
  * @return null
  */
 function output($str, $filters=null) {
-	if(empty($filters)){
-		return $str;
-	}
-	else{
-		if(is_array($filters)){
-			foreach($filters as $filter){
-				$str = util_filter::$filter($str);
-			}
-		}
-		else{
-			$str = util_filter::$filters($str);
-		}
-		return $str;
-	}
+    if (empty($filters)) {
+        return $str;
+    } else {
+        if (is_array($filters)) {
+            foreach ($filters as $filter) {
+                $str = util_filter::$filter($str);
+            }
+        } else {
+            $str = util_filter::$filters($str);
+        }
+        return $str;
+    }
 }
 
 /**
  * print_r aliasname
  */
 function trace($obj) {
-	$buf = '<pre>';
-	$buf .= print_r($obj, true);
-	$buf .= '</pre>';
-	return $buf;
+    $buf = '<pre>';
+    $buf .= print_r($obj, true);
+    $buf .= '</pre>';
+    return $buf;
 }
 
 /**
@@ -145,11 +143,11 @@ function trace($obj) {
  * @return array
  */
 function use_session() {
-	static $isStart;
-	if (!isset($isStart)) {
-		session_start();
-		$isStart = true;
-	}
+    static $isStart;
+    if (!isset($isStart)) {
+        session_start();
+        $isStart = true;
+    }
 }
 
 /**
@@ -157,28 +155,28 @@ function use_session() {
  * @param $errorMessage
  */
 function error($errorMessage) {
-	echo view('error', array('errorMessage' => $errorMessage));
-	exit;
+    echo view('error', array('errorMessage' => $errorMessage));
+    exit;
 }
 
 /**
  * gbk转utf-8编码
  */
 function utf8($str) {
-	if (util_string::is_utf8($str))
-		return $str;
-	else
-		return iconv('gbk', 'utf-8', $str);
+    if (util_string::is_utf8($str))
+        return $str;
+    else
+        return iconv('gbk', 'utf-8', $str);
 }
 
 /**
  * utf-8转gbk编码
  */
 function gbk($str) {
-	if (util_string::is_utf8($str))
-		return iconv('utf-8', 'gbk', $str);
-	else
-		return $str;
+    if (util_string::is_utf8($str))
+        return iconv('utf-8', 'gbk', $str);
+    else
+        return $str;
 }
 
 /**
@@ -188,7 +186,7 @@ function gbk($str) {
  * @return mix
  */
 function param($key, $filter=true) {
-	return core_request::param($key, $filter);
+    return core_request::param($key, $filter);
 }
 
 /**
@@ -196,7 +194,7 @@ function param($key, $filter=true) {
  * @return string
  */
 function uri() {
-	return core_request::uri();
+    return core_request::uri();
 }
 
 /**
@@ -204,7 +202,7 @@ function uri() {
  * @return string
  */
 function path() {
-	return core_request::path();
+    return core_request::path();
 }
 
 /**
@@ -212,7 +210,7 @@ function path() {
  * @return string
  */
 function full_path() {
-	return core_request::fullPath();
+    return core_request::fullPath();
 }
 
 /**
@@ -220,7 +218,7 @@ function full_path() {
  * @return string
  */
 function base_url() {
-	return core_request::baseUrl();
+    return core_request::baseUrl();
 }
 
 /**
@@ -231,26 +229,26 @@ function base_url() {
  * @return string
  */
 function make_url($controller='', $action='', $path='') {
-	if (param('GG_REWRITE', false)==1) {
-		$url = base_url() . trim("$controller/$action/$path", '/');
-	} else {
-		$tmp = explode('/', $path);
-		$params = '';
-		if (!empty($path)) {
-			foreach ($tmp as $k => $v) {
-				$params .= 'arg[]=' . $v . '&';
-			}
-			$params = trim($params, '&');
-		}
-		$url = base_url() . "?controller=$controller&action=$action";
-		if (!empty($params))
-			$url .= '&' . $params;
-	}
-	return $url;
+    if (param('GG_REWRITE', false) == 1) {
+        $url = base_url() . trim("$controller/$action/$path", '/');
+    } else {
+        $tmp = explode('/', $path);
+        $params = '';
+        if (!empty($path)) {
+            foreach ($tmp as $k => $v) {
+                $params .= 'arg[]=' . $v . '&';
+            }
+            $params = trim($params, '&');
+        }
+        $url = base_url() . "?controller=$controller&action=$action";
+        if (!empty($params))
+            $url .= '&' . $params;
+    }
+    return $url;
 }
 
 function html($content, $title=null) {
-	if (!isset($title))
-		$title = config('app', 'app_name');
-	return view('html', array('content' => $content, 'title' => $title));
+    if (!isset($title))
+        $title = config('app', 'app_name');
+    return view('html', array('content' => $content, 'title' => $title));
 }
