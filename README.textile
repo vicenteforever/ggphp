@@ -187,8 +187,7 @@ h3. 核心模块core
 
 h3. ORM
 
-集成phpDataMapper,并扩展字段类，提供字段校验 widget生成等。
-@todo:
+对象关系映射
 
 h3. NOSQL
 
@@ -214,6 +213,10 @@ h3. Default
 
 系统默认控制器
 
-h3. 自定义字段
+h3. Field 
 
-datetime email image int password string text
+自定义字段 datetime email image int password string text
+
+h3. UnitTest
+
+单元测试
