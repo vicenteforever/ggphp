@@ -1,8 +1,8 @@
 <?php
 
-class util_controller{
+class util_controller {
 
-	function doIndex(){
+	function doIndex() {
 		return html('util 常用函数集合模块');
 	}
 

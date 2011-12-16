@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 文件名处理常用函数
  * @package util
@@ -11,7 +12,7 @@ class util_file {
 	 * @param string $filename
 	 * @return string
 	 */
-	static function file_ext($filename){
+	static function file_ext($filename) {
 		$tmp = explode('.', $filename);
 		return strtolower(end($tmp));
 	}
@@ -21,7 +22,7 @@ class util_file {
 	 * @param string $filename
 	 * @return string
 	 */
-	static function parent_dir($filename){
+	static function parent_dir($filename) {
 		$file = str_replace(DS, '/', $filename);
 		return str_replace('/', DS, dirname($filename));
 	}
@@ -36,14 +37,14 @@ class util_file {
 		return preg_match('/^(((?:\.)(?!\.))|\w)+$/', $filename);
 	}
 
-	static function subdir($dir){
+	static function subdir($dir) {
 		$result = array();
-		if(is_dir($dir)){
+		if (is_dir($dir)) {
 			$list = scandir($dir);
-			foreach($list as $file){
-				if($file!='.' && $file!='..'){
-					$path = $dir.DS.$file;
-					if(is_dir($path)){
+			foreach ($list as $file) {
+				if ($file != '.' && $file != '..') {
+					$path = $dir . DS . $file;
+					if (is_dir($path)) {
 						$result[$file] = $path;
 					}
 				}
@@ -51,4 +52,5 @@ class util_file {
 		}
 		return $result;
 	}
+
 }

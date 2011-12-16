@@ -9,12 +9,17 @@ class test_controller {
 	function doPhpinfo() {
 		phpinfo();
 	}
+	
+	function doTest(){
+		$doc = reflect('core_app')->doc('start');
+		return html("[$doc]");
+	}
 
 	function doFilter() {
 		$str =  'h1. hello <a href=javascript:alert(123)>world</a>';
 		return html(output($str, array('xss', 'textile')));
 	}
-
+	
 	function doConfig() {
 		$appname = 'read from config file <br> app_name is:' . config('app', 'app_name');
 		return html($appname, 'read config file test');
@@ -38,6 +43,38 @@ A *simple* example.
 
 EOF;
 		return html(util_filter::textile($in));
+	}
+	
+	function doMarkdown(){
+		$str = <<<EOF
+# this is h1
+## this is h2
+[google](http://www.google.com)
+
+###markdown###
+
+1. aaaaa
+2. bbbbb
+3. ccccc
+
+* sdfsdf
+* wrew
+ ** werwr
+ ** werwr
+* sdfds
+---
+
+| Program   | Path to Markdown
+| -------   | ----------------
+| [Pivot][] | `(site home)/pivot/includes/markdown/`
+
+    echo util_filter::markdown(\$str);
+	    echo util_filter::markdown(\$str);
+		
+
+
+EOF;
+		return html(util_filter::markdown($str));
 	}
 
 }

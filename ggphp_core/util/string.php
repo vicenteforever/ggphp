@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 字符串常用函数
  * @package util
@@ -11,7 +12,7 @@ class util_string {
 	 * @param string $string �����ַ�
 	 * @return bool
 	 */
-	static function is_utf8($string){
+	static function is_utf8($string) {
 		return preg_match('%^(?:
 			[\x09\x0A\x0D\x20-\x7E]				# ASCII
 			| [\xC2-\xDF][\x80-\xBF]			# non-overlong 2-byte
@@ -29,21 +30,22 @@ class util_string {
 	 * @param integer $size
 	 * @return string
 	 */
-	static function size_hum_read($size){
-		$i=0;
+	static function size_hum_read($size) {
+		$i = 0;
 		$iec = array("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
-		while (($size/1024)>1) {
-			$size=$size/1024;
+		while (($size / 1024) > 1) {
+			$size = $size / 1024;
 			$i++;
 		}
-		return substr($size,0,strpos($size,'.')+4).$iec[$i];
+		return substr($size, 0, strpos($size, '.') + 4) . $iec[$i];
 	}
 
 	/**
 	 * 生成绝对唯一的id
 	 * @return string
 	 */
-	static function token(){
+	static function token() {
 		return md5(uniqid(rand(), true));
 	}
+
 }

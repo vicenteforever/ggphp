@@ -1,63 +1,80 @@
 <?php
+
 /**
  * input filter
  * @package util
  * @author goodzsq@gmail.com
  */
 class util_filter {
-	
-    /**
-     * convert textile code to html
-     * @staticvar Textile $textile
-     * @return string 
-     */
-    static function textile($str) {
-        static $textile;
-        if(!isset($textile)){
-            require_once(GG_DIR.'/lib/textile/classTextile.php');
-            $textile = new Textile();
-        }
-        return $textile->TextileThis($str);
-    }	
-	
+
+	/**
+	 * convert markdown code to html
+	 * @staticvar parser_class $parser
+	 * @param string $text
+	 * @return string 
+	 */
+	static function markdown($text) {
+		static $parser;
+		if (!isset($parser)) {
+			include(GG_DIR.'/lib/php-markdown/markdown.php');
+			$parser_class = MARKDOWN_PARSER_CLASS;
+			$parser = new $parser_class;
+		}
+		return $parser->transform($text);
+	}
+
+	/**
+	 * convert textile code to html
+	 * @staticvar Textile $textile
+	 * @return string 
+	 */
+	static function textile($str) {
+		static $textile;
+		if (!isset($textile)) {
+			require_once(GG_DIR . '/lib/textile/classTextile.php');
+			$textile = new Textile();
+		}
+		return $textile->TextileThis($str);
+	}
+
 	/**
 	 * convert ubb code to html
 	 * @param string $Text
 	 * @return string 
 	 */
 	static function ubb($Text) {
-		$Text=trim($Text);
+		$Text = trim($Text);
 		//$Text=htmlspecialchars($Text);
-		$Text=preg_replace("/\\t/is","	",$Text);
-		$Text=preg_replace("/\[h1\](.+?)\[\/h1\]/is","<h1>\\1</h1>",$Text);
-		$Text=preg_replace("/\[h2\](.+?)\[\/h2\]/is","<h2>\\1</h2>",$Text);
-		$Text=preg_replace("/\[h3\](.+?)\[\/h3\]/is","<h3>\\1</h3>",$Text);
-		$Text=preg_replace("/\[h4\](.+?)\[\/h4\]/is","<h4>\\1</h4>",$Text);
-		$Text=preg_replace("/\[h5\](.+?)\[\/h5\]/is","<h5>\\1</h5>",$Text);
-		$Text=preg_replace("/\[h6\](.+?)\[\/h6\]/is","<h6>\\1</h6>",$Text);
-		$Text=preg_replace("/\[separator\]/is","",$Text);
-		$Text=preg_replace("/\[center\](.+?)\[\/center\]/is","<center>\\1</center>",$Text);
-		$Text=preg_replace("/\[url=http:\/\/([^\[]*)\](.+?)\[\/url\]/is","<a href=\"http://\\1\" target=_blank>\\2</a>",$Text);
-		$Text=preg_replace("/\[url=([^\[]*)\](.+?)\[\/url\]/is","<a href=\"http://\\1\" target=_blank>\\2</a>",$Text);
-		$Text=preg_replace("/\[url\]http:\/\/([^\[]*)\[\/url\]/is","<a href=\"http://\\1\" target=_blank>\\1</a>",$Text);
-		$Text=preg_replace("/\[url\]([^\[]*)\[\/url\]/is","<a href=\"\\1\" target=_blank>\\1</a>",$Text);
-		$Text=preg_replace("/\[img\](.+?)\[\/img\]/is","<img src=\\1>",$Text);
-		$Text=preg_replace("/\[color=(.+?)\](.+?)\[\/color\]/is","<font color=\\1>\\2</font>",$Text);
-		$Text=preg_replace("/\[size=(.+?)\](.+?)\[\/size\]/is","<font size=\\1>\\2</font>",$Text);
-		$Text=preg_replace("/\[sup\](.+?)\[\/sup\]/is","<sup>\\1</sup>",$Text);
-		$Text=preg_replace("/\[sub\](.+?)\[\/sub\]/is","<sub>\\1</sub>",$Text);
-		$Text=preg_replace("/\[pre\](.+?)\[\/pre\]/is","<pre>\\1</pre>",$Text);
-		$Text=preg_replace("/\[email\](.+?)\[\/email\]/is","<a href='mailto:\\1'>\\1</a>",$Text);
-		$Text=preg_replace("/\[colorTxt\](.+?)\[\/colorTxt\]/eis","color_txt('\\1')",$Text);
-		$Text=preg_replace("/\[emot\](.+?)\[\/emot\]/eis","emot('\\1')",$Text);
-		$Text=preg_replace("/\[i\](.+?)\[\/i\]/is","<i>\\1</i>",$Text);
-		$Text=preg_replace("/\[u\](.+?)\[\/u\]/is","<u>\\1</u>",$Text);
-		$Text=preg_replace("/\[b\](.+?)\[\/b\]/is","<b>\\1</b>",$Text);
-		$Text=preg_replace("/\[quote\](.+?)\[\/quote\]/is"," <div class='quote'><h5>引用:</h5><blockquote>\\1</blockquote></div>", $Text);
-		$Text=preg_replace("/\[code\](.+?)\[\/code\]/eis","highlight_code('\\1')", $Text);
-		$Text=preg_replace("/\[php\](.+?)\[\/php\]/eis","highlight_code('\\1')", $Text);
-		$Text=preg_replace("/\[sig\](.+?)\[\/sig\]/is","<div class='sign'>\\1</div>", $Text);
-		$Text=preg_replace("/\\n/is","<br/>",$Text);
+		$Text = preg_replace("/\\t/is", "	", $Text);
+		$Text = preg_replace("/\[h1\](.+?)\[\/h1\]/is", "<h1>\\1</h1>", $Text);
+		$Text = preg_replace("/\[h2\](.+?)\[\/h2\]/is", "<h2>\\1</h2>", $Text);
+		$Text = preg_replace("/\[h3\](.+?)\[\/h3\]/is", "<h3>\\1</h3>", $Text);
+		$Text = preg_replace("/\[h4\](.+?)\[\/h4\]/is", "<h4>\\1</h4>", $Text);
+		$Text = preg_replace("/\[h5\](.+?)\[\/h5\]/is", "<h5>\\1</h5>", $Text);
+		$Text = preg_replace("/\[h6\](.+?)\[\/h6\]/is", "<h6>\\1</h6>", $Text);
+		$Text = preg_replace("/\[separator\]/is", "", $Text);
+		$Text = preg_replace("/\[center\](.+?)\[\/center\]/is", "<center>\\1</center>", $Text);
+		$Text = preg_replace("/\[url=http:\/\/([^\[]*)\](.+?)\[\/url\]/is", "<a href=\"http://\\1\" target=_blank>\\2</a>", $Text);
+		$Text = preg_replace("/\[url=([^\[]*)\](.+?)\[\/url\]/is", "<a href=\"http://\\1\" target=_blank>\\2</a>", $Text);
+		$Text = preg_replace("/\[url\]http:\/\/([^\[]*)\[\/url\]/is", "<a href=\"http://\\1\" target=_blank>\\1</a>", $Text);
+		$Text = preg_replace("/\[url\]([^\[]*)\[\/url\]/is", "<a href=\"\\1\" target=_blank>\\1</a>", $Text);
+		$Text = preg_replace("/\[img\](.+?)\[\/img\]/is", "<img src=\\1>", $Text);
+		$Text = preg_replace("/\[color=(.+?)\](.+?)\[\/color\]/is", "<font color=\\1>\\2</font>", $Text);
+		$Text = preg_replace("/\[size=(.+?)\](.+?)\[\/size\]/is", "<font size=\\1>\\2</font>", $Text);
+		$Text = preg_replace("/\[sup\](.+?)\[\/sup\]/is", "<sup>\\1</sup>", $Text);
+		$Text = preg_replace("/\[sub\](.+?)\[\/sub\]/is", "<sub>\\1</sub>", $Text);
+		$Text = preg_replace("/\[pre\](.+?)\[\/pre\]/is", "<pre>\\1</pre>", $Text);
+		$Text = preg_replace("/\[email\](.+?)\[\/email\]/is", "<a href='mailto:\\1'>\\1</a>", $Text);
+		$Text = preg_replace("/\[colorTxt\](.+?)\[\/colorTxt\]/eis", "color_txt('\\1')", $Text);
+		$Text = preg_replace("/\[emot\](.+?)\[\/emot\]/eis", "emot('\\1')", $Text);
+		$Text = preg_replace("/\[i\](.+?)\[\/i\]/is", "<i>\\1</i>", $Text);
+		$Text = preg_replace("/\[u\](.+?)\[\/u\]/is", "<u>\\1</u>", $Text);
+		$Text = preg_replace("/\[b\](.+?)\[\/b\]/is", "<b>\\1</b>", $Text);
+		$Text = preg_replace("/\[quote\](.+?)\[\/quote\]/is", " <div class='quote'><h5>引用:</h5><blockquote>\\1</blockquote></div>", $Text);
+		$Text = preg_replace("/\[code\](.+?)\[\/code\]/eis", "highlight_code('\\1')", $Text);
+		$Text = preg_replace("/\[php\](.+?)\[\/php\]/eis", "highlight_code('\\1')", $Text);
+		$Text = preg_replace("/\[sig\](.+?)\[\/sig\]/is", "<div class='sign'>\\1</div>", $Text);
+		$Text = preg_replace("/\\n/is", "<br/>", $Text);
 		return $Text;
 	}
 
@@ -81,11 +98,10 @@ class util_filter {
 		for ($i = 0; $i < strlen($search); $i++) {
 			// ;? matches the ;, which is optional
 			// 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
-
 			// @ @ search for the hex values
-			$val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val); // with a ;
+			$val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val); // with a ;
 			// @ @ 0{0,7} matches '0' zero to seven times
-			$val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val); // with a ;
+			$val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
 		}
 
 		// now the only remaining whitespace attacks are \t, \n, and \r
@@ -109,7 +125,7 @@ class util_filter {
 					$pattern .= $ra[$i][$j];
 				}
 				$pattern .= '/i';
-				$replacement = substr($ra[$i], 0, 2).'xxx'.substr($ra[$i], 2); // add in <> to nerf the tag
+				$replacement = substr($ra[$i], 0, 2) . 'xxx' . substr($ra[$i], 2); // add in <> to nerf the tag
 				$val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
 				if ($val_before == $val) {
 					// no replacements were made, so exit the loop
@@ -118,7 +134,8 @@ class util_filter {
 			}
 		}
 		return $val;
-	}	
+	}
+
 }
 
 ?>

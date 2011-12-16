@@ -6,18 +6,19 @@
  * @author Administrator
  */
 class unittest_case {
-	
+
 	/**
 	 * 测试结果
 	 * @var array
 	 */
 	private $_result = array();
+
 	/**
 	 * 当前测试模块
 	 * @var string 
 	 */
 	private $_module = '';
-	
+
 	function testModule($module, $desp='') {
 		$moduleName = "{$module}_test";
 		$methods = get_class_methods($moduleName);
@@ -34,17 +35,16 @@ class unittest_case {
 	}
 
 	function assert($result, $msg) {
-		if($result==true){
+		if ($result == true) {
 			$rs = 'pass';
-		}
-		else{
+		} else {
 			$rs = 'fail';
 		}
-		$this->_result[$this->_module][] = array($rs=>$msg);
+		$this->_result[$this->_module][] = array($rs => $msg);
 	}
 
 	function assertEqual($a, $b, $msg) {
-		$result = ($a==$b)?true:false;
+		$result = ($a == $b) ? true : false;
 		$this->assert($result, $msg);
 	}
 

@@ -4,12 +4,18 @@
  * 常用函数快捷方法
  * @author goodzsq@gmail.com
  */
+
+/**
+ * 获取应用实例
+ * @return core_app
+ */
 function app() {
 	return core_app::instance();
 }
 
 /**
  * 翻译
+ * @return core_language
  */
 function t($str, $language=null) {
 	return core_language::translate($str, $language);
@@ -17,6 +23,7 @@ function t($str, $language=null) {
 
 /**
  * 读取配置
+ * return mix
  */
 function config($file, $key='') {
 	return config_loader::load($file, $key);
@@ -27,9 +34,9 @@ function config($file, $key='') {
  * @staticvar unittest_case $test
  * @return unittest_case 
  */
-function test(){
+function test() {
 	static $test;
-	if(!isset($test)){
+	if (!isset($test)) {
 		$test = new unittest_case();
 	}
 	return $test;
@@ -59,7 +66,7 @@ function storage($storage, $group) {
 /**
  * 获取pdo数据库对象
  * @param string $dbname 数据库配置文件config/database.php中的配置名称
- * @return mixed
+ * @return PDO
  */
 function pdo($dbname='default') {
 	static $pdo;
@@ -81,6 +88,7 @@ function pdo($dbname='default') {
 
 /**
  * 加载视图
+ * @return string
  */
 function view($view=null, $data=null) {
 	return core_view::php($view, $data);
@@ -89,7 +97,7 @@ function view($view=null, $data=null) {
 /**
  * 获取memcache对象
  * @param $config memcache配置
- * @return memcache
+ * @return Memcache
  */
 function memcache($config) {
 	static $memcache;
@@ -113,16 +121,14 @@ function memcache($config) {
  * @return null
  */
 function output($str, $filters=null) {
-	if(empty($filters)){
+	if (empty($filters)) {
 		return $str;
-	}
-	else{
-		if(is_array($filters)){
-			foreach($filters as $filter){
+	} else {
+		if (is_array($filters)) {
+			foreach ($filters as $filter) {
 				$str = util_filter::$filter($str);
 			}
-		}
-		else{
+		} else {
 			$str = util_filter::$filters($str);
 		}
 		return $str;
@@ -130,7 +136,9 @@ function output($str, $filters=null) {
 }
 
 /**
- * print_r aliasname
+ * 打印调试变量
+ * @param mix $obj
+ * @return string 
  */
 function trace($obj) {
 	$buf = '<pre>';
@@ -140,8 +148,7 @@ function trace($obj) {
 }
 
 /**
- * 启用session
- * 可保证仅调用一次session_start函数
+ * 启用session，可保证仅调用一次session_start函数
  * @return array
  */
 function use_session() {
@@ -231,7 +238,7 @@ function base_url() {
  * @return string
  */
 function make_url($controller='', $action='', $path='') {
-	if (param('GG_REWRITE', false)==1) {
+	if (param('GG_REWRITE', false) == 1) {
 		$url = base_url() . trim("$controller/$action/$path", '/');
 	} else {
 		$tmp = explode('/', $path);
@@ -249,8 +256,28 @@ function make_url($controller='', $action='', $path='') {
 	return $url;
 }
 
+/**
+ * 输出html页面
+ * @param type $content
+ * @param type $title
+ * @return type 
+ */
 function html($content, $title=null) {
 	if (!isset($title))
 		$title = config('app', 'app_name');
 	return view('html', array('content' => $content, 'title' => $title));
+}
+
+/**
+ *
+ * @staticvar core_reflect $reflect
+ * @param type $name
+ * @return core_reflect 
+ */
+function reflect($name) {
+	static $reflect;
+	if (!isset($reflect)) {
+		$reflect = new core_reflect($name);
+	}
+	return $reflect;
 }

@@ -167,8 +167,8 @@ class core_app {
 		}
 		$total = sprintf("%.4f", $time - $log[0]['time']);
 		$result .= "程序运行时间:$total ms, memory:" . util_string::size_hum_read(memory_get_usage()) . " <br>";
-		$result .= "<a href='".  base_url()."unittest'>运行单元测试</a>";
-		return '<hr/>'.$result;
+		$result .= "<a href='" . base_url() . "unittest'>运行单元测试</a>";
+		return '<hr/>' . $result;
 	}
 
 }
