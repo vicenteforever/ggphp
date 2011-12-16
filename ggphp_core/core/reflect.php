@@ -18,7 +18,7 @@ class core_reflect {
 	}
 
 	/**
-	 *
+	 * get all method
 	 * @return array();
 	 */
 	function methods($filter=ReflectionMethod::IS_PUBLIC) {

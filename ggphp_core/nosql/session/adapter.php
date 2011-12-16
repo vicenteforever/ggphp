@@ -9,8 +9,8 @@ class nosql_session_adapter implements nosql_adapter {
     private $_group;
 
     function __construct($group) {
+        core_session::start();
         $this->_group = $group;
-        use_session();
     }
 
     function load($key) {
