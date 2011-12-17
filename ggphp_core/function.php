@@ -161,18 +161,6 @@ function trace($obj) {
 }
 
 /**
- * 启用session，可保证仅调用一次session_start函数
- * @return array
- */
-function use_session() {
-	static $isStart;
-	if (!isset($isStart)) {
-		session_start();
-		$isStart = true;
-	}
-}
-
-/**
  * 显示错误页面
  * @param $errorMessage
  */
@@ -251,7 +239,7 @@ function base_url() {
  * @param mix $params string or array
  * @return string 
  */
-function make_url($controller='', $action='', $path='', $params='') {
+function url($controller='', $action='', $path='', $params='') {
 	$param_str = '';
 	if (!empty($params)) {
 		if (is_array($params)) {
@@ -306,7 +294,6 @@ function reflect($name) {
 	return $reflect;
 }
 
-function redirect($controller, $action, $path='', $params=array()) {
-	$url = make_url($controller, $action, $path, $params);
+function redirect($url) {
 	core_response::redirect($url);
 }

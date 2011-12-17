@@ -3,7 +3,7 @@
 class default_controller{
 
 	function doIndex(){
-		core_response::redirect(base_url().'main.html');
+		redirect(base_url().'main.html');
 	}
 
 }

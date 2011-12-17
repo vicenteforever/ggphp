@@ -11,7 +11,7 @@ class test_controller {
 	}
 	
 	function doTest(){
-		$url = make_url(app()->getController(), app()->getAction(), '../sdf/sdf//', array('a'=>'b', 'c'=>'d'));
+		$url = url(app()->getController(), app()->getAction(), '../sdf/sdf//', array('a'=>'b', 'c'=>'d'));
 		return html($url);
 	}
 	
