@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 应用程序入口
+ * 核心应用程序类 单例模式
  * @package core
  */
 class core_app {
@@ -10,10 +10,12 @@ class core_app {
 	private $_controller;
 	private $_action;
 
-	private function __construct() {
-		
-	}
+	private function __construct() {}
 
+	/**
+	 * return core_app single instance
+	 * @return core_app
+	 */
 	static function instance() {
 		if (!self::$instance) {
 			self::$instance = new self;
@@ -22,7 +24,7 @@ class core_app {
 	}
 
 	/**
-	 * 程序入口, 启动APP
+	 * 程序执行流程
 	 */
 	static function start() {
 		$app = self::instance();
@@ -37,10 +39,23 @@ class core_app {
 				$app->parseFromParam();
 			}
 		}
-		$app->exec($app->_controller, $app->_action);
+		session()->start()->role = array('test', 'administratord ');
+		if(core_auth::access("{$app->_controller}::{$app->_action}")){
+			$app->exec($app->_controller, $app->_action);
+		}
+		else{
+			//redirect('user', 'login');
+			echo html('认证失败');
+			echo app()->report();
+		}
 	}
 
-	function exec($controller, $action) {
+	/**
+	 * 执行控制器方法
+	 * @param type $controller
+	 * @param type $action 
+	 */
+	public function exec($controller, $action) {
 		if (!preg_match("/^[_0-9a-zA-Z]+$/", $controller))
 			throw new Exception('invalid controller:' . $controller);
 		if (!preg_match("/^[_0-9a-zA-Z]+$/", $action))
@@ -58,6 +73,10 @@ class core_app {
 		}
 	}
 
+	/**
+	 * 从config/router.php路由配置中解析控制器和方法
+	 * @return bool 是否存在匹配的路由 
+	 */
 	private function parseFromConfig() {
 		$path = path();
 		$config = config('router');
@@ -77,6 +96,9 @@ class core_app {
 		return false;
 	}
 
+	/**
+	 * 解析从url中的GET方法传递过来的控制器和方法
+	 */
 	private function parseFromParam() {
 		$this->_controller = param('controller');
 		if (empty($this->_controller))
@@ -87,7 +109,7 @@ class core_app {
 	}
 
 	/**
-	 * 解析pathinfo
+	 * 从pathinfo中解析控制器和方法
 	 */
 	private function parseFromPath() {
 		$path = path();

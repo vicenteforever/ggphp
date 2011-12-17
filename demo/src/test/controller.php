@@ -11,6 +11,11 @@ class test_controller {
 	}
 	
 	function doTest(){
+		$url = make_url(app()->getController(), app()->getAction(), '../sdf/sdf//', array('a'=>'b', 'c'=>'d'));
+		return html($url);
+	}
+	
+	function doDoc(){
 		$doc = reflect('core_app')->doc('start');
 		return html("[$doc]");
 	}
