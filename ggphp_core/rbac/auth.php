@@ -22,7 +22,6 @@ class rbac_auth {
 		return true;
 	    }
 
-	    session()->start();
 	    $user_roles = session()->role;
 	    if (!is_array($user_roles)) {
 		$user_roles = array($user_roles);

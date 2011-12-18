@@ -1,45 +1,49 @@
 <?php
 
 /**
- * core_session
+ * core_session 单例模式
  * @package core
  * @author goodzsq@gmail.com
  */
 class core_session {
 
-	/**
-	 * session start only run once
-	 * @staticvar int $start
-	 * @return core_session
-	 */
-	function start() {
-		static $start;
-		if (!isset($start)) {
-			$start = 1;
-			session_start();
-		}
-		return $this;
-	}
+    private function __construct() {
+        
+    }
 
-	/**
-	 * session destroy
-	 */
-	function end() {
-		session_destroy();
-	}
+    /**
+     * return core_session
+     * @return core_app
+     */
+    static function instance() {
+        static $instance;
+        if (!isset($instance)) {
+            //保证只运行一次session_start
+            session_start();
+            $instance = new self;
+        }
+        return $instance;
+    }
 
-	function __get($name) {
-		if (isset($_SESSION[$name])) {
-			return $_SESSION[$name];
-		} else {
-			return null;
-		};
-	}
-	
-	function __set($name, $value) {
-		$_SESSION[$name] = $value;
-	}
-	
+    /**
+     * session destroy
+     */
+    function end() {
+        session_destroy();
+    }
+
+    function __get($name) {
+        if (isset($_SESSION[$name])) {
+            return $_SESSION[$name];
+        } else {
+            return null;
+        };
+    }
+
+    function __set($name, $value) {
+        $_SESSION[$name] = $value;
+    }
+
 }
 
 ?>

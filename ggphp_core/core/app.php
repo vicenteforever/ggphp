@@ -18,11 +18,11 @@ class core_app {
      * @return core_app
      */
     static function instance() {
-	static $instance;
-	if(!isset($instance)){
-	    $instance = new self;
-	}
-	return $instance;
+        static $instance;
+        if (!isset($instance)) {
+            $instance = new self;
+        }
+        return $instance;
     }
 
     /**
@@ -35,7 +35,7 @@ class core_app {
 	    if (config('app', 'only_use_router')) {
 		error('the router not allow:' . path());
 	    }
-	    if (param('GG_REWRITE', false) == 1) {
+	    if (core_request::isRewrite()) {
 		$this->parseFromPath();
 	    } else {
 		$this->parseFromParam();

@@ -1,18 +1,18 @@
 <?php
 
 /**
- * 权限认证
+ * 基于角色的权限认证
  * @package hook
  * @author goodzsq@gmail.com
  */
-class hook_auth implements hook_interface {
+class hook_rbac implements hook_interface {
     
     public function hook() {
-	session()->start()->role = array('test123', 'administratord ');//test
 	$perm = app()->getController() . '::' . app()->getAction();
+        $perm = strtolower($perm);
 	if(!self::access($perm)){
-	    echo html('认证失败');
-	    exit;
+            session()->redirect_url = uri();
+	    redirect(url('rbac', 'login'));
 	}
     }
     
@@ -22,6 +22,9 @@ class hook_auth implements hook_interface {
      * @return bool true:allow false:forbidden
      */
     function access($perm) {
+	if($perm == 'rbac::login' || $perm=='rbac::logincheck'){
+	    return true;
+	}
 	return rbac_auth::access($perm);
     }
 

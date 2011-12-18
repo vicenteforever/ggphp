@@ -1,7 +1,8 @@
 <?php
 
 /**
- * 常用函数快捷方法
+ * 框架常用函数集
+ * @package core
  * @author goodzsq@gmail.com
  */
 
@@ -10,7 +11,7 @@
  * @return core_app
  */
 function app() {
-	return core_app::instance();
+    return core_app::instance();
 }
 
 /**
@@ -18,12 +19,8 @@ function app() {
  * @staticvar core_session $session
  * @return core_session 
  */
-function session(){
-	static $session;
-	if(!isset($session)){
-		$session = new core_session();
-	}
-	return $session;
+function session() {
+    return core_session::instance();
 }
 
 /**
@@ -31,15 +28,15 @@ function session(){
  * @return core_language
  */
 function t($str, $language=null) {
-	return core_language::translate($str, $language);
+    return core_language::translate($str, $language);
 }
 
 /**
  * 读取配置
- * return mix
+ * return string|array
  */
 function config($file, $key='') {
-	return config_loader::load($file, $key);
+    return config_loader::load($file, $key);
 }
 
 /**
@@ -48,11 +45,11 @@ function config($file, $key='') {
  * @return unittest_case 
  */
 function test() {
-	static $test;
-	if (!isset($test)) {
-		$test = new unittest_case();
-	}
-	return $test;
+    static $test;
+    if (!isset($test)) {
+        $test = new unittest_case();
+    }
+    return $test;
 }
 
 /**
@@ -63,17 +60,17 @@ function test() {
  * @example storage('database', 'log_table')->save('2000-01-01 00:00:00', '新世纪开始');
  */
 function storage($storage, $group) {
-	static $storage_object;
-	$key = $storage . $group;
-	if (!isset($storage_object[$key])) {
-		try {
-			$adapter = 'storage_adapter_' . $storage;
-			$storage_object[$key] = new $adapter($group);
-		} catch (Exception $e) {
-			throw new Exception(t('storage not exists') . ":[{$storage}]");
-		}
-	}
-	return $storage_object[$key];
+    static $storage_object;
+    $key = $storage . $group;
+    if (!isset($storage_object[$key])) {
+        try {
+            $adapter = 'storage_adapter_' . $storage;
+            $storage_object[$key] = new $adapter($group);
+        } catch (Exception $e) {
+            throw new Exception(t('storage not exists') . ":[{$storage}]");
+        }
+    }
+    return $storage_object[$key];
 }
 
 /**
@@ -82,21 +79,21 @@ function storage($storage, $group) {
  * @return PDO
  */
 function pdo($dbname='default') {
-	static $pdo;
-	if (empty($dbname))
-		$dbname = 'default';
-	if (!isset($pdo[$dbname])) {
-		$config = config('database', $dbname);
-		try {
-			$pdo[$dbname] = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
-			if (!empty($config['charset'])) {
-				$pdo[$dbname]->exec("SET names '{$config['charset']}'");
-			}
-		} catch (PDOException $exception) {
-			throw new Exception(t("连接数据库失败") . $exception->getMessage());
-		}
-	}
-	return $pdo[$dbname];
+    static $pdo;
+    if (empty($dbname))
+        $dbname = 'default';
+    if (!isset($pdo[$dbname])) {
+        $config = config('database', $dbname);
+        try {
+            $pdo[$dbname] = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
+            if (!empty($config['charset'])) {
+                $pdo[$dbname]->exec("SET names '{$config['charset']}'");
+            }
+        } catch (PDOException $exception) {
+            throw new Exception(t("连接数据库失败") . $exception->getMessage());
+        }
+    }
+    return $pdo[$dbname];
 }
 
 /**
@@ -104,7 +101,7 @@ function pdo($dbname='default') {
  * @return string
  */
 function view($view=null, $data=null) {
-	return core_view::php($view, $data);
+    return core_view::php($view, $data);
 }
 
 /**
@@ -113,18 +110,18 @@ function view($view=null, $data=null) {
  * @return Memcache
  */
 function memcache($config) {
-	static $memcache;
-	if (!isset($memcache[$config])) {
-		$memcache[$config] = new Memcache();
-		$cfg = config('memcache', $config);
-		if (empty($cfg)) {
-			throw new Exception(t('memcache config not found:') . "[$config]");
-		}
-		if (!$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
-			throw new Exception(t('memcache server fail'));
-		}
-	}
-	return $memcache[$config];
+    static $memcache;
+    if (!isset($memcache[$config])) {
+        $memcache[$config] = new Memcache();
+        $cfg = config('memcache', $config);
+        if (empty($cfg)) {
+            throw new Exception(t('memcache config not found:') . "[$config]");
+        }
+        if (!$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
+            throw new Exception(t('memcache server fail'));
+        }
+    }
+    return $memcache[$config];
 }
 
 /**
@@ -134,18 +131,18 @@ function memcache($config) {
  * @return null
  */
 function output($str, $filters=null) {
-	if (empty($filters)) {
-		return $str;
-	} else {
-		if (is_array($filters)) {
-			foreach ($filters as $filter) {
-				$str = util_filter::$filter($str);
-			}
-		} else {
-			$str = util_filter::$filters($str);
-		}
-		return $str;
-	}
+    if (empty($filters)) {
+        return $str;
+    } else {
+        if (is_array($filters)) {
+            foreach ($filters as $filter) {
+                $str = util_filter::$filter($str);
+            }
+        } else {
+            $str = util_filter::$filters($str);
+        }
+        return $str;
+    }
 }
 
 /**
@@ -154,10 +151,10 @@ function output($str, $filters=null) {
  * @return string 
  */
 function trace($obj) {
-	$buf = '<pre>';
-	$buf .= print_r($obj, true);
-	$buf .= '</pre>';
-	return $buf;
+    $buf = '<pre>';
+    $buf .= print_r($obj, true);
+    $buf .= '</pre>';
+    return $buf;
 }
 
 /**
@@ -165,28 +162,28 @@ function trace($obj) {
  * @param $errorMessage
  */
 function error($errorMessage) {
-	echo view('error', array('errorMessage' => $errorMessage));
-	exit;
+    echo view('error', array('errorMessage' => $errorMessage));
+    exit;
 }
 
 /**
  * gbk转utf-8编码
  */
 function utf8($str) {
-	if (util_string::is_utf8($str))
-		return $str;
-	else
-		return iconv('gbk', 'utf-8', $str);
+    if (util_string::is_utf8($str))
+        return $str;
+    else
+        return iconv('gbk', 'utf-8', $str);
 }
 
 /**
  * utf-8转gbk编码
  */
 function gbk($str) {
-	if (util_string::is_utf8($str))
-		return iconv('utf-8', 'gbk', $str);
-	else
-		return $str;
+    if (util_string::is_utf8($str))
+        return iconv('utf-8', 'gbk', $str);
+    else
+        return $str;
 }
 
 /**
@@ -196,7 +193,7 @@ function gbk($str) {
  * @return mix
  */
 function param($key, $filter=true) {
-	return core_request::param($key, $filter);
+    return core_request::param($key, $filter);
 }
 
 /**
@@ -204,7 +201,7 @@ function param($key, $filter=true) {
  * @return string
  */
 function uri() {
-	return core_request::uri();
+    return core_request::uri();
 }
 
 /**
@@ -212,7 +209,7 @@ function uri() {
  * @return string
  */
 function path() {
-	return core_request::path();
+    return core_request::path();
 }
 
 /**
@@ -220,7 +217,7 @@ function path() {
  * @return string
  */
 function full_path() {
-	return core_request::fullPath();
+    return core_request::fullPath();
 }
 
 /**
@@ -228,7 +225,7 @@ function full_path() {
  * @return string
  */
 function base_url() {
-	return core_request::baseUrl();
+    return core_request::baseUrl();
 }
 
 /**
@@ -240,32 +237,7 @@ function base_url() {
  * @return string 
  */
 function url($controller='', $action='', $path='', $params='') {
-	$param_str = '';
-	if (!empty($params)) {
-		if (is_array($params)) {
-			foreach ($params as $k => $v) {
-				$param_str .= "{$k}={$v}&";
-			}
-		} else {
-			$param_str .= "{$params}&";
-		}
-	}
-	$path = trim($path, '/');
-	if (param('GG_REWRITE', false) == 1) {
-		$url = base_url() . trim("$controller/$action/$path", '/');
-	} else {
-		$url = base_url() . "?controller=$controller&action=$action";
-		if (!empty($path)) {
-			$tmp = explode('/', $path);
-			foreach ($tmp as $v) {
-				$param_str .= 'arg[]=' . $v . '&';
-			}
-		}
-	}
-	if(!empty($param_str)){
-		$param_str = '?'.trim($param_str, '&');
-	}
-	return $url.$param_str;
+    return core_request::makeUrl($controller, $action, $path, $params);
 }
 
 /**
@@ -275,9 +247,12 @@ function url($controller='', $action='', $path='', $params='') {
  * @return type 
  */
 function html($content, $title=null) {
-	if (!isset($title))
-		$title = config('app', 'app_name');
-	return view('html', array('content' => $content, 'title' => $title));
+    if (!isset($title)) {
+        $controller = app()->getController() . '_controller';
+        $action = config('app', 'action_prefix') . ucfirst(app()->getAction());
+        $title = reflect($controller)->doc($action);
+    }
+    return view('html', array('content' => $content, 'title' => $title));
 }
 
 /**
@@ -287,13 +262,31 @@ function html($content, $title=null) {
  * @return core_reflect 
  */
 function reflect($name) {
-	static $reflect;
-	if (!isset($reflect)) {
-		$reflect = new core_reflect($name);
-	}
-	return $reflect;
+    static $reflect;
+    if (!isset($reflect)) {
+        $reflect = new core_reflect($name);
+    }
+    return $reflect;
 }
 
+/**
+ * redirect url
+ * @param string $url 
+ */
 function redirect($url) {
-	core_response::redirect($url);
+    core_response::redirect($url);
+}
+
+/**
+ * 取得orm模型对象
+ * @staticvar orm_mapper $orm
+ * @param type $model config/schema配置文件名称
+ * @return orm_mapper 
+ */
+function orm($model){
+    static $orm;
+    if(!isset($orm[$model])){
+        $orm[$model] = new orm_mapper($model);
+    }
+    return $orm[$model];
 }
