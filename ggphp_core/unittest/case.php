@@ -23,14 +23,16 @@ class unittest_case {
     private $_total = 0;
     
     function testModule($module, $desp='') {
-        $moduleName = "{$module}_test";
-        $methods = get_class_methods($moduleName);
+        $className = "{$module}_test";
+        $methods = get_class_methods($className);
         $this->_result[$module] = array();
         $this->_module = $module;
         if (is_array($methods)) {
-            $obj = new $moduleName();
+            $obj = new $className();
             foreach ($methods as $method) {
                 if (strpos($method, 'test_') === 0) {
+                    $doc = $method.'() '.reflect($className)->doc($method);
+                    $this->_result[$this->_module][] = array('status' => '>>>', 'msg' => $doc);
                     $obj->$method();
                 }
             }
@@ -54,7 +56,10 @@ class unittest_case {
         $this->_result[$this->_module][] = array('status' => $status, 'msg' => $msg);
     }
 
-    function assertEqual($a, $b, $msg) {
+    function assertEqual($a, $b, $msg='') {
+        if(empty($msg)){
+            $msg = "[{$a}] == [{$b}]";
+        }
         $this->assert(($a == $b), $msg);
     }
     
@@ -70,7 +75,7 @@ class unittest_case {
         $buf .= "\n  <div class='summary {$style}'>total test:{$this->_total} pass:{$this->_pass} fail:{$this->_fail}</div>";
         foreach($this->_result as $module=>$result){
             $buf .= "\n  <div id='module_{$module}'>";
-            $buf .= "<div class='title'>====={$module}=====</div>";
+            $buf .= "<div class='title'>=====模块测试：{$module}=====</div>";
             foreach($result as $row){
                 $buf .= "\n    <div class='{$row['status']}'>{$row['status']}: {$row['msg']}</div>";
             }

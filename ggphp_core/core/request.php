@@ -219,7 +219,7 @@ class core_request {
      * @param string $controller
      * @param string $action
      * @param string $path
-     * @param mix $params string or array
+     * @param mixed $params string or array
      * @return string 
      */
     static function makeUrl($controller='', $action='', $path='', $params='') {

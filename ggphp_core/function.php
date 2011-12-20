@@ -24,6 +24,22 @@ function session() {
 }
 
 /**
+ * 获取nosql键值存储对象
+ * @staticvar className $nosql
+ * @param string $adapter 适配器类文件名称
+ * @param string $source 数据源名称
+ * @return nosql_object 
+ */
+function nosql($adapter, $source) {
+    static $nosql;
+    if (!isset($nosql[$adapter][$source])) {
+        $className = "nosql_{$adapter}";
+        $nosql[$adapter][$source] = new $className($source);
+    }
+    return $nosql[$adapter][$source];
+}
+
+/**
  * 翻译
  * @return core_language
  */
@@ -78,7 +94,7 @@ function storage($storage, $group) {
  * @param string $dbname 数据库配置文件config/database.php中的配置名称
  * @return PDO
  */
-function pdo($dbname='default') {
+function pdo($dbname=null) {
     static $pdo;
     if (empty($dbname))
         $dbname = 'default';
@@ -106,28 +122,34 @@ function view($view=null, $data=null) {
 
 /**
  * 获取memcache对象
- * @param $config memcache配置
+ * @param $server memcache配置
  * @return Memcache
  */
-function memcache($config) {
+function memcache($server=null) {
     static $memcache;
-    if (!isset($memcache[$config])) {
-        $memcache[$config] = new Memcache();
-        $cfg = config('memcache', $config);
+    if (empty($server)) {
+        $server = 'default';
+    }
+    if (!isset($memcache[$server])) {
+        $memcache[$server] = new Memcache();
+
+        $cfg = config('memcache', $server);
         if (empty($cfg)) {
-            throw new Exception(t('memcache config not found:') . "[$config]");
+            throw new Exception(t('memcache config not found:') . "[$server]");
         }
-        if (!$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
-            throw new Exception(t('memcache server fail'));
+        if (!@$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
+            unset($memcache[$server]);
+            app()->log('memcache server not found');
+            return null;
         }
     }
-    return $memcache[$config];
+    return $memcache[$server];
 }
 
 /**
  * 打印输出变量值
  * @param string $str
- * @param mix $filters
+ * @param mixed $filters
  * @return null
  */
 function output($str, $filters=null) {
@@ -147,7 +169,7 @@ function output($str, $filters=null) {
 
 /**
  * 打印调试变量
- * @param mix $obj
+ * @param mixed $obj
  * @return string 
  */
 function trace($obj) {
@@ -158,7 +180,7 @@ function trace($obj) {
 }
 
 /**
- * 显示错误页面
+ * 显示错误页面并退出程序
  * @param $errorMessage
  */
 function error($errorMessage) {
@@ -190,7 +212,7 @@ function gbk($str) {
  * 获取提交的参数值
  * @param string $key 提交参数名称
  * @param bool $filter 是否使用过滤器过滤
- * @return mix
+ * @return mixed
  */
 function param($key, $filter=true) {
     return core_request::param($key, $filter);
@@ -233,7 +255,7 @@ function base_url() {
  * @param string $controller
  * @param string $action
  * @param string $path
- * @param mix $params string or array
+ * @param mixed $params string or array
  * @return string 
  */
 function url($controller='', $action='', $path='', $params='') {
@@ -256,17 +278,17 @@ function html($content, $title=null) {
 }
 
 /**
- *
+ * 反射类
  * @staticvar core_reflect $reflect
- * @param type $name
+ * @param type $className
  * @return core_reflect 
  */
-function reflect($name) {
+function reflect($className) {
     static $reflect;
-    if (!isset($reflect)) {
-        $reflect = new core_reflect($name);
+    if (!isset($reflect[$className])) {
+        $reflect[$className] = new core_reflect($className);
     }
-    return $reflect;
+    return $reflect[$className];
 }
 
 /**
@@ -283,9 +305,9 @@ function redirect($url) {
  * @param type $model config/schema配置文件名称
  * @return orm_mapper 
  */
-function orm($model){
+function orm($model) {
     static $orm;
-    if(!isset($orm[$model])){
+    if (!isset($orm[$model])) {
         $orm[$model] = new orm_mapper($model);
     }
     return $orm[$model];

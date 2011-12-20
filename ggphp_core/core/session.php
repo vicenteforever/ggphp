@@ -41,7 +41,11 @@ class core_session {
     }
 
     function __set($name, $value) {
-        $_SESSION[$name] = $value;
+        if ($value === null) {
+            unset($_SESSION[$name]);
+        } else {
+            $_SESSION[$name] = $value;
+        }
     }
 
 }

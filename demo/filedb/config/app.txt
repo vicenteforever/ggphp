@@ -1,1 +1,0 @@
-a:8:{s:8:"app_name";s:5:"ggphp";s:15:"only_use_router";b:0;s:5:"debug";b:1;s:9:"app_title";s:5:"GGPHP";s:18:"default_controller";s:7:"default";s:14:"default_action";s:5:"index";s:13:"action_prefix";s:2:"do";s:11:"log_storage";s:4:"file";}

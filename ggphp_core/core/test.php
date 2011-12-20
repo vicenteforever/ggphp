@@ -6,14 +6,23 @@
  */
 class core_test {
 
+    /**
+     * test1
+     */
     function test_1() {
-        test()->assertEqual(1, 2, '1 = 2 test');
-    }
-
-    function test_2() {
-        test()->assertEqual(2, 2, '2 = 2 test');
+        test()->assertEqual(1, 1);
     }
     
+    /**
+     * test2
+     */
+    function test_2() {
+        test()->assertEqual(2, 2);
+    }
+    
+    /**
+     * test3
+     */    
     function test_3(){
         test()->assertEqual('0', false, '0 = false');
     }
