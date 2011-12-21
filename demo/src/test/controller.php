@@ -10,8 +10,33 @@ class test_controller {
         phpinfo();
     }
 
+    function test() {
+        $mem = memcache();
+
+        $mem->a = array('a', 'b', 'c');
+        $mem->b = 'bbbbb';
+        $mem->c = 'ccccc';
+        $mem->d = 'ddddd';
+        $mem->e = 'eeeee';
+    }
+
     function doTest() {
-        return html('hello world');
+        app()->log('a');
+        $mem = memcache();
+        app()->log('b');
+        $mem->weewrre = 'sdfsdfsdf';
+        $mem->__set('sdf werwr sdf', 'qqqqqqqq');
+        //$this->test();
+        app()->log('c');
+        echo $mem->a;
+        echo $mem->b;
+        echo $mem->c;
+        echo $mem->d;
+        echo $mem->e;
+        app()->log('d');
+        echo trace($mem->keys());
+        app()->log('e');
+        return html('ok');
     }
 
     function doNosql() {

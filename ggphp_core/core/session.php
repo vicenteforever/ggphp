@@ -12,8 +12,8 @@ class core_session {
     }
 
     /**
-     * return core_session
-     * @return core_app
+     * get session instance
+     * @return core_session
      */
     static function instance() {
         static $instance;

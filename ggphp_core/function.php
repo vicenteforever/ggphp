@@ -123,27 +123,14 @@ function view($view=null, $data=null) {
 /**
  * 获取memcache对象
  * @param $server memcache配置
- * @return Memcache
+ * @return core_memcache
  */
 function memcache($server=null) {
     static $memcache;
-    if (empty($server)) {
-        $server = 'default';
+    if(!isset($memcache)){
+        $memcache = new core_memcache();
     }
-    if (!isset($memcache[$server])) {
-        $memcache[$server] = new Memcache();
-
-        $cfg = config('memcache', $server);
-        if (empty($cfg)) {
-            throw new Exception(t('memcache config not found:') . "[$server]");
-        }
-        if (!@$memcache[$server]->connect($cfg['host'], $cfg['port'])) {
-            unset($memcache[$server]);
-            app()->log('memcache server not found');
-            return null;
-        }
-    }
-    return $memcache[$server];
+    return $memcache;
 }
 
 /**
