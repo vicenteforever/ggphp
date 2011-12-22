@@ -20,10 +20,14 @@ $server4 = array(
 	'port' => 11214,
 );
 
-//分组集群设置
-$config['group1'] = array($server1,$server2);
-$config['group2'] = array($server3, $server4);
+//单个memcache服务器
+$config['group'] = array($server1);
 
-//$config['group'] = array($server1, $server2, $server3, $server4);
+//双组集群设置，具有容错功能
+//$config['group1'] = array($server1,$server2);
+//$config['group2'] = array($server3, $server4);
+
+//单组多个服务器集群，不具有容错功能
+//$config['group'] = array($server1, $server2);
 
 return $config;

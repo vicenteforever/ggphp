@@ -11,7 +11,7 @@ class test_controller {
     }
 
     function test() {
-        $mem = memcache();
+        $mem = memcache('aaa');
 
         $mem->a = array('a', 'b', 'c');
         $mem->b = 'bbbbb';
@@ -22,12 +22,8 @@ class test_controller {
 
     function doTest() {
         app()->log('a');
-        $mem = memcache();
-        app()->log('b');
-        $mem->weewrre = 'sdfsdfsdf';
-        $mem->__set('sdf werwr sdf', 'qqqqqqqq');
-        //$this->test();
-        app()->log('c');
+        $mem = memcache('bbb');
+
         echo $mem->a;
         echo $mem->b;
         echo $mem->c;

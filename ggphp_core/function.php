@@ -122,15 +122,15 @@ function view($view=null, $data=null) {
 
 /**
  * 获取memcache对象
- * @param $server memcache配置
+ * @param $prefix 将memcache对象数据标记为$prefix
  * @return core_memcache
  */
-function memcache($server=null) {
+function memcache($prefix='') {
     static $memcache;
-    if(!isset($memcache)){
-        $memcache = new core_memcache();
+    if(!isset($memcache[$prefix])){
+        $memcache[$prefix] = new core_memcache($prefix);
     }
-    return $memcache;
+    return $memcache[$prefix];
 }
 
 /**
