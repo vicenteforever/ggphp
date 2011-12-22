@@ -38,7 +38,7 @@ abstract class nosql_object {
      * @param array $data
      * @return array 
      */
-    final function data($data=null){
+    function data($data=null){
         if(isset($data)){
             $this->_data = $data;
         }
@@ -51,7 +51,7 @@ abstract class nosql_object {
      * 将数据转存为其他存储数据源，例如将文件数据源另存为memcached数据源
      * @param nosql_object $object 
      */
-    final function saveAs(nosql_object $object){
+    function saveAs(nosql_object $object){
         $object->data($this->_data);
         $object->save();
     }

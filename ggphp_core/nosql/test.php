@@ -62,22 +62,6 @@ class nosql_test {
     }
 
     /**
-     * 测试memcache存储
-     */
-    function test_memcache(){
-        //pass memcache test
-        return;
-        $obj = nosql('memcache', 'test1');
-        $obj->a = 'aaa';
-        $obj->b = 'bbb';
-        $obj->save();
-        
-        $obj2 = new nosql_memcache('test1');
-        test()->assertEqual($obj2->a, 'aaa');
-        test()->assertEqual($obj2->b, 'bbb');
-    }
-
-    /**
      * 测试monogb存储
      */
     function test_monogb(){
