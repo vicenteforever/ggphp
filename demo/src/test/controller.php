@@ -1,7 +1,12 @@
 <?php
-
+/**
+ * 测试页 
+ */
 class test_controller {
 
+    /**
+     * 首页
+     */
     function doIndex() {
         return html('ggphp examples');
     }

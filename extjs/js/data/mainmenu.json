@@ -1,0 +1,30 @@
+[{
+        text:'应用结构',
+        expanded:true,
+        children:[{text:'模块控制器',leaf:true},{text:'视图',leaf:true}]
+    },{
+        text:'应用配置',
+        expanded: true,
+        children:[{
+                text:'应用',
+                id:'app',
+                leaf:true
+            },{
+                text:'数据库',
+                id:'database',
+                leaf:true
+            }]
+    },{
+        text:'权限管理',
+        expanded:true,
+        children:[{
+                text:'角色',
+                id:'role',
+                leaf:true
+            },{
+                text:'权限',
+                id:'perm',
+                leaf:true
+            }]
+    }]
+

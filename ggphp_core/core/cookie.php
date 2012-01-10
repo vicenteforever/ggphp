@@ -6,14 +6,15 @@
  * @author goodzsq@gmail.com
  */
 class cookie {
-    
+
     function __get($name) {
         ;
     }
-    
+
     function __set($name, $value) {
         ;
     }
+
 }
 
 ?>

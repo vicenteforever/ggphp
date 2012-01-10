@@ -76,10 +76,10 @@ class core_memcache {
      * @param string $name
      * @return string 
      */
-    private function prefixKey($name){
+    private function prefixKey($name) {
         return "{$this->_prefix}_{$name}";
     }
-    
+
     /**
      * 读取key的值
      * @param string $name
@@ -146,13 +146,13 @@ class core_memcache {
     /**
      * 删除$prefix相关的所有数据
      */
-    public function deleteAll(){
+    public function deleteAll() {
         $keys = $this->keys();
-        foreach($keys as $key=>$v){
+        foreach ($keys as $key => $v) {
             $this->delete($key);
         }
     }
-    
+
     /**
      * 取得memcache的所有key，仅维护使用core_memcache对象使用过的key，不包括服务器的所有key
      * @return array

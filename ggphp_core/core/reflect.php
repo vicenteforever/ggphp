@@ -31,8 +31,10 @@ class core_reflect {
         } else {
             $doc = $this->_reflect->getMethod($method)->getDocComment();
         }
-        $doc = trim(preg_replace("/(^\s*\/\*\*?)|(^\s*\*\/)|(^\s*\*)/m", '', $doc));
-        return $doc;
+
+        $doc = trim(preg_replace("/(^\s*\/\*\*?)|(^\s*\*\/)|(^\s*\*)|(^.*@.*$)/m", '', $doc));
+        $lines = explode("\n", $doc);
+        return $lines[0];
     }
 
 }

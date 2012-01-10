@@ -52,7 +52,7 @@ function t($str, $language=null) {
  * return string|array
  */
 function config($file, $key='') {
-    return config_loader::load($file, $key);
+    return core_config::load($file, $key);
 }
 
 /**
@@ -256,12 +256,7 @@ function url($controller='', $action='', $path='', $params='') {
  * @return type 
  */
 function html($content, $title=null) {
-    if (!isset($title)) {
-        $controller = app()->getController() . '_controller';
-        $action = config('app', 'action_prefix') . ucfirst(app()->getAction());
-        $title = reflect($controller)->doc($action);
-    }
-    return view('html', array('content' => $content, 'title' => $title));
+    return core_response::html($title, $content);
 }
 
 /**
@@ -298,4 +293,39 @@ function orm($model) {
         $orm[$model] = new orm_mapper($model);
     }
     return $orm[$model];
+}
+
+/**
+ * 生成aop动态代理对象
+ * @param string $className
+ * @return \abc 
+ */
+function aop($className) {
+    static $proxy;
+    if (!isset($proxy[$className])) {
+        $proxy[$className] = new core_aop($className);
+    }
+    return $proxy[$className];
+}
+
+/**
+ * 获取aop增强对象
+ * @staticvar className $advice
+ * @param type $className
+ * @return advice_interface 
+ */
+function advice($className){
+    $className = "advice_{$className}";
+    static $advice;
+    if(!isset($advice[$className])){
+        $object = new $className;
+        if($object instanceof advice_interface){
+            $advice[$className] = $object;
+        }
+        else{
+            $advice[$className] = null;
+            throw new Exception('advice_interface not implement');
+        }
+    }
+    return $advice[$className];
 }

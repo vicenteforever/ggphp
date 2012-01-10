@@ -13,5 +13,5 @@ return array(
     'input_filters' => array('xss'), //用户输入过滤器，过滤掉非法输入字符
     'hook_app_start' => array(''),
     'hook_controller_start' => array('rbac'),
-    'hook_controller_end' => array('report'),
+    'hook_controller_end' => array(''),
 );
