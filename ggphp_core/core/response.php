@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 设置向浏览器的输出格式
+ * 浏览器的输出
  * @package core
  */
 class core_response {
@@ -39,6 +39,8 @@ class core_response {
 
     static function download($filename, $content) {
         return view('download', array('filename' => $filename, 'content' => $content));
+        header("Content-Disposition: attachment; filename=$filename");
+        return $content;
     }
 
     static function error($errorMessage) {
@@ -46,7 +48,7 @@ class core_response {
     }
 
     static function json($data) {
-        return view('json', $data);
+        return json_encode($data);
     }
 
     static function jsonp($data, $callback) {
@@ -54,23 +56,24 @@ class core_response {
     }
 
     static function redirect($url) {
-        return view('redirect', array('url' => $url));
+        header("Location: {$url}");
+        exit;
     }
 
     static function rss($data) {
-        return view('rss', $data);
+        header("Content-type: text/xml");
+        $buffer = '<?xml version="1.0" encoding="UTF-8"?>';
+        $buffer .= '<rss version="2.0">';
+        $buffer .= $data;
+        $buffer .= '</rss>';
+        return $buffer;
     }
 
     static function xml($data) {
-        return view('xml', $data);
-    }
-
-    static function mail($address, $title, $content) {
-        return view('mail', array(
-                    'address' => $address,
-                    'title' => $title,
-                    'content' => $content,
-                ));
+        header("Content-type: text/xml");
+        $buffer = '<?xml version="1.0" encoding="UTF-8"?>';
+        $buffer .= $data;
+        return $buffer;
     }
 
     static function gzip($data, $contenttype) {
@@ -79,7 +82,7 @@ class core_response {
             header("Content-Encoding: gzip");
             header("Vary: Accept-Encoding");
             header("Content-Length: " . strlen($data['content']));
-            echo $data['content'];
+            return $data;
         }
     }
 

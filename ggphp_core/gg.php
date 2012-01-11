@@ -1,12 +1,38 @@
 <?php
 
 /*
+ * ggphp env setting
  * @author goodzsq@gmail.com
  */
 //定义环境变量
 define("__VERSION__", "0.0.1");
 define("GG_DIR", dirname(__FILE__));
 define("DS", DIRECTORY_SEPARATOR);
+
+//自动加载类
+class GGLoader {
+    public static function load($className) {
+        if (!preg_match("/^[_0-9a-zA-Z]+$/", $className)) {
+            app()->log('invalid autoload:' . $className);
+            return;
+        }
+        $basepath = str_replace('_', DS, $className);
+        $path = APP_DIR . DS . 'src' . DS . $basepath . ".php";
+        if (file_exists($path)) {
+            include($path);
+        } else {
+            $path = GG_DIR . DS . $basepath . ".php";
+            if (file_exists($path)) {
+                include($path);
+            } else {
+                app()->log('class not exists:' . $className);
+                return;
+            }
+        }
+    }
+}
+spl_autoload_register( "GGLoader::load" );
+
 //加载常用函数
 require(GG_DIR . '/function.php');
 if (file_exists(APP_DIR . '/function.php')) {
@@ -27,27 +53,6 @@ if (version_compare(PHP_VERSION, "5.3.0") < 0) {
     set_magic_quotes_runtime(0);
 } else {
     ini_set("magic_quotes_runtime", 0);
-}
-
-function __autoload($className) {
-    if (!preg_match("/^[_0-9a-zA-Z]+$/", $className)) {
-        app()->log('invalid autoload:' . $className);
-        return;
-    }
-
-    $basepath = str_replace('_', DS, $className);
-    $path = APP_DIR . DS . 'src' . DS . $basepath . ".php";
-    if (file_exists($path)) {
-        include($path);
-    } else {
-        $path = GG_DIR . DS . $basepath . ".php";
-        if (file_exists($path)) {
-            include($path);
-        } else {
-            app()->log('class not exists:' . $className);
-            return;
-        }
-    }
 }
 
 //set_error_handler("handleError", E_ALL);
