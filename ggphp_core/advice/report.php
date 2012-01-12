@@ -1,11 +1,11 @@
 <?php
 
 /**
- * hook report
- * @package hook
+ * 程序运行报告
+ * @package advice
  * @author goodzsq@gmail.com
  */
-class advice_report implements advice_interface {
+class advice_report extends advice_base {
 
     public function after($name, $args, $return) {
         $report = '<hr/>';
@@ -22,18 +22,9 @@ class advice_report implements advice_interface {
             $total = sprintf("%.4f", $time - $log[0]['time']);
             $report .= "程序运行时间:$total ms, memory:" . util_string::size_hum_read(memory_get_usage()) . " <br>";
             $report .= "<a href='" . base_url() . "unittest'>运行单元测试</a>";
+            $report .= "url rewrite:".core_request::isRewrite();
         }
         return $return . $report;
     }
 
-    public function before($name, $args) {
-        
-    }
-
-    public function except($name, $args, $except) {
-        
-    }
-
 }
-
-?>

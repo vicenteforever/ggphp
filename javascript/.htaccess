@@ -1,8 +1,6 @@
-#Apache rewrite configuration
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^/?$ index.php?GG_REWRITE=1 [QSA,PT,L]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1?GG_REWRITE=1 [QSA,PT,L]
+#RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1
 </IfModule>

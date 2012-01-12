@@ -1,5 +1,7 @@
 <?php
+
 /**
+ * 实现切面增强的接口
  * @package advice 
  */
 interface advice_interface {

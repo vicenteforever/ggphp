@@ -208,10 +208,12 @@ class core_request {
      * @return type 
      */
     static function isRewrite() {
-        if (isset($_REQUEST['GG_REWRITE']))
+        if($_SERVER['REDIRECT_STATUS']==200){
             return true;
-        else
+        }
+        else{
             return false;
+        }
     }
 
     /**
