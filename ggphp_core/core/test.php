@@ -1,7 +1,7 @@
 <?php
 
 /**
- * core_test
+ * 内核测试文档
  * @package core
  * @author Administrator
  */

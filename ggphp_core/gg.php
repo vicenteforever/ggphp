@@ -35,8 +35,8 @@ spl_autoload_register( "GGLoader::load" );
 
 //加载常用函数
 require(GG_DIR . '/function.php');
-if (file_exists(APP_DIR . '/function.php')) {
-    require(APP_DIR . '/function.php');
+if (file_exists(APP_DIR . '/src/function.php')) {
+    require(APP_DIR . '/src/function.php');
 }
 //设置系统时区
 date_default_timezone_set(config('app', 'timezone'));

@@ -11,7 +11,7 @@ class default_controller {
      * 首页
      */
     function doIndex(){
-        return html('exit');
+        return html(block('menu', 'main'));
     }
 }
 
