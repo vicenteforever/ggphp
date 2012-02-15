@@ -30,15 +30,14 @@ class core_app {
      */
     function start() {
         $this->log('application start');
-        if (!$this->parseFromConfig()) {
-            if (config('app', 'only_use_router')) {
+        if (core_request::isRewrite()) {
+            $url = $this->rewriteUrl();
+            if (config('app', 'only_use_router') && empty($url)) {
                 error('the router not allow:' . path());
             }
-            if (core_request::isRewrite()) {
-                $this->parseFromPath();
-            } else {
-                $this->parseFromParam();
-            }
+            $this->parseFromPath();
+        } else {
+            $this->parseFromParam();
         }
         $this->exec($this->_controller, $this->_action);
         $this->log('application end');
@@ -56,32 +55,9 @@ class core_app {
             throw new Exception('invalid action:' . $action);
 
         $controllerName = $controller . '_controller';
-        $actionName = config('app', 'action_prefix') . $action;
+        $actionName = config('app', 'action_prefix') . '_' . $action;
         $classObject = aop($controllerName);
         echo $classObject->$actionName();
-    }
-
-    /**
-     * 从config/router.php路由配置中解析控制器和方法
-     * @return bool 是否存在匹配的路由 
-     */
-    private function parseFromConfig() {
-        $path = path();
-        $config = config('router');
-        foreach ($config as $k => $v) {
-            if (preg_match($k, $path, $match)) {
-                $this->_controller = $v['controller'];
-                $this->_action = $v['action'];
-                array_shift($match);
-                if (empty($this->_action)) {
-                    $this->_action = array_shift($match);
-                }
-
-                $_REQUEST['arg'] = $match;
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -105,7 +81,7 @@ class core_app {
         $args = explode('/', $path);
         $defaultAction = config('app', 'default_action');
         $defaultController = config('app', 'default_controller');
-        $prefix = config('app', 'action_prefix');
+        $action_prefix = config('app', 'action_prefix');
         //控制器和方法均为空 均设为默认值
         if (empty($args[0])) {
             $args = array($defaultController, $defaultAction);
@@ -114,7 +90,7 @@ class core_app {
         else if (class_exists("{$args[0]}_controller")) {
             if (empty($args[1])) {
                 $args[1] = $defaultAction;
-            } elseif (!method_exists($args[0] . '_controller', $prefix . $args[1])) {
+            } elseif (!method_exists($args[0] . '_controller', $action_prefix . '_' . $args[1])) {
                 array_splice($args, 1, 0, $defaultAction);
             }
         }
@@ -123,7 +99,7 @@ class core_app {
             array_unshift($args, $defaultController);
             if (empty($args[1])) {
                 $args[1] = $defaultAction;
-            } elseif (!method_exists($args[0] . '_controller', $prefix . $args[1])) {
+            } elseif (!method_exists($args[0] . '_controller', $action_prefix . '_' . $args[1])) {
                 array_splice($args, 1, 0, $defaultAction);
             }
         }
@@ -153,13 +129,25 @@ class core_app {
      * 记录系统日志
      * @param string $message
      */
-    function log($message=null) {
+    function log($message = null) {
         static $log = array();
         if (isset($message)) {
             $log[] = array('time' => microtime(true), 'message' => $message);
         } else {
             return $log;
         }
+    }
+
+    private function rewriteUrl() {
+        $path = core_request::path();
+        $config = config('router');
+        foreach ($config as $k => $v) {
+            if (preg_match($k, $path, $match)) {
+                $_SERVER['PATH_INFO'] = str_replace($match[0], $v, $path);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

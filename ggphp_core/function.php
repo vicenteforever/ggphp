@@ -43,7 +43,7 @@ function nosql($adapter, $source) {
  * 翻译
  * @return core_language
  */
-function t($str, $language=null) {
+function t($str, $language = null) {
     return core_language::translate($str, $language);
 }
 
@@ -51,7 +51,7 @@ function t($str, $language=null) {
  * 读取配置
  * return string|array
  */
-function config($file, $key='') {
+function config($file, $key = '') {
     return core_config::load($file, $key);
 }
 
@@ -94,7 +94,7 @@ function storage($storage, $group) {
  * @param string $dbname 数据库配置文件config/database.php中的配置名称
  * @return PDO
  */
-function pdo($dbname=null) {
+function pdo($dbname = null) {
     static $pdo;
     if (empty($dbname))
         $dbname = 'default';
@@ -116,8 +116,8 @@ function pdo($dbname=null) {
  * 加载视图
  * @return string
  */
-function view($view=null, $data=null) {
-    return core_view::php($view, $data);
+function view($data = null, $view = null) {
+    return core_view::php($data, $view);
 }
 
 /**
@@ -125,9 +125,9 @@ function view($view=null, $data=null) {
  * @param $prefix 将memcache对象数据标记为$prefix
  * @return core_memcache
  */
-function memcache($prefix='') {
+function memcache($prefix = '') {
     static $memcache;
-    if(!isset($memcache[$prefix])){
+    if (!isset($memcache[$prefix])) {
         $memcache[$prefix] = new core_memcache($prefix);
     }
     return $memcache[$prefix];
@@ -139,7 +139,7 @@ function memcache($prefix='') {
  * @param mixed $filters
  * @return null
  */
-function output($str, $filters=null) {
+function output($str, $filters = null) {
     if (empty($filters)) {
         return $str;
     } else {
@@ -171,8 +171,7 @@ function trace($obj) {
  * @param $errorMessage
  */
 function error($errorMessage) {
-    echo view('error', array('errorMessage' => $errorMessage));
-    exit;
+    return core_response::error($errorMessage);
 }
 
 /**
@@ -201,7 +200,7 @@ function gbk($str) {
  * @param bool $filter 是否使用过滤器过滤
  * @return mixed
  */
-function param($key, $filter=true) {
+function param($key, $filter = true) {
     return core_request::param($key, $filter);
 }
 
@@ -245,7 +244,7 @@ function base_url() {
  * @param mixed $params string or array
  * @return string 
  */
-function url($controller='', $action='', $path='', $params='') {
+function url($controller = '', $action = '', $path = '', $params = '') {
     return core_request::makeUrl($controller, $action, $path, $params);
 }
 
@@ -255,7 +254,7 @@ function url($controller='', $action='', $path='', $params='') {
  * @param type $title
  * @return type 
  */
-function html($content, $title=null) {
+function html($content, $title = null) {
     return core_response::html($title, $content);
 }
 
@@ -314,18 +313,38 @@ function aop($className) {
  * @param type $className
  * @return advice_interface 
  */
-function advice($className){
+function advice($className) {
     $className = "advice_{$className}";
     static $advice;
-    if(!isset($advice[$className])){
+    if (!isset($advice[$className])) {
         $object = new $className;
-        if($object instanceof advice_interface){
+        if ($object instanceof advice_interface) {
             $advice[$className] = $object;
-        }
-        else{
+        } else {
             $advice[$className] = null;
             throw new Exception('advice_interface not implement');
         }
     }
     return $advice[$className];
+}
+
+/**
+ * 获取mysql对象
+ * @staticvar database_mysql_adapter $mysql
+ * @param string $configName
+ * @return database_mysql_adapter 
+ */
+function mydb($configName='default') {
+    static $mysql;
+    if (!isset($mysql[$configName])) {
+        $data = config('mysql', $configName);
+        $mysql[$configName] = new database_mysql_adapter(
+                        $data['server'],
+                        $data['username'],
+                        $data['password'],
+                        $data['dbname'],
+                        $data['charset']
+        );
+    }
+    return $mysql;
 }

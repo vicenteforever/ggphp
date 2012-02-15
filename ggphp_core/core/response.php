@@ -27,24 +27,21 @@ class core_response {
     static function html($title, $content) {
         if (!isset($title)) {
             $controller = app()->getController() . '_controller';
-            $action = config('app', 'action_prefix') . ucfirst(app()->getAction());
-            $title = reflect($controller)->doc();
-            $subtitle = reflect($controller)->doc($action);
-            if (!empty($subtitle)) {
-                $title .= " - {$subtitle}";
-            }
+            $action = config('app', 'action_prefix') . '_' . app()->getAction();
+            //$title = reflect($controller)->doc();
+            $title = reflect($controller)->doc($action);
         }
-        return view('html', array('title' => $title, 'content' => $content));
+        return view(array('title' => $title, 'content' => $content), 'html');
     }
 
     static function download($filename, $content) {
-        return view('download', array('filename' => $filename, 'content' => $content));
         header("Content-Disposition: attachment; filename=$filename");
         return $content;
     }
 
     static function error($errorMessage) {
-        return view('error', array('errorMessage' => $errorMessage));
+        echo view(array('errorMessage' => $errorMessage),'error');
+        exit;
     }
 
     static function json($data) {
@@ -52,7 +49,7 @@ class core_response {
     }
 
     static function jsonp($data, $callback) {
-        return $callback . '(' . view('json', $data) . ')';
+        return $callback . '(' . json_encode($data) . ')';
     }
 
     static function redirect($url) {

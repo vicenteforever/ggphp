@@ -2,12 +2,8 @@
 
 class default_controller {
 
-	function doIndex() {
+	function do_index() {
 		return html('default 默认控制器行为');
-	}
-
-	function doDoc() {
-		return html(view('document'));
 	}
 
 }

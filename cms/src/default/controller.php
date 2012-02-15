@@ -10,8 +10,12 @@ class default_controller {
     /**
      * 首页
      */
-    function doIndex(){
+    function do_index(){
         return html(block('menu', 'main'));
+    }
+    
+    function do_test(){
+        return html('test');
     }
 }
 

@@ -163,11 +163,7 @@ class core_request {
      * @return string 
      */
     static function path() {
-        static $path;
-        if (!isset($path)) {
-            $path = trim(self::server("PATH_INFO"), '/');
-        }
-        return $path;
+        return trim(self::server("PATH_INFO"), '/');
     }
 
     /**

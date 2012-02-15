@@ -12,7 +12,7 @@ class core_view {
      * @param type $data 模版数据
      * @return string 
      */
-    function php($view=null, $data=null) {
+    function php($data=null,$view=null) {
         if (empty($view)) {
             $view = app()->getAction();
         }
