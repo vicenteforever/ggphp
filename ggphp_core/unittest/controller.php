@@ -6,7 +6,7 @@
  */
 class unittest_controller {
 
-    function index() {
+    function do_index() {
         if (config('app', 'debug')) {
             $modules = core_module::all();
             foreach ($modules as $module => $path) {

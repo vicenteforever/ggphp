@@ -2,7 +2,7 @@
 
 class test_sub_controller{
 
-	function index(){
+	function do_index(){
 		return html('test sub controller');
 	}
 

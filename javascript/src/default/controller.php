@@ -2,11 +2,11 @@
 
 class default_controller{
 
-	function index(){
+	function do_index(){
 		echo 'default controller';
 	}
 
-	function compress(){
+	function do_compress(){
 		$url = param('url');
 		$newname = param('newname');
 		if(empty($url)) error('url not assign');

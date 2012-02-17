@@ -2,7 +2,7 @@
 
 class default_controller {
 
-	function index() {
+	function do_index() {
 		return html('default 默认控制器行为');
 	}
 

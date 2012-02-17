@@ -2,11 +2,11 @@
 
 class field_controller{
 
-	function index(){
+	function do_index(){
 		return html('字段管理');
 	}
 
-	function admin(){
+	function do_admin(){
 		$result = array();
 		$fields = field_helper::fields();
 		foreach($fields as $field=>$path){

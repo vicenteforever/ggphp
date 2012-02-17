@@ -2,11 +2,11 @@
 
 class orm_controller{
 
-	function index(){
+	function do_index(){
 		return html('ORM data mapper');
 	}
 
-	function test(){
+	function do_test(){
 		$mapper = new orm_mapper('user');
 		$t = $mapper->all();
 		$buf = '';

@@ -2,7 +2,7 @@
 
 class util_controller {
 
-	function index() {
+	function do_index() {
 		return html('util 常用函数集合模块');
 	}
 

@@ -27,7 +27,7 @@ class core_response {
     static function html($title, $content) {
         if (!isset($title)) {
             $controller = app()->getController() . '_controller';
-            $action = app()->getAction();
+            $action = config('app', 'action_prefix') . '_' . app()->getAction();
             //$title = reflect($controller)->doc();
             $title = reflect($controller)->doc($action);
         }

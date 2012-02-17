@@ -2,7 +2,7 @@
 
 class default_controller{
 
-	function index(){
+	function do_index(){
 		redirect(base_url().'index.html');
 	}
 

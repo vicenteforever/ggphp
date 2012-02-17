@@ -10,7 +10,7 @@ class controller {
     /**
      * 首页 
      */
-    function index(){
+    function do_index(){
         
     }
 }

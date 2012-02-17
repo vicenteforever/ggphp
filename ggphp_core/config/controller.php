@@ -2,7 +2,7 @@
 
 class config_controller{
 
-	function index(){
+	function do_index(){
 		return html('config 应用配置');
 	}
 

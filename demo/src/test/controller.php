@@ -7,19 +7,19 @@ class test_controller {
     /**
      * 首页
      */
-    function index() {
+    function do_index() {
         return html('ggphp examples');
     }
 
-    function phpinfo() {
+    function do_phpinfo() {
         phpinfo();
     }
 
-    function test() {
+    function do_test() {
 
     }
 
-    function nosql() {
+    function do_nosql() {
         $test = array('a' => 'aaa', 'b' => array('bbb', 'ccc'));
         $a = nosql('session', 'test1');
         //$a->test = $test;
@@ -40,32 +40,32 @@ class test_controller {
         return html(trace($trace));
     }
 
-    function doc() {
+    function do_doc() {
         $doc = reflect('core_app')->doc('start');
         return html("[$doc]");
     }
 
-    function filter() {
+    function do_filter() {
         $str = 'h1. hello <a href=javascript:alert(123)>world</a>';
         return html(output($str, array('xss', 'textile')));
     }
 
-    function config() {
+    function do_config() {
         $appname = 'read from config file <br> app_name is:' . config('app', 'app_name');
         return html($appname, 'read config file test');
     }
 
-    function translate() {
+    function do_translate() {
         return html(t('hello world'), 'translate test');
     }
 
-    function smarty() {
+    function do_smarty() {
         $smarty = core_view::smarty();
         $smarty->assign('name', 'hello world');
         $smarty->display('index.tpl');
     }
 
-    function textile() {
+    function do_textile() {
         $in = <<<EOF
 h2. textile filter sample
     
@@ -75,7 +75,7 @@ EOF;
         return html(util_filter::textile($in));
     }
 
-    function markdown() {
+    function do_markdown() {
         $str = <<<EOF
 # this is h1
 ## this is h2
