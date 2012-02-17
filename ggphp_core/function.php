@@ -295,40 +295,6 @@ function orm($model) {
 }
 
 /**
- * 生成aop动态代理对象
- * @param string $className
- * @return \abc 
- */
-function aop($className) {
-    static $proxy;
-    if (!isset($proxy[$className])) {
-        $proxy[$className] = new core_aop($className);
-    }
-    return $proxy[$className];
-}
-
-/**
- * 获取aop增强对象
- * @staticvar className $advice
- * @param type $className
- * @return advice_interface 
- */
-function advice($className) {
-    $className = "advice_{$className}";
-    static $advice;
-    if (!isset($advice[$className])) {
-        $object = new $className;
-        if ($object instanceof advice_interface) {
-            $advice[$className] = $object;
-        } else {
-            $advice[$className] = null;
-            throw new Exception('advice_interface not implement');
-        }
-    }
-    return $advice[$className];
-}
-
-/**
  * 获取mysql对象
  * @staticvar database_mysql_adapter $mysql
  * @param string $configName
@@ -338,13 +304,14 @@ function mydb($configName='default') {
     static $mysql;
     if (!isset($mysql[$configName])) {
         $data = config('mysql', $configName);
-        $mysql[$configName] = new database_mysql_adapter(
+        $target = new database_mysql_adapter(
                         $data['server'],
                         $data['username'],
                         $data['password'],
                         $data['dbname'],
                         $data['charset']
         );
+        $mysql[$configName] = new core_aop($target);
     }
-    return $mysql;
+    return $mysql[$configName];
 }

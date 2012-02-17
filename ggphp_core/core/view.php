@@ -14,14 +14,14 @@ class core_view {
      */
     function php($data=null,$view=null) {
         if (empty($view)) {
-            $view = app()->getAction();
+            $view = app()->getActionName();
         }
 
         if (!preg_match("/^[_0-9a-zA-Z]+$/", $view))
             throw new Exception('invalid view' . $view);
 
         ob_start();
-        $modulePath = core_module::path(app()->getController());
+        $modulePath = core_module::path(app()->getControllerName());
         $path = str_replace('/', DS, "{$modulePath}/template/{$view}.php");
         if (!file_exists($path)) {
             $path = APP_DIR . str_replace('/', DS, "/src/template/{$view}.php");
@@ -44,7 +44,7 @@ class core_view {
      * @return Smarty 
      */
     function smarty() {
-        $modulePath = core_module::path(app()->getController());
+        $modulePath = core_module::path(app()->getControllerName());
         $path = str_replace('/', DS, "{$modulePath}/template/");
         require_once(GG_DIR . '/lib/Smarty-3.1.6/libs/Smarty.class.php');
         $smarty = new Smarty();

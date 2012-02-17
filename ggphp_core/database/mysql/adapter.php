@@ -30,7 +30,7 @@ class database_mysql_adapter {
      * @param string $sql
      * @return resource 
      */
-    function query($sql){
+    function sql($sql){
         $sql = mysql_escape_string($sql);
         $rs = mysql_query($sql, $this->_dbh);
         if($rs === false){
@@ -44,8 +44,8 @@ class database_mysql_adapter {
      * @param string $sql
      * @return integer 
      */
-    function exec($sql){
-        $this->query($sql);
+    function sqlExec($sql){
+        $this->sql($sql);
         return mysql_affected_rows();
     }
 
@@ -54,9 +54,9 @@ class database_mysql_adapter {
      * @param string $sql
      * @return database_mysql_result 
      */
-    function result($sql) {
+    function sqlQuery($sql) {
         $sql = mysql_escape_string($sql);
-        $rs = $this->execSql($sql);
+        $rs = $this->sql($sql);
         return new database_mysql_result($rs);
     }
 
@@ -66,10 +66,10 @@ class database_mysql_adapter {
      * @param string $sql
      * @return database_mysql_result 
      */
-    function cacheResult($sql) {
+    function sqlQueryCache($sql) {
         static $result;
         if (!isset($result[$sql])) {
-            $result[$sql] = $this->result($sql);
+            $result[$sql] = $this->sqlQuery($sql);
         }
         return $result[$sql];
     }

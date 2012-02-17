@@ -5,7 +5,7 @@
  * @package advice
  * @author goodzsq@gmail.com
  */
-class advice_report extends advice_base {
+class core_advice_report extends advice_base {
 
     public function after($name, $args, $return) {
         $report = '<hr/>';

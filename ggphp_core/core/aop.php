@@ -6,55 +6,75 @@
  */
 class core_aop {
 
-    private $_className;
+    /**
+     * 目标对象
+     * @var ClassObject 
+     */
     private $_target;
-    private $_advisorConfig = array();
+    private $_targetClass;
 
-    function __construct($className) {
-        $this->_className = $className;
-        $this->_target = new $className;
-        $advice = config('advice', $className);
-        if (!is_array($advice)) {
-            $advice = config('advice', '*');
+    /**
+     * AOP代理对象
+     * @param type $target 代理目标对象
+     */
+    function __construct($target) {
+        $this->_target = $target;
+        $this->_targetClass = get_class($target);
+    }
+
+    static function getAdvisor($caller) {
+        static $advisor = array();
+        if (!isset($advisor[$caller])) {
+            $config = config('advice');
+            $result = array();
+            foreach ($config as $pattern => $value) {
+                if (preg_match($pattern, $caller)) {
+                    $result = array_merge($result, $value['allow']);
+                    $result = array_diff($result, $value['forbidden']);
+                }
+            }
+            $advisor[$caller] = array_unique($result);
         }
-        if (!is_array($advice)) {
-            $advice = array();
+        return $advisor[$caller];
+    }
+
+    static function getAdvice($name) {
+        static $advice;
+        $className = str_replace('::', '_advice_', $name);
+        if (!isset($advice[$className])) {
+            if (class_exists($className)) {
+                $advice[$className] = new $className;
+            } else {
+                $advice[$className] = new advice_base;
+            }
         }
-        $this->_advisorConfig = $advice;
+        return $advice[$className];
     }
 
     function __call($methodName, $args) {
-        $reflect = new ReflectionClass($this->_target);
-        $dispatcher = $reflect->getMethod($methodName);
-        if ($dispatcher->isPublic() && !$dispatcher->isAbstract()) {
-            //获取增强列表
-            $advisor = @$this->_advisorConfig[$methodName];
-            if (!is_array($advisor)) {
-                $advisor = $this->_advisorConfig['*'];
-            }
-            if (!is_array($advisor)) {
-                $advisor = array();
-            }
-
+        if (method_exists($this->_target, $methodName)) {
+            $caller = "{$this->_targetClass}::{$methodName}";
+            //获取增强对象列表
+            $advisor = self::getAdvisor($caller);
             //业务方法调用之前增强
-            $caller = "{$this->_className}::{$methodName}";
             foreach ($advisor as $advice) {
-                advice($advice)->before($caller, $args);
+                self::getAdvice($advice)->before($caller, $args);
             }
 
             //执行真正的业务方法
             try {
-                $result = $dispatcher->invoke($this->_target, $args);
-            } catch (Exception $exc) {
+                $result = call_user_func_array(array($this->_target, $methodName), $args);
+            } catch (Exception $except) {
                 //发生异常时增强
+                $result = null;
                 foreach ($advisor as $advice) {
-                    advice($advice)->except($caller, $args, $except);
+                    self::getAdvice($advice)->except($caller, $args, $except);
                 }
             }
 
             //业务方法调用之后增强
             foreach ($advisor as $advice) {
-                $result = advice($advice)->after($caller, $args, $result);
+                $result = self::getAdvice($advice)->after($caller, $args, $result);
             }
 
             //返回业务方法返回值
@@ -65,4 +85,3 @@ class core_aop {
     }
 
 }
-

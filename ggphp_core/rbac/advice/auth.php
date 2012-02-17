@@ -5,7 +5,7 @@
  * @package advice
  * @author goodzsq@gmail.com
  */
-class advice_auth extends advice_base {
+class rbac_advice_auth extends advice_base {
 
     public function before($name, $args) {
         $perm = strtolower($name);

@@ -6,8 +6,8 @@
  */
 class core_app {
 
-    private $_controller;
-    private $_action;
+    private $_controllerName;
+    private $_actionName;
 
     private function __construct() {
         //设为私有方法禁止构造新实例
@@ -39,37 +39,38 @@ class core_app {
         } else {
             $this->parseFromParam();
         }
-        $this->exec($this->_controller, $this->_action);
+        $this->exec($this->_controllerName, $this->_actionName);
         $this->log('application end');
     }
 
     /**
      * 执行控制器方法
-     * @param type $controller
-     * @param type $action 
+     * @param string $controllerName
+     * @param string $actionName 
      */
-    public function exec($controller, $action) {
-        if (!preg_match("/^[_0-9a-zA-Z]+$/", $controller))
-            throw new Exception('invalid controller:' . $controller);
-        if (!preg_match("/^[_0-9a-zA-Z]+$/", $action))
-            throw new Exception('invalid action:' . $action);
+    public function exec($controllerName, $actionName) {
+        if (!preg_match("/^[_0-9a-zA-Z]+$/", $controllerName))
+            throw new Exception('invalid controller:' . $controllerName);
+        if (!preg_match("/^[_0-9a-zA-Z]+$/", $actionName))
+            throw new Exception('invalid action:' . $actionName);
 
-        $controllerName = $controller . '_controller';
-        $actionName = config('app', 'action_prefix') . '_' . $action;
-        $classObject = aop($controllerName);
-        echo $classObject->$actionName();
+        $controllerName = $controllerName . '_controller';
+        $actionName = config('app', 'action_prefix') . '_' . $actionName;
+        $controller = new $controllerName;
+        $proxy = new core_aop($controller);
+        echo $proxy->$actionName();
     }
 
     /**
      * 解析从url中的GET方法传递过来的控制器和方法
      */
     private function parseFromParam() {
-        $this->_controller = param('controller');
-        if (empty($this->_controller))
-            $this->_controller = config('app', 'default_controller');
-        $this->_action = param('action');
-        if (empty($this->_action))
-            $this->_action = config('app', 'default_action');
+        $this->_controllerName = param('controller');
+        if (empty($this->_controllerName))
+            $this->_controllerName = config('app', 'default_controller');
+        $this->_actionName = param('action');
+        if (empty($this->_actionName))
+            $this->_actionName = config('app', 'default_action');
     }
 
     /**
@@ -104,8 +105,8 @@ class core_app {
             }
         }
 
-        $this->_controller = $args[0];
-        $this->_action = $args[1];
+        $this->_controllerName = $args[0];
+        $this->_actionName = $args[1];
         $_REQUEST['arg'] = array_slice($args, 2);
     }
 
@@ -113,16 +114,16 @@ class core_app {
      * 获取控制器名称
      * @return string 
      */
-    function getController() {
-        return $this->_controller;
+    function getControllerName() {
+        return $this->_controllerName;
     }
 
     /**
      * 获取控制器方法
      * @return string 
      */
-    function getAction() {
-        return $this->_action;
+    function getActionName() {
+        return $this->_actionName;
     }
 
     /**

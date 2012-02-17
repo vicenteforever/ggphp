@@ -4,7 +4,7 @@
  * 系统日志
  * @package advice
  */
-class advice_log extends advice_base {
+class core_advice_log extends advice_base {
 
     public function after($name, $args, $return) {
         app()->log("$name end");
@@ -16,7 +16,8 @@ class advice_log extends advice_base {
     }
 
     public function except($name, $args, $except) {
-        app()->log("$name except: " . $except->getMessage());
+
+        app()->log("$name exception: " . $except->getMessage());
     }
 
 }
