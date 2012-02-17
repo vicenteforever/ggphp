@@ -10,7 +10,7 @@ class article_controller {
      * 主页
      * @return string 
      */
-    function do_index(){
+    function index(){
         return html(path());
     }
     
@@ -18,7 +18,7 @@ class article_controller {
      * 新闻
      * @return type 
      */
-    function do_news(){
+    function news(){
         mydb();
         return html('news');
     }

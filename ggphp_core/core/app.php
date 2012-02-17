@@ -55,7 +55,7 @@ class core_app {
             throw new Exception('invalid action:' . $action);
 
         $controllerName = $controller . '_controller';
-        $actionName = config('app', 'action_prefix') . '_' . $action;
+        $actionName = $action;
         $classObject = aop($controllerName);
         echo $classObject->$actionName();
     }
@@ -81,7 +81,6 @@ class core_app {
         $args = explode('/', $path);
         $defaultAction = config('app', 'default_action');
         $defaultController = config('app', 'default_controller');
-        $action_prefix = config('app', 'action_prefix');
         //控制器和方法均为空 均设为默认值
         if (empty($args[0])) {
             $args = array($defaultController, $defaultAction);
@@ -90,7 +89,7 @@ class core_app {
         else if (class_exists("{$args[0]}_controller")) {
             if (empty($args[1])) {
                 $args[1] = $defaultAction;
-            } elseif (!method_exists($args[0] . '_controller', $action_prefix . '_' . $args[1])) {
+            } elseif (!method_exists($args[0] . '_controller', $args[1])) {
                 array_splice($args, 1, 0, $defaultAction);
             }
         }
@@ -99,7 +98,7 @@ class core_app {
             array_unshift($args, $defaultController);
             if (empty($args[1])) {
                 $args[1] = $defaultAction;
-            } elseif (!method_exists($args[0] . '_controller', $action_prefix . '_' . $args[1])) {
+            } elseif (!method_exists($args[0] . '_controller', $args[1])) {
                 array_splice($args, 1, 0, $defaultAction);
             }
         }

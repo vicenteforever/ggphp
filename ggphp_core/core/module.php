@@ -53,9 +53,7 @@ class core_module {
             $action[$module] = array();
             if (is_array($methods)) {
                 foreach ($methods as $method) {
-                    if (strpos($method, config('app', 'action_prefix')) === 0) {
-                        $action[$module][] = $method;
-                    }
+                    $action[$module][] = $method;
                 }
             }
         }

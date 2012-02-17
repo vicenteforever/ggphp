@@ -7,11 +7,11 @@
  */
 class user_controller {
 	
-	function do_index(){
+	function index(){
 		return html('用户管理');
 	}
 	
-	function do_login(){
+	function login(){
 		return html('权限错误');
 	}
 }

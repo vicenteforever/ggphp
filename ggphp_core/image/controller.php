@@ -2,11 +2,11 @@
 
 class image_controller {
 
-    function do_index() {
+    function index() {
         return html('image 图像处理模块');
     }
 
-    function do_cache() {
+    function cache() {
         $path = path();
         if (preg_match("/\.\.|[\:\\\\]/", $path))
             error('url error');
@@ -32,7 +32,7 @@ class image_controller {
         }
     }
 
-    function do_captcha() {
+    function captcha() {
         image_captcha::output();
     }
 
