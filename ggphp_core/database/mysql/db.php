@@ -5,7 +5,7 @@
  * @package database
  * @author goodzsq@gmail.com
  */
-class database_mysql_adapter {
+class database_mysql_db {
 
     private $_dbh;
 

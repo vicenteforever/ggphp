@@ -298,13 +298,13 @@ function orm($model) {
  * 获取mysql对象
  * @staticvar database_mysql_adapter $mysql
  * @param string $configName
- * @return database_mysql_adapter 
+ * @return database_mysql_db 
  */
 function mydb($configName='default') {
     static $mysql;
     if (!isset($mysql[$configName])) {
         $data = config('mysql', $configName);
-        $target = new database_mysql_adapter(
+        $target = new database_mysql_db(
                         $data['server'],
                         $data['username'],
                         $data['password'],

@@ -13,11 +13,16 @@ class article_controller {
      */
     function do_index() {
         $a = new menu_item('a', 'A');
-        $a1 = new menu_item('a1', 'A1');
-        $a2 = new menu_item('a2', 'A2');
-        $a21 = new menu_item('a21', 'A21');
+        $a1 = new menu_item('b', 'B');
+        $a2 = new menu_item('c', 'C');
+        $a21 = new menu_item('d', 'D');
         
-        $a->setChildren($key, $object)
+        $a->addChildren($a1);
+        $a1->addChildren($a2);
+        $a2->addChildren($a21);
+        
+        $a->changeParent($a21);
+        echo $a->renderHtml();
     }
 
     /**
@@ -29,6 +34,10 @@ class article_controller {
         foreach($list as $row){
             print_r($row);
         }
+    }
+    
+    function do_test(){
+        echo 'hello world';
     }
 
     //private function //
