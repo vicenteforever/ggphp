@@ -12,7 +12,12 @@ class article_controller {
      * @return string 
      */
     function do_index() {
-        return html(path());
+        $a = new menu_item('a', 'A');
+        $a1 = new menu_item('a1', 'A1');
+        $a2 = new menu_item('a2', 'A2');
+        $a21 = new menu_item('a21', 'A21');
+        
+        $a->setChildren($key, $object)
     }
 
     /**
