@@ -27,7 +27,7 @@ class menu_model {
     function html($maxLevel=0){
         //return "<ul>".$this->render($this->_tree)."</ul>";
         $buf = '<ul>';
-        foreach($this->_tree->children() as $value){
+        foreach($this->_tree->getChildren() as $value){
             $buf .= $this->render($value, $maxLevel);
         }
         $buf .= '</ul>';

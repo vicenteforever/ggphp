@@ -22,21 +22,30 @@ class core_module {
     /**
      * 获取模块所在路径
      * @staticvar array $path
-     * @param string $module
+     * @param string $moduleName
      * @return string 
      */
-    static function path($module) {
-        static $path;
-        if (!isset($path[$module])) {
-            $path[$module] = APP_DIR . DS . 'src' . DS . $module;
-            if (!is_dir($path[$module])) {
-                $path[$module] = GG_DIR . DS . $module;
-                if (!is_dir($path[$module])) {
-                    $path[$module] = '';
+    static function path($moduleName) {
+        static $path = array();
+        if (!array_key_exists($moduleName, $path)) {
+            $path[$moduleName] = APP_DIR . DS . 'src' . DS . $moduleName;
+            if (!is_dir($path[$moduleName])) {
+                $path[$moduleName] = GG_DIR . DS . $moduleName;
+                if (!is_dir($path[$moduleName])) {
+                    $path[$moduleName] = '';
                 }
             }
         }
-        return $path[$module];
+        return $path[$moduleName];
+    }
+
+    /**
+     * 检测模块是否存在
+     * @param string $moduleName
+     * @return boolean 
+     */
+    static function exists($moduleName) {
+        return self::path($moduleName) !== '';
     }
 
     /**
@@ -60,6 +69,41 @@ class core_module {
             }
         }
         return $action[$module];
+    }
+
+    static function call($className, $method) {
+        if (!preg_match("/^[_0-9a-zA-Z]+$/", $className))
+            throw new Exception('invalid controller:' . $className);
+        if (!preg_match("/^[_0-9a-zA-Z]+$/", $method))
+            throw new Exception('invalid action:' . $method);
+        
+        static $object;
+        if (!isset($object[$className])) {
+            $target = new $className();
+            $proxy = new core_aop($target);
+            $object[$className] = $proxy;
+        } else {
+            $proxy = $object[$className];
+            $target = $proxy->target();
+        }
+
+        if (method_exists($target, $method)) {
+            return call_user_func(array($proxy, $method));
+        } else {
+            return "$className::$method 方法不存在";
+        }
+    }
+
+    static function admin($module, $method) {
+        $className = "{$module}_admin";
+        $method = "admin_{$method}";
+        return self::call($className, $method);
+    }
+
+    static function controller($module, $method) {
+        $className = "{$module}_controller";
+        $method = "do_{$method}";
+        return self::call($className, $method);
     }
 
 }

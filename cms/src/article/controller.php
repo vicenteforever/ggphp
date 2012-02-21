@@ -21,8 +21,8 @@ class article_controller {
         $a1->addChildren($a2);
         $a2->addChildren($a21);
         
-        $a->changeParent($a21);
-        echo $a->renderHtml();
+        //$a->changeParent($a21);
+        return html($a->renderHtml());
     }
 
     /**
@@ -34,6 +34,10 @@ class article_controller {
         foreach($list as $row){
             print_r($row);
         }
+    }
+    
+    function admin_news(){
+        return '新闻管理';
     }
     
     function do_test(){

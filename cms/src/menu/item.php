@@ -5,7 +5,7 @@
  * @package menu
  * @author goodzsq@gmail.com
  */
-class menu_item extends struct_tree1 {
+class menu_item extends struct_tree {
 
     private $_title;
 

@@ -1,95 +1,121 @@
 <?php
 
 /**
- * 树形结构
- * @package struct
+ * tree
+ * @package
  * @author goodzsq@gmail.com
  */
-class struct_tree1 {
+class struct_tree {
 
-    private $_parent = null;
-    private $_children = array();
-    private $_valid = false;
-    private $_id;
+    private $_parent;
+    private $_children;
+    private $_item;
 
     /**
-     * 构造函数设置该节点id值
-     * @param string $id
+     * 构造树形结构
+     * @param struct_tree $parent
+     * @param array $item
+     * @param string $childrenName 
      */
-    public function __construct($id) {
-        $this->_id = $id;
+    public function __construct($parent, $item, $childrenName = 'children') {
+        $this->_parent = $parent;
+
+        if (isset($item[$childrenName])) {
+            $children = $item[$childrenName];
+            //unset($item[$childrenName]);
+        } else {
+            $children = array();
+        }
+        $this->_item = $item;
+
+        if (is_array($children)) {
+            foreach ($children as $key => $value) {
+                $this->_children[$key] = new struct_tree($this, $value);
+            }
+        } else {
+            $this->_children = null;
+        }
     }
 
-    /**
-     * 获取节点id
-     * @return string 
-     */
-    public function getId() {
-        return $this->_id;
+    public function __get($name) {
+        return $this->item($name);
     }
 
-    /**
-     * 获取父元素
-     * @return self 
-     */
-    public function parent(){
+    public function parent() {
         return $this->_parent;
     }
-    
+
     /**
-     * 添加子对象
+     * get children
      * @param string $key
-     * @param self $object 
+     * @return struct_tree
      */
-    public function addChildren(self $object) {
-        $key = $object->getId();
-        $object->_parent = $this;
-        $this->_children[$key] = $object;
-    }
-
-    /**
-     * 移除子对象
-     * @param self $object 
-     */
-    public function removeChildren(self $object) {
-        $key = $object->getId();
-        unset($this->_children[$key]);
-    }
-
-    /**
-     * 通过名称获取子对象
-     * @param type $key
-     * @return null 
-     */
-    public function getChildrenByName($key) {
-        if (isset($this->_children[$key])) {
-            return $this->_children[$key];
+    public function children($key = null) {
+        if (isset($key)) {
+            if (isset($this->_children[$key])) {
+                return $this->_children[$key];
+            } else {
+                return null;
+            }
         } else {
+            return $this->_children;
+        }
+    }
+
+    /**
+     * 判断是否存在子节点
+     * @return boolean 
+     */
+    public function isLeaf() {
+        if (is_array($this->_children)) {
+            if (empty($this->_children)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public function item($name = null) {
+        if (isset($name)) {
+            if (isset($this->_item[$name])) {
+                return $this->_item[$name];
+            } else {
+                return null;
+            }
+        } else {
+            return $this->_item;
+        }
+    }
+
+    public function find($key, $value) {
+        if ($this->$key == $value) {
+            return $this;
+        }
+
+        if ($this->isLeaf()) {
+            return null;
+        } else {
+            foreach ($this->_children as $object) {
+                $result = $object->find($key, $value);
+                if (!empty($result)) {
+                    return $result;
+                }
+            }
             return null;
         }
     }
-
-    public function getChildren() {
-        return $this->_children;
-    }
-
-    public function hasChildren() {
-        if (!empty($this->_children)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
     
-    public function changeParent(self $newParent){
-        $oldParent = $this->_parent;
-        if(isset($oldParent)){
-            $oldParent->removeChildren($this);
-            $newParent->addChildren($this);
+    public function path(){
+        $result = $this->title;
+        $parent = $this->_parent;
+        while(!empty($parent)){
+            $result = $parent->title . '->' . $result;
+            $parent = $parent->_parent;
         }
-        else{
-            throw new Exception('tree root node cant change parent');
-        }
-        
+        return $result;
     }
+
 }

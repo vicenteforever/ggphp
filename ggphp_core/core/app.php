@@ -33,32 +33,14 @@ class core_app {
         if (core_request::isRewrite()) {
             $url = $this->rewriteUrl();
             if (config('app', 'only_use_router') && empty($url)) {
-                error('the router not allow:' . path());
+                error('the router not allow:' . core_request::path());
             }
             $this->parseFromPath();
         } else {
             $this->parseFromParam();
         }
-        $this->exec($this->_controllerName, $this->_actionName);
+        echo core_module::controller($this->_controllerName, $this->_actionName);
         $this->log('application end');
-    }
-
-    /**
-     * 执行控制器方法
-     * @param string $controllerName
-     * @param string $actionName 
-     */
-    public function exec($controllerName, $actionName) {
-        if (!preg_match("/^[_0-9a-zA-Z]+$/", $controllerName))
-            throw new Exception('invalid controller:' . $controllerName);
-        if (!preg_match("/^[_0-9a-zA-Z]+$/", $actionName))
-            throw new Exception('invalid action:' . $actionName);
-
-        $controllerName = $controllerName . '_controller';
-        $actionName = config('app', 'action_prefix') . '_' . $actionName;
-        $controller = new $controllerName;
-        $proxy = new core_aop($controller);
-        echo $proxy->$actionName();
     }
 
     /**
@@ -77,7 +59,7 @@ class core_app {
      * 从pathinfo中解析控制器和方法
      */
     private function parseFromPath() {
-        $path = path();
+        $path = core_request::path();
         $path = str_replace('..', '', $path);
         $args = explode('/', $path);
         $defaultAction = config('app', 'default_action');

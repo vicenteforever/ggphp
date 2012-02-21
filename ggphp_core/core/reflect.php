@@ -38,5 +38,3 @@ class core_reflect {
     }
 
 }
-
-?>

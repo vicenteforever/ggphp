@@ -21,6 +21,10 @@ class core_aop {
         $this->_target = $target;
         $this->_targetClass = get_class($target);
     }
+    
+    function target(){
+        return $this->_target;
+    }
 
     static function getAdvisor($caller) {
         static $advisor = array();

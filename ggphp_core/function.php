@@ -160,6 +160,14 @@ function output($str, $filters = null) {
  * @return string 
  */
 function trace($obj) {
+    if(is_bool($obj)){
+        if ($obj===true){
+            $obj = 'TRUE';
+        }
+        else{
+            $obj = 'FALSE';
+        }
+    }
     $buf = '<pre>';
     $buf .= print_r($obj, true);
     $buf .= '</pre>';
@@ -197,7 +205,7 @@ function gbk($str) {
 /**
  * 获取提交的参数值
  * @param string $key 提交参数名称
- * @param bool $filter 是否使用过滤器过滤
+ * @param bool $filter 是否使用过滤器过滤过滤掉非法输入信息
  * @return mixed
  */
 function param($key, $filter = true) {
