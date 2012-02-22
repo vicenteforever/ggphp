@@ -31,7 +31,7 @@ class database_mysql_db {
      * @return resource 
      */
     function sql($sql){
-        $sql = mysql_escape_string($sql);
+        //$sql = mysql_escape_string($sql);
         $rs = mysql_query($sql, $this->_dbh);
         if($rs === false){
             throw new Exception('mysqlerror' . mysql_error($this->_dbh));

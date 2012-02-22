@@ -71,7 +71,7 @@ class orm_helper {
      * @param string $suffix
      * @return string 
      */
-    function form($action, $default=null, $prefix='', $suffix='') {
+    function form($action, $default = null, $prefix = '', $suffix = '') {
         $buf = "<form method=\"POST\" name=\"{$this->_schema}\" action=\"$action\">{$prefix}";
         foreach ($this->_fields as $k => $v) {
             $value = $this->fieldValue($k, $default);
@@ -94,8 +94,14 @@ class orm_helper {
         if (!isset($adapter)) {
             include(GG_DIR . '/lib/phpDataMapper/Adapter/PDO.php');
             include(GG_DIR . '/lib/phpDataMapper/Adapter/Mysql.php');
-            $database = config('database', 'default');
-            $adapter = new phpDataMapper_Adapter_Mysql(pdo(), $database['database']);
+            $dbconfig = config('database', 'default');
+            $adapter = new phpDataMapper_Adapter_Mysql(
+                            $dbconfig['host'],
+                            $dbconfig['database'],
+                            $dbconfig['username'],
+                            $dbconfig['password'],
+                            $dbconfig['driver_opts']
+            );
         }
         return $adapter;
     }

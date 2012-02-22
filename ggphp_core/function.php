@@ -90,29 +90,6 @@ function storage($storage, $group) {
 }
 
 /**
- * 获取pdo数据库对象
- * @param string $dbname 数据库配置文件config/database.php中的配置名称
- * @return PDO
- */
-function pdo($dbname = null) {
-    static $pdo;
-    if (empty($dbname))
-        $dbname = 'default';
-    if (!isset($pdo[$dbname])) {
-        $config = config('database', $dbname);
-        try {
-            $pdo[$dbname] = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
-            if (!empty($config['charset'])) {
-                $pdo[$dbname]->exec("SET names '{$config['charset']}'");
-            }
-        } catch (PDOException $exception) {
-            throw new Exception(t("连接数据库失败") . $exception->getMessage());
-        }
-    }
-    return $pdo[$dbname];
-}
-
-/**
  * 加载视图
  * @return string
  */

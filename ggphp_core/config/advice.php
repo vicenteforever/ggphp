@@ -13,7 +13,7 @@ $advice['/_admin::admin_/'] = array(
 
 
 //sql执行语句拦截
-$advice['/database_mysql_adapter::sql/'] = array(
+$advice['/database_mysql_db::sql/'] = array(
     'allow' => array('database::sqltrace'),
     'forbidden' => array(),
 );
