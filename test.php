@@ -1,9 +1,8 @@
 <?php
+$rand = rand();
+$uniqid = uniqid($rand, true);
+$md5 = md5($uniqid);
 
-class test{
-    protected $t;
-}
-
-$t = new test();
-$t->t = '123';
-echo $t->t;
+echo "rand:$rand<br>";
+echo "uniqid:$uniqid<br>";
+echo "md5:$md5";

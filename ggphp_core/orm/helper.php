@@ -81,6 +81,7 @@ class orm_helper {
                 $buf .= $v->widget_input($value) . '<br />';
             }
         }
+        $buf .= "<input type=submit />";
         $buf .= "{$suffix}</form>";
         return $buf;
     }
@@ -105,5 +106,5 @@ class orm_helper {
         }
         return $adapter;
     }
-
+       
 }

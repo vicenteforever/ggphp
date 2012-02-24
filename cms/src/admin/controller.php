@@ -14,10 +14,13 @@ class admin_controller {
     function do_index(){
         $module = param(0);
         $method = param(1);
+        if(empty($method)){
+            $method = 'index';
+        }
         if(!core_module::exists($module)){
             return html("$module 不存在");
         }else{
-            $content = trace( core_module::admin($module,$method));
+            $content = core_module::admin($module,$method);
             return html($content);
         }
     }

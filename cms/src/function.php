@@ -28,3 +28,14 @@ function menu($menuName) {
     }
     return $menu[$menuName];
 }
+
+/**
+ * widget部件工厂
+ * @staticvar array $widget
+ * @param string $widgetName
+ * @return widget_base
+ */
+function widget($widgetName) {
+    $className = "widget_$widgetName";
+    return new $className;
+}

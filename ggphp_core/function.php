@@ -137,11 +137,10 @@ function output($str, $filters = null) {
  * @return string 
  */
 function trace($obj) {
-    if(is_bool($obj)){
-        if ($obj===true){
+    if (is_bool($obj)) {
+        if ($obj === true) {
             $obj = 'TRUE';
-        }
-        else{
+        } else {
             $obj = 'FALSE';
         }
     }
@@ -285,7 +284,7 @@ function orm($model) {
  * @param string $configName
  * @return database_mysql_db 
  */
-function mydb($configName='default') {
+function mydb($configName = 'default') {
     static $mysql;
     if (!isset($mysql[$configName])) {
         $data = config('mysql', $configName);
@@ -299,4 +298,14 @@ function mydb($configName='default') {
         $mysql[$configName] = new core_aop($target);
     }
     return $mysql[$configName];
+}
+
+/**
+ * 自动填充用户提交的数据到Entity对象
+ * @param phpDataMapper_Entity $entity 
+ */
+function fill_data(&$entity) {
+    foreach ($_REQUEST as $key => $value) {
+        $entity->$key = param($key);
+    }
 }

@@ -196,7 +196,7 @@ class core_request {
      * @return bool 
      */
     static function isFlash() {
-        return $self::server("HTTP_USER_AGENT") == "Shockwave Flash";
+        return self::server("HTTP_USER_AGENT") == "Shockwave Flash";
     }
 
     /**
@@ -253,5 +253,5 @@ class core_request {
         }
         return $url . $param_str;
     }
-
+    
 }
