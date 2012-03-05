@@ -309,3 +309,11 @@ function fill_data(&$entity) {
         $entity->$key = param($key);
     }
 }
+
+/**
+ * 取得response对象
+ * @return core_response 
+ */
+function response(){
+    return core_response::instance();
+}

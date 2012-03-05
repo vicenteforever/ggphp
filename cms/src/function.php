@@ -39,3 +39,15 @@ function widget($widgetName) {
     $className = "widget_$widgetName";
     return new $className;
 }
+
+/**
+ * 取得jquery对象
+ * @return \script_jquery 
+ */
+function jquery(){
+    static $jquery;
+    if(!isset($jquery)){
+        $jquery = new script_jquery();
+    }
+    return $jquery;
+}
