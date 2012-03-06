@@ -16,6 +16,12 @@ class script_jquery {
         $buf .= $code;
         $buf .= "\n});";
         response()->addScriptInline($buf);
+        return $this;
+    }
+    
+    function menu(){
+        response()->addScriptFile('js/gg_menu.js');
+        return $this;
     }
 
 }

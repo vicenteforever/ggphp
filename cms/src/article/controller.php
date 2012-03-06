@@ -13,21 +13,18 @@ class article_controller {
      */
     function do_index() {
 
-
-        jquery()->ready('window.a = $(document);');
-        jquery()->ready('alert(122345)');
-        response()->addCssFile('style.css');
         $a = new menu_item('a', 'A');
         $a1 = new menu_item('b', 'B');
         $a2 = new menu_item('c', 'C');
         $a21 = new menu_item('d', 'D');
 
         $a->addChildren($a1);
-        $a1->addChildren($a2);
+        $a->addChildren($a2);
         $a2->addChildren($a21);
 
         //$a->changeParent($a21);
-        return html($a->renderHtml());
+        jquery()->menu()->ready("$('#sdf').gg_menu()");
+        return html($a->html('sdf'));
     }
 
     /**
