@@ -6,7 +6,7 @@ $advice['/_controller::do_/'] = array(
 );
 
 //所有后台管理方法
-$advice['/_admin::admin_/'] = array(
+$advice['/_admin::do_/'] = array(
     'allow' => array('core::log'),
     'forbidden' => array(),
 );

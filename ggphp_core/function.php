@@ -301,16 +301,6 @@ function mydb($configName = 'default') {
 }
 
 /**
- * 自动填充用户提交的数据到Entity对象
- * @param phpDataMapper_Entity $entity 
- */
-function fill_data(&$entity) {
-    foreach ($_REQUEST as $key => $value) {
-        $entity->$key = param($key);
-    }
-}
-
-/**
  * 取得response对象
  * @return core_response 
  */

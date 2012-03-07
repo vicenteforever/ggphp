@@ -96,7 +96,7 @@ class core_module {
 
     static function admin($module, $method) {
         $className = "{$module}_admin";
-        $method = "admin_{$method}";
+        $method = "do_{$method}";
         return self::call($className, $method);
     }
 

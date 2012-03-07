@@ -78,10 +78,11 @@ class orm_helper {
             if ($v->hidden) {//@todo: 
                 $buf .= $v->widget_hidden($value) . '<br />';
             } else {
-                $buf .= $v->widget_input($value) . '<br />';
+                $buf .= $v->widget_input($value) . "<br />\n";
             }
         }
-        $buf .= "<input type=submit />";
+        $buf .= "<input type=button value='提交' onclick='submit()' />";
+        
         $buf .= "{$suffix}</form>";
         return $buf;
     }
