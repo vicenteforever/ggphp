@@ -9,15 +9,15 @@ class widget_table extends widget_base {
 
     function style_default() {
         if (is_array($this->_data)) {
-            $buf = "<table class=widget_table>";
+            $buf = "<table border=1 style='border-collapse:collapse;border:1px solid #ccc' class=widget_table>\n";
             foreach ($this->_data as $row) {
                 $buf .= "<tr>";
                 foreach ($row as $column) {
                     $buf .= "<td>$column</td>";
                 }
-                $buf .= '</tr>';
+                $buf .= "</tr>\n";
             }
-            $buf .="</table>";
+            $buf .="</table>\n";
         } else {
             $buf = $this->_data;
         }

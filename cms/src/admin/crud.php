@@ -20,6 +20,7 @@ abstract class admin_crud {
     }
 
     function do_edit() {
+        jquery()->ajaxSubmit("form");
         $id = param('id');
         $entity = $this->_model->get($id);
         $url = url('admin', $this->_modelName, 'save');
@@ -37,7 +38,10 @@ abstract class admin_crud {
             $this->fillData($entity);
             $this->_model->save($entity);
         }
-        redirect(url('admin', $this->_modelName, 'index'));
+        $result = array('status'=> 'ok', 'redirect'=>url('admin', $this->_modelName, 'index'));
+        echo response()->json($result);
+        exit;
+        //redirect(url('admin', $this->_modelName, 'index'));
     }
 
     function do_delete() {
@@ -47,7 +51,12 @@ abstract class admin_crud {
     }
 
     function do_index() {
-        $data = array();
+        $header = array();
+        foreach ($this->_model->helper()->field() as $key => $value) {
+            $header[$key] = $value->label;
+        }
+        $header['admin'] = '管理';
+        $data = array($header);
         $url = url('admin', $this->_modelName, 'edit');
         $buf = util_html::a($url, '添加');
         foreach ($this->_model->all() as $row) {
@@ -56,7 +65,9 @@ abstract class admin_crud {
             $edit = util_html::a($url, '编辑');
             $url = url('admin', $this->_modelName, 'delete', $param);
             $delete = util_html::a($url, '删除');
-            $data[] = array_merge($row->toArray(), array("$edit $delete"));
+            $rowData = $row->toArray();
+            $rowData['admin'] = "$edit $delete";
+            $data[] = $rowData;
         }
         return $buf . widget('table')->setData($data)->render();
     }
@@ -67,7 +78,8 @@ abstract class admin_crud {
         }
         $error = $this->_model->helper()->validate($entity);
         if (!empty($error)) {
-            print_r($error);
+            $result = array('status'=> 'fail', 'error'=>$error);
+            echo response()->json($result);
             exit;
         }
     }

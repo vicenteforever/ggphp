@@ -23,7 +23,7 @@ class article_controller {
         $a2->addChildren($a21);
 
         //$a->changeParent($a21);
-        jquery()->menu()->ready("$('#sdf').gg_menu()");
+        jquery()->menu('#sdf');
         return html($a->html('sdf'));
     }
 

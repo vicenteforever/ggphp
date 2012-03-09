@@ -81,7 +81,7 @@ class orm_helper {
                 $buf .= $v->widget_input($value) . "<br />\n";
             }
         }
-        $buf .= "<input type=button value='提交' onclick='submit()' />";
+        $buf .= "<input type=submit />";
         
         $buf .= "{$suffix}</form>";
         return $buf;

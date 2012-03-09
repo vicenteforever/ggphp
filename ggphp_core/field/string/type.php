@@ -13,7 +13,7 @@ class field_string_type extends field_base {
     }
 
     public function widget_input($value) {
-        return "<label>{$this->label}</label> <input type=\"text\" name=\"{$this->name}\" value=\"{$value}\" />";
+        return "<label class='label'>{$this->label} <input type=\"text\" name=\"{$this->name}\" value=\"{$value}\" /> <label class='tip' name='{$this->name}'></label></label>";
     }
 
 }
