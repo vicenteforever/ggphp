@@ -8,8 +8,18 @@
 class widget_table extends widget_base {
 
     function style_default() {
+        $style = <<<EOF
+table.table {border-collapse:collapse;border:1px solid #ccc}
+table .odd{background:#eee;}
+table .even{background:#fff;}
+table .first{background:#aaa;}
+table .last{}
+table .hover{background:yellow;}
+EOF;
+        response()->addCssInline($style);
+        jquery()->table('#'.$this->_id);
         if (is_array($this->_data)) {
-            $buf = "<table border=1 style='border-collapse:collapse;border:1px solid #ccc' class=widget_table>\n";
+            $buf = "<table id='{$this->_id}'>\n";
             foreach ($this->_data as $row) {
                 $buf .= "<tr>";
                 foreach ($row as $column) {
@@ -24,8 +34,4 @@ class widget_table extends widget_base {
         return $buf;
     }
     
-    function style_list(){
-        
-    }
-
 }

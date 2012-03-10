@@ -11,19 +11,35 @@ class script_jquery {
         response()->addScriptFile('js/jquery.js');
     }
 
+    /**
+     * ready
+     * @param string $code
+     */
     function ready($code) {
         $buf = "$(document).ready(function(){\n";
         $buf .= $code;
         $buf .= "\n});";
         response()->addScriptInline($buf);
-        return $this;
     }
-
+    
+    /**
+     * 生成下拉式菜单
+     * @param string $select jquery选择器 
+     */
     function menu($select) {
         response()->addScriptFile('js/gg_menu.js');
-        $this->ready("$('$select').gg_menu()");
+        $this->ready("$('$select').gg_menu();");
+    }
+    
+    function table($select) {
+        response()->addScriptFile('js/gg_table.js');
+        $this->ready("$('$select').gg_table();");
     }
 
+    /**
+     * 以ajax方式提交窗体
+     * @param string $select jquery的form选择器 
+     */
     function ajaxSubmit($select) {
         $code = <<<EOF
 $("$select").submit(function(){

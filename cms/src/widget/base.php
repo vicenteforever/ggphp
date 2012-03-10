@@ -4,10 +4,15 @@
  * @package widget
  * @author goodzsq@gmail.com
  */
-class widget_base {
+abstract class widget_base {
+    /**
+     * id
+     * @var string
+     */
+    protected $_id;
     /**
      * 数据
-     * @var type
+     * @var string 
      */
     protected $_data;
 
@@ -16,14 +21,13 @@ class widget_base {
      * @param mixed $data
      * @return \widget_base 
      */
-    public function setData($data){
+    public function setData($id, $data){
+        $this->_id = $id;
         $this->_data = $data;
         return $this;
     }
     
-    public function style_default(){
-        return '';
-    }
+    abstract public function style_default();
     
     public function render($style='default'){
         $methodName = "style_{$style}";

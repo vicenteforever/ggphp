@@ -1,4 +1,5 @@
 /**
+ * 下拉式菜单插件
  * @author goodzsq@gmail.com
  */
 (function( $ ){

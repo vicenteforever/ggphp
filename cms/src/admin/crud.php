@@ -59,7 +59,12 @@ abstract class admin_crud {
         $data = array($header);
         $url = url('admin', $this->_modelName, 'edit');
         $buf = util_html::a($url, '添加');
-        foreach ($this->_model->all() as $row) {
+        
+        $displayCount = 5;
+        $query = $this->_model->all();
+        $pager = new phpDataMapper_Pager($query,param('page'),$displayCount);
+
+        foreach ($query as $row) {
             $param = array('id' => $row->id);
             $url = url('admin', $this->_modelName, 'edit', $param);
             $edit = util_html::a($url, '编辑');
@@ -69,7 +74,11 @@ abstract class admin_crud {
             $rowData['admin'] = "$edit $delete";
             $data[] = $rowData;
         }
-        return $buf . widget('table')->setData($data)->render();
+        $buf .= widget('table')->setData($this->_modelName, $data)->render();
+        //$pagger = new util_pagger(12);
+        //$buf .= widget('pagger')->setData('pagger', $pagger)->render();
+        $this->_model->debug();
+        return $buf;
     }
 
     private function fillData(&$entity) {
