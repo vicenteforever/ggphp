@@ -9,6 +9,7 @@ abstract class admin_crud {
 
     protected $_modelName;
     protected $_model;
+    protected $_displayCount = 20;
 
     public function __construct() {
         $this->_model = orm($this->_modelName);
@@ -38,7 +39,7 @@ abstract class admin_crud {
             $this->fillData($entity);
             $this->_model->save($entity);
         }
-        $result = array('status'=> 'ok', 'redirect'=>url('admin', $this->_modelName, 'index'));
+        $result = array('status' => 'ok', 'redirect' => url('admin', $this->_modelName, 'index'));
         echo response()->json($result);
         exit;
         //redirect(url('admin', $this->_modelName, 'index'));
@@ -59,11 +60,9 @@ abstract class admin_crud {
         $data = array($header);
         $url = url('admin', $this->_modelName, 'edit');
         $buf = util_html::a($url, '添加');
-        
-        $displayCount = 5;
-        $query = $this->_model->all();
-        $pager = new phpDataMapper_Pager($query,param('page'),$displayCount);
 
+        $query = $this->_model->all();
+        $pager = new orm_pager($query, param('page'), $this->_displayCount);
         foreach ($query as $row) {
             $param = array('id' => $row->id);
             $url = url('admin', $this->_modelName, 'edit', $param);
@@ -75,8 +74,7 @@ abstract class admin_crud {
             $data[] = $rowData;
         }
         $buf .= widget('table')->setData($this->_modelName, $data)->render();
-        //$pagger = new util_pagger(12);
-        //$buf .= widget('pagger')->setData('pagger', $pagger)->render();
+        $buf .= $pager->render(url('admin', $this->_modelName, 'index').'?');
         $this->_model->debug();
         return $buf;
     }
@@ -87,7 +85,7 @@ abstract class admin_crud {
         }
         $error = $this->_model->helper()->validate($entity);
         if (!empty($error)) {
-            $result = array('status'=> 'fail', 'error'=>$error);
+            $result = array('status' => 'fail', 'error' => $error);
             echo response()->json($result);
             exit;
         }

@@ -8,5 +8,5 @@
 class article_admin extends admin_crud {
 
     protected $_modelName = 'article';
-       
+    
 }

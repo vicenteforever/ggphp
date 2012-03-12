@@ -9,7 +9,7 @@ class field_text_type extends field_base {
 	}
 
 	public function widget_input($value){
-		return "<label>{$this->label}</label>  <textarea name=\"{$this->name}\">{$value}</textarea>";
+		return "<label>{$this->label}<textarea name=\"{$this->name}\">{$value}</textarea></label>";
 	}
 
 }

@@ -19,14 +19,12 @@ class orm_pager {
     public function __construct(phpDataMapper_Query $query, $page = 1, $itemsPerPage = 30) {
         $this->_mapper = $query->mapper();
         $this->_query = $query;
-        $this->setPage($page);
         $this->perPage($itemsPerPage);
+        $this->setPage($page);
     }
 
     public function setPage($page) {
-        if (!is_int($page)) {
-            $page = 1;
-        } else if ($page < 1) {
+        if ($page < 1) {
             $page = 1;
         } else if ($page > $this->pages()) {
             $page = $this->pages();
@@ -40,7 +38,7 @@ class orm_pager {
      * Get/Set current page
      * @param $page int
      */
-    public function getPage($page = null) {
+    public function getPage() {
         return $this->_page;
     }
 
@@ -93,6 +91,31 @@ class orm_pager {
             }
         }
         return $this->_itemCount;
+    }
+
+    public function render($url) {
+        
+        
+
+        $page = $this->getPage() - 1;
+        if ($page < 1) {
+            $pagePrevious = '上页';
+            $pageFirst = '首页';
+        } else {
+            $pagePrevious = util_html::a("$url&page=" . $page, "上页");
+            $pageFirst = util_html::a("$url&page=1", "首页");
+        }
+        $page = $this->getPage()+1;
+        if($page > $this->pages()){
+            $pageNext = "下页";
+            $pageLast = "末页";
+        }
+        else{
+            $pageNext = util_html::a("$url&page=" . $page, "下页");
+            $pageLast = util_html::a("$url&page=" . $this->pages(), "末页");
+        }
+        
+        return "$pageFirst $pagePrevious {$this->getPage()}/{$this->pages()} $pageNext $pageLast";
     }
 
 }

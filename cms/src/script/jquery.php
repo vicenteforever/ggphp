@@ -24,25 +24,29 @@ class script_jquery {
     
     /**
      * 生成下拉式菜单
-     * @param string $select jquery选择器 
+     * @param string $selector jquery选择器 
      */
-    function menu($select) {
+    function menu($selector) {
         response()->addScriptFile('js/gg_menu.js');
-        $this->ready("$('$select').gg_menu();");
+        $this->ready("$('$selector').gg_menu();");
     }
     
-    function table($select) {
+    /**
+     * 表格变色
+     * @param type $selector 
+     */
+    function table($selector) {
         response()->addScriptFile('js/gg_table.js');
-        $this->ready("$('$select').gg_table();");
+        $this->ready("$('$selector').gg_table();");
     }
 
     /**
      * 以ajax方式提交窗体
-     * @param string $select jquery的form选择器 
+     * @param string $selector jquery的form选择器 
      */
-    function ajaxSubmit($select) {
+    function ajaxSubmit($selector) {
         $code = <<<EOF
-$("$select").submit(function(){
+$("$selector").submit(function(){
     var form = $(this);
     var url = form.attr('action');
     var data = form.serializeArray();
@@ -67,6 +71,22 @@ $("$select").submit(function(){
     }, 'json');
     return false;
 });
+EOF;
+        $this->ready($code);
+    }
+    
+    /**
+     * 生成tinymce编辑器
+     * @param string $selector 
+     */
+    function tinymce($selector){
+        response()->addScriptFile('tiny_mce/jquery.tinymce.js');
+        $code = <<<EOF
+$('$selector').tinymce({
+    script_url : 'tiny_mce/tiny_mce.js',
+    'language':'zh-cn',
+    theme : "advanced"
+});        
 EOF;
         $this->ready($code);
     }

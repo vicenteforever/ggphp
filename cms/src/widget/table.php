@@ -9,7 +9,8 @@ class widget_table extends widget_base {
 
     function style_default() {
         $style = <<<EOF
-table.table {border-collapse:collapse;border:1px solid #ccc}
+table.table {border-collapse:collapse;border:1px solid #ccc;}
+table.table td {padding:5px}
 table .odd{background:#eee;}
 table .even{background:#fff;}
 table .first{background:#aaa;}
