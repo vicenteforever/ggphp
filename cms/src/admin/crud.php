@@ -21,11 +21,11 @@ abstract class admin_crud {
     }
 
     function do_edit() {
-        jquery()->ajaxSubmit("form");
-        $id = param('id');
-        $entity = $this->_model->get($id);
-        $url = url('admin', $this->_modelName, 'save');
-        return $this->_model->helper()->form($url, $entity);
+        $helper = $this->_model->helper();
+        $helper->url = url('admin', $this->_modelName, 'save');
+        $helper->entity = $this->_model->get(param('id'));
+        $buf = widget('form', $this->_modelName, $helper)->render();
+        return $buf;
     }
 
     function do_save() {
@@ -73,15 +73,19 @@ abstract class admin_crud {
             $rowData['admin'] = "$edit $delete";
             $data[] = $rowData;
         }
-        $buf .= widget('table')->setData($this->_modelName, $data)->render();
-        $buf .= $pager->render(url('admin', $this->_modelName, 'index').'?');
+        $buf .= widget('table', $this->_modelName, $data)->render();
+        $buf .= $pager->render(url('admin', $this->_modelName, 'index') . '?');
         $this->_model->debug();
         return $buf;
     }
 
-    private function fillData(&$entity) {
+    /**
+     * 填充数据并校验
+     * @param phpDataMapper_Entity $entity 
+     */
+    private function fillData(phpDataMapper_Entity &$entity) {
         foreach ($this->_model->helper()->field() as $key => $value) {
-            $entity->$key = param($key);
+            $entity->$key = trim(param($key));
         }
         $error = $this->_model->helper()->validate($entity);
         if (!empty($error)) {

@@ -6,19 +6,33 @@
  * @author goodzsq@gmail.com
  */
 class widget_table extends widget_base {
-
-    function style_default() {
+    
+    public function __construct($id, $data) {
+        parent::__construct($id, $data);
+        $this->_id = "table_$id";
+    }
+    
+    function theme_test(){
+        return 'hello world';
+    }
+    
+    function theme_default() {
+        $selector = "#{$this->_id}";
         $style = <<<EOF
-table.table {border-collapse:collapse;border:1px solid #ccc;}
-table.table td {padding:5px}
-table .odd{background:#eee;}
-table .even{background:#fff;}
-table .first{background:#aaa;}
-table .last{}
-table .hover{background:yellow;}
+$selector {border-collapse:collapse;border:1px solid #ccc;}
+$selector td {padding:5px}
+$selector .odd{background:#eee;}
+$selector .even{background:#fff;}
+$selector .first{background:#aaa;}
+$selector .last{}
+$selector .hover{background:yellow;}
 EOF;
         response()->addCssInline($style);
-        jquery()->table('#'.$this->_id);
+        jquery()->table($selector);
+        return $this->html();
+    }
+
+    private function html() {
         if (is_array($this->_data)) {
             $buf = "<table id='{$this->_id}'>\n";
             foreach ($this->_data as $row) {
@@ -34,5 +48,5 @@ EOF;
         }
         return $buf;
     }
-    
+
 }

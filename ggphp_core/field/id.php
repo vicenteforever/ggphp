@@ -1,6 +1,6 @@
 <?php
 
-class field_id_type extends field_base {
+class field_id extends field_base {
 
     public $type = 'int';
     public $length = 11;
@@ -15,12 +15,8 @@ class field_id_type extends field_base {
             if ($value != $value2) {
                 return "{$this->label} is not integer";
             }
-            return parent::validate($value);
+            return true;
         }
-    }
-
-    public function widget_input($value) {
-        return "<input type=\"hidden\" name=\"{$this->name}\" value=\"{$value}\" />";
     }
 
 }

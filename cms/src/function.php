@@ -7,26 +7,7 @@
  * @return string 
  */
 function block($moduleName, $methodName) {
-    static $blockObject;
-    $blockName = "{$moduleName}_block";
-    if (!isset($blockObject[$blockName])) {
-        $blockObject[$blockName] = new $blockName;
-    }
-    return $blockObject[$blockName]->block($methodName);
-}
-
-/**
- * 树状导航菜单对象
- * @staticvar menu_model $menu
- * @param string $menuName 菜单名称
- * @return menu_model 
- */
-function menu($menuName) {
-    static $menu;
-    if (!isset($menu[$menuName])) {
-        $menu[$menuName] = new menu_model($menuName);
-    }
-    return $menu[$menuName];
+    return widget('block', $moduleName, $methodName)->render();
 }
 
 /**
@@ -35,9 +16,9 @@ function menu($menuName) {
  * @param string $widgetName
  * @return widget_base
  */
-function widget($widgetName) {
+function widget($widgetName, $id, $data) {
     $className = "widget_$widgetName";
-    return new $className;
+    return new $className($id, $data);
 }
 
 /**

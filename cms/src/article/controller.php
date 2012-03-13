@@ -12,19 +12,9 @@ class article_controller {
      * @return string 
      */
     function do_index() {
-
-        $a = new menu_item('a', 'A');
-        $a1 = new menu_item('b', 'B');
-        $a2 = new menu_item('c', 'C');
-        $a21 = new menu_item('d', 'D');
-
-        $a->addChildren($a1);
-        $a->addChildren($a2);
-        $a2->addChildren($a21);
-
-        //$a->changeParent($a21);
-        jquery()->menu('#sdf');
-        return html($a->html('sdf'));
+        $buf = block('menu', 'main');
+        $buf .= block('menu', 'tree');
+        return html($buf);
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 
-class field_base {
+abstract class field_base {
+
+    abstract function validate($value);
 
     public $name;
     public $label;
@@ -20,35 +22,6 @@ class field_base {
         if (!isset($this->label)) {
             $this->label = $this->name;
         }
-    }
-
-    /**
-     * 值校验检查
-     */
-    function validate($value) {
-        if ($this->required && empty($value)) {
-            return "{$this->name} is required";
-        }
-        return true;
-    }
-
-    /**
-     * 生成widget部件的html
-     */
-    function widget($value = '') {
-        $method = 'widget_' . $this->widget;
-        if (method_exists($this, $method)) {
-            return $this->$method($value);
-        } else {
-            return $value;
-        }
-    }
-
-    /**
-     * 生成widget部件的html
-     */
-    function widget_hidden($value = '') {
-        return "<input type=\"hidden\" name=\"{$this->name}\" value=\"{$value}\" />";
     }
 
     function __get($name) {

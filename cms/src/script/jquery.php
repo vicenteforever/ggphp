@@ -12,7 +12,7 @@ class script_jquery {
     }
 
     /**
-     * ready
+     * 生成$(document).ready代码
      * @param string $code
      */
     function ready($code) {
@@ -61,6 +61,7 @@ $("$selector").submit(function(){
             }
         }
         else if(xml.status=='fail'){
+            form.find('.tip').html('');
             for(field in xml.error){
                 form.find('.tip[name='+field+']').html(xml.error[field]).css({color:'red'});
             }
@@ -74,16 +75,16 @@ $("$selector").submit(function(){
 EOF;
         $this->ready($code);
     }
-    
+       
     /**
      * 生成tinymce编辑器
      * @param string $selector 
      */
-    function tinymce($selector){
-        response()->addScriptFile('tiny_mce/jquery.tinymce.js');
+    function widget_text_tinymce($selector){
+        response()->addScriptFile('js/tiny_mce/jquery.tinymce.js');
+        response()->addScriptFile('js/tiny_mce/tiny_mce.js');
         $code = <<<EOF
 $('$selector').tinymce({
-    script_url : 'tiny_mce/tiny_mce.js',
     'language':'zh-cn',
     theme : "advanced"
 });        

@@ -17,7 +17,7 @@ class orm_helper {
             if (empty($v['name'])) {
                 throw new Exception('field name not assign');
             }
-            $fieldType = "field_{$v['field']}_type";
+            $fieldType = "field_{$v['field']}";
             $fieldObject = new $fieldType($v);
             $this->_fields[$v['name']] = $fieldObject;
         }
@@ -55,7 +55,11 @@ class orm_helper {
         $error = array();
         foreach ($this->_fields as $k => $v) {
             $value = $this->fieldValue($k, $entity);
-            $err = $v->validate($value);
+            if ($v->required && empty($value)) {
+                $err = "{$v->label}必须填写";
+            } else {
+                $err = $v->validate($value);
+            }
             if ($err !== true) {
                 $error[$k] = $err;
             }
@@ -82,7 +86,7 @@ class orm_helper {
             }
         }
         $buf .= "<input type=submit />";
-        
+
         $buf .= "{$suffix}</form>";
         return $buf;
     }
@@ -107,5 +111,9 @@ class orm_helper {
         }
         return $adapter;
     }
-       
+
+    public function __get($name) {
+        ;
+    }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-class field_datetime_type extends field_type {
+class field_datetime extends field_type {
 
 	public $type = 'datetime';
 	public $length = null;

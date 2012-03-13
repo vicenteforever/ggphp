@@ -90,5 +90,9 @@ class struct_tree {
             throw new Exception('tree root node cant change parent');
         }
     }
+
+    public function __get($name) {
+        return 'novalue';
+    }
     
 }
