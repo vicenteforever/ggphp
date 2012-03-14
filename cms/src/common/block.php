@@ -1,32 +1,20 @@
 <?php
 
 /**
- * block
- * @package widget
+ * 公共页面元素
+ * @package common
  * @author Administrator
  */
-class block {
-    //put your code here
+class common_block {
     
     function header(){
-        
+        return "header";
     }
     
     function footer(){
-        
+        return "footer";
     }
-    
-    function menu(){
-        
-    }
-    
-    function breadcrumb(){
-        
-    }
-    
-    function block(){
-        
-    }
+       
 }
 
 ?>

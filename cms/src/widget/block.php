@@ -34,15 +34,20 @@ class widget_block extends widget_base {
         }
     }
 
+    private function html($id, $title, $data, $css){
+        if(!empty($title)){
+            $title = "<h1>$title</h1>";
+        }
+        return "<div id='{$id}' class='block {$css}' >{$title}\n{$data}\n</div>\n";
+    }
+    
+    
     public function theme_default() {
-        $selector = '#' . $this->_id;
-        $style = <<<EOF
-.block {width:200px;height:200px;border:1px solid red}
-EOF;
-        response()->addCssInline($style);
-        return "<div id='{$this->_id}' class='block' ><h1>{$this->_title}</h1>{$this->_data}</div>\n";
+        return $this->html($this->_id, $this->_title, $this->_data, 'default');
+    }
+    
+    public function theme_left(){
+        return $this->html($this->_id, $this->_title, $this->_data, 'left');
     }
 
 }
-
-?>

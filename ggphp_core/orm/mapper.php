@@ -6,9 +6,13 @@ class orm_mapper extends phpDataMapper_Base {
 
     protected $_helper;
 
+    /**
+     * orm构造器
+     * @param string $schemaName config/schema配置文件名 
+     */
     public function __construct($schemaName) {
         $helper = new orm_helper($schemaName);
-        foreach ($helper->field() as $fieldName => $field) {
+        foreach ($helper->fields() as $fieldName => $field) {
             $this->_datasource = $helper->schema();
             $arr = array();
             $arr['type'] = $field->type;
@@ -25,17 +29,22 @@ class orm_mapper extends phpDataMapper_Base {
             $this->$fieldName = $arr;
         }
         $this->_helper = $helper;
-        parent::__construct($helper->adapter());
+        parent::__construct(orm_helper::adapter());
     }
 
     /**
-     * get helper object
+     * 获取orm_helper
      * @return orm_helper
      */
     public function helper() {
         return $this->_helper;
     }
 
+    /**
+     * 校验数据
+     * @param phpDataMapper_Entity $entity
+     * @return boolean 
+     */
     public function validate(phpDataMapper_Entity $entity) {
         $error = $this->_helper->validate($entity);
         if (empty($error)) {
@@ -44,13 +53,14 @@ class orm_mapper extends phpDataMapper_Base {
             foreach ($error as $field => $msg) {
                 $this->error($field, $msg);
             }
+            return false;
         }
     }
 
     /**
-     * Prints all executed SQL queries - useful for debugging
+     * 输出查询语句
      */
-    public function debug($entity = null) {
+    public function debug() {
         $buf = "Executed " . $this->queryCount() . " queries:</p>";
         $buf .= trace(self::$_queryLog);
         app()->log($buf);

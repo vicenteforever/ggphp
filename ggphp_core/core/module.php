@@ -72,12 +72,16 @@ class core_module {
     }
 
     static function call($className, $method) {
+        static $object;
         if (!preg_match("/^[_0-9a-zA-Z]+$/", $className))
             throw new Exception('invalid controller:' . $className);
         if (!preg_match("/^[_0-9a-zA-Z]+$/", $method))
             throw new Exception('invalid action:' . $method);
         
-        static $object;
+        if(!class_exists($className)){
+            return "$className 类不存在";
+        }
+        
         if (!isset($object[$className])) {
             $target = new $className();
             $proxy = new core_aop($target);
@@ -96,8 +100,8 @@ class core_module {
 
     static function admin($module, $method) {
         $className = "{$module}_admin";
-        $method = "do_{$method}";
-        return self::call($className, $method);
+        $methodName = "do_{$method}";
+        return self::call($className, $methodName);
     }
 
     static function controller($module, $method) {

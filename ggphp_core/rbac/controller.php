@@ -10,10 +10,7 @@ class rbac_controller {
      *  用户登录
      */
     function do_login() {
-        $user = orm('user')->helper();
-        $suffix = "<input type='hidden' name='redirect_url' value='".session()->redirect_url."' />";
-        $suffix .= "<input type='submit' />";
-        return html($user->form('logincheck', null, '', $suffix));
+
     }
     
     /**
@@ -25,11 +22,11 @@ class rbac_controller {
     }
 
     function do_logout() {
-        //@todo:用户注销
+        //@todo goodzsq 用户注销
     }
 
     function do_list() {
-        //@todo:用户列表
+        //@todo goodzsq 用户列表
     }
 
     function do_register() {

@@ -11,6 +11,7 @@ class field_file extends field_base {
         return true;
     }
 
+    /**
+     * @todo goodzsq 文件字段
+     */
 }
-
-?>

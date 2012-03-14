@@ -6,8 +6,8 @@
  * @param string $methodName 方法名称
  * @return string 
  */
-function block($moduleName, $methodName) {
-    return widget('block', $moduleName, $methodName)->render();
+function block($moduleName, $methodName, $style='') {
+    return widget('block', $moduleName, $methodName)->render($style);
 }
 
 /**

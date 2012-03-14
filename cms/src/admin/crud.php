@@ -53,7 +53,7 @@ abstract class admin_crud {
 
     function do_index() {
         $header = array();
-        foreach ($this->_model->helper()->field() as $key => $value) {
+        foreach ($this->_model->helper()->fields() as $key => $value) {
             $header[$key] = $value->label;
         }
         $header['admin'] = '管理';
@@ -84,7 +84,7 @@ abstract class admin_crud {
      * @param phpDataMapper_Entity $entity 
      */
     private function fillData(phpDataMapper_Entity &$entity) {
-        foreach ($this->_model->helper()->field() as $key => $value) {
+        foreach ($this->_model->helper()->fields() as $key => $value) {
             $entity->$key = trim(param($key));
         }
         $error = $this->_model->helper()->validate($entity);

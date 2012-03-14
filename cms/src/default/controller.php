@@ -11,12 +11,11 @@ class default_controller {
      * 首页
      */
     function do_index(){
-        return html(block('menu', 'main'));
+        $buf = view(block('menu', 'main', 'left'));
+        return html($buf);
     }
     
     function do_test(){
         return html('test');
     }
 }
-
-?>

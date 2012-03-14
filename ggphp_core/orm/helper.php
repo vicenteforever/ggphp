@@ -5,6 +5,11 @@ class orm_helper {
     protected $_fields;
     protected $_schema;
 
+    /**
+     * orm_helper构造器
+     * @param string $schemaName 数据配置表名称
+     * @throws Exception 
+     */
     function __construct($schemaName) {
         $this->_schema = $schemaName;
         if (!is_array($this->_fields))
@@ -23,19 +28,34 @@ class orm_helper {
         }
     }
 
-    function field($fieldName = null) {
-        if (isset($fieldName)) {
-            if (isset($this->_fields[$fieldName])) {
-                $this->_fields[$fieldName];
-            } else {
-                return null;
-            }
+    /**
+     * 根据字段名称获取字段对象
+     * @param string $fieldName
+     * @return mixed 
+     */
+    function field($fieldName) {
+        if (isset($this->_fields[$fieldName])) {
+            $this->_fields[$fieldName];
         } else {
-            return $this->_fields;
+            return null;
         }
     }
 
-    function fieldValue($field, $entity) {
+    /**
+     * 获取所有字段对象数组
+     * @return array 
+     */
+    function fields() {
+        return $this->_fields;
+    }
+
+    /**
+     * 获取字段值
+     * @param string $field
+     * @param phpDataMapper_Entity $entity
+     * @return mixed 
+     */
+    function fieldValue($field, phpDataMapper_Entity $entity) {
         if (!isset($this->_fields[$field])) {
             return null;
         }
@@ -68,34 +88,20 @@ class orm_helper {
     }
 
     /**
-     * 构建输入窗体
-     * @param string $action
-     * @param entity $default
-     * @param string $prefix
-     * @param string $suffix
+     * 获取数据配置表名称(表名称)
      * @return string 
      */
-    function form($action, $default = null, $prefix = '', $suffix = '') {
-        $buf = "<form method=\"POST\" name=\"{$this->_schema}\" action=\"$action\">{$prefix}";
-        foreach ($this->_fields as $k => $v) {
-            $value = $this->fieldValue($k, $default);
-            if ($v->hidden) {//@todo: 
-                $buf .= $v->widget_hidden($value) . '<br />';
-            } else {
-                $buf .= $v->widget_input($value) . "<br />\n";
-            }
-        }
-        $buf .= "<input type=submit />";
-
-        $buf .= "{$suffix}</form>";
-        return $buf;
-    }
-
     function schema() {
         return $this->_schema;
     }
 
-    function adapter() {
+    /**
+     * 获取phpDataMapper数据库适配器
+     * @staticvar phpDataMapper_Adapter_Mysql $adapter
+     * @param type $config
+     * @return \phpDataMapper_Adapter_Mysql 
+     */
+    static function adapter($config = 'default') {
         static $adapter;
         if (!isset($adapter)) {
             include(GG_DIR . '/lib/phpDataMapper/Adapter/PDO.php');
@@ -110,6 +116,15 @@ class orm_helper {
             );
         }
         return $adapter;
+    }
+
+    /**
+     * 获取pdo链接
+     * @param string $config
+     * @return PDO 
+     */
+    static function pdo($config) {
+        return self::adapter($config)->connection();
     }
 
     public function __get($name) {

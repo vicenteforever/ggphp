@@ -21,7 +21,7 @@ class widget_form extends widget_base {
 
     private function html(orm_helper $helper) {
         $buf = "<form method=\"POST\" id=\"{$this->_id}\" action=\"$helper->url\">\n";
-        foreach ($helper->field() as $k => $field) {
+        foreach ($helper->fields() as $k => $field) {
             $value = $helper->fieldValue($k, $helper->entity);
             if ($field->hidden || $field->field == 'id') {
                 $buf .= $this->fieldHidden($field, $value) . "\n";

@@ -11,24 +11,23 @@ class menu_block {
      * 主菜单 
      */
     public function main(){
-        $a = new menu_item('a', 'A');
-        $a1 = new menu_item('b', 'B');
-        $a2 = new menu_item('c', 'C');
-        $a21 = new menu_item('d', 'D');
-
-        $a->addChildren($a1);
-        $a->addChildren($a2);
-        $a2->addChildren($a21);
-
-        //$a->changeParent($a21);
-        return widget('menu', 'main', $a)->render();
+        $data = menu_model::main();
+        return widget('menu', 'main', $data)->render();
+    }
+    
+    /**
+     * 面包屑
+     */
+    public function breadcrumb(){
+        $data = menu_model::main();
+        return widget('breadcrumb', 'main', $data)->render();
     }
     
     /**
      * 二级菜单 
      */
     public function second(){
-        
+        return '二级菜单';
     }
     
     /**
