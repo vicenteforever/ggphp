@@ -4,6 +4,7 @@ class field_email extends field_type {
 
     public $type = 'varchar';
     public $length = 255;
+    public $defaultWidget = 'text';
 
     function validate($value) {
         if (strlen($value) > $this->length) {

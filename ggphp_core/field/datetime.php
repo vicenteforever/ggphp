@@ -4,6 +4,7 @@ class field_datetime extends field_type {
 
 	public $type = 'datetime';
 	public $length = null;
+        public $defaultWidget = 'text';
 
 	function validate($value){
 		@list($date, $time) = explode(' ', trim($value));

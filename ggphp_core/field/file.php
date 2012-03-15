@@ -7,6 +7,8 @@
  */
 class field_file extends field_base {
 
+    public $defaultWidget = 'text';
+    
     public function validate($value) {
         return true;
     }

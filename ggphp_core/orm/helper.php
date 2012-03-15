@@ -10,7 +10,7 @@ class orm_helper {
      * @param string $schemaName 数据配置表名称
      * @throws Exception 
      */
-    function __construct($schemaName) {
+    public function __construct($schemaName) {
         $this->_schema = $schemaName;
         if (!is_array($this->_fields))
             $this->_fields = array();
@@ -29,11 +29,20 @@ class orm_helper {
     }
 
     /**
+     * 增加字段
+     * @param array $fieldInfo 
+     */
+    public function addField($fieldInfo){
+        $fieldName = "field_{$fieldInfo['field']}";
+        $this->_fields[$fieldInfo['name']] = new $fieldName($fieldInfo);
+    }
+    
+    /**
      * 根据字段名称获取字段对象
      * @param string $fieldName
      * @return mixed 
      */
-    function field($fieldName) {
+    public function field($fieldName) {
         if (isset($this->_fields[$fieldName])) {
             $this->_fields[$fieldName];
         } else {
@@ -45,7 +54,7 @@ class orm_helper {
      * 获取所有字段对象数组
      * @return array 
      */
-    function fields() {
+    public function fields() {
         return $this->_fields;
     }
 
@@ -55,7 +64,7 @@ class orm_helper {
      * @param phpDataMapper_Entity $entity
      * @return mixed 
      */
-    function fieldValue($field, phpDataMapper_Entity $entity) {
+    public function fieldValue($field, phpDataMapper_Entity $entity) {
         if (!isset($this->_fields[$field])) {
             return null;
         }
@@ -71,7 +80,7 @@ class orm_helper {
      * @param type $entity 
      * @return array
      */
-    function validate($entity) {
+    public function validate($entity) {
         $error = array();
         foreach ($this->_fields as $k => $v) {
             $value = $this->fieldValue($k, $entity);
@@ -91,7 +100,7 @@ class orm_helper {
      * 获取数据配置表名称(表名称)
      * @return string 
      */
-    function schema() {
+    public function schema() {
         return $this->_schema;
     }
 
@@ -101,7 +110,7 @@ class orm_helper {
      * @param type $config
      * @return \phpDataMapper_Adapter_Mysql 
      */
-    static function adapter($config = 'default') {
+    static public function adapter($config = 'default') {
         static $adapter;
         if (!isset($adapter)) {
             include(GG_DIR . '/lib/phpDataMapper/Adapter/PDO.php');
@@ -123,7 +132,7 @@ class orm_helper {
      * @param string $config
      * @return PDO 
      */
-    static function pdo($config) {
+    static public function pdo($config) {
         return self::adapter($config)->connection();
     }
 

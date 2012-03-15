@@ -6,7 +6,7 @@
  * @param string $methodName 方法名称
  * @return string 
  */
-function block($moduleName, $methodName, $style='') {
+function block($moduleName, $methodName, $style = '') {
     return widget('block', $moduleName, $methodName)->render($style);
 }
 
@@ -25,10 +25,29 @@ function widget($widgetName, $id, $data) {
  * 取得jquery对象
  * @return \script_jquery 
  */
-function jquery(){
+function jquery() {
     static $jquery;
-    if(!isset($jquery)){
+    if (!isset($jquery)) {
         $jquery = new script_jquery();
     }
     return $jquery;
+}
+
+/**
+ * 获取字典对象并保证单例
+ * @staticvar array $dict
+ * @param string $name 字典名称
+ * @return dict_base 字典对象
+ * @throws Exception 
+ */
+function dict($name) {
+    static $dict;
+    if (!isset($dict[$name])) {
+        $dictName = "dict_$name";
+        if (!class_exists($dictName)) {
+            throw new Exception("class:$dictName not exists");
+        }
+        $dict[$name] = new $dictName;
+    }
+    return $dict[$name];
 }

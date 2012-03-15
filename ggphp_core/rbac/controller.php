@@ -22,11 +22,11 @@ class rbac_controller {
     }
 
     function do_logout() {
-        //@todo goodzsq 用户注销
+
     }
 
     function do_list() {
-        //@todo goodzsq 用户列表
+
     }
 
     function do_register() {

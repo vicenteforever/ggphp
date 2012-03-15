@@ -11,8 +11,9 @@ abstract class field_base {
     public $required = false;
     public $number = 1;
     public $hidden = false;
+    public $defaultWidget = 'text';
 
-    function __construct(array $arr) {
+    public function __construct(array $arr) {
         foreach ($arr as $k => $v) {
             $this->$k = $v;
         }
@@ -24,7 +25,20 @@ abstract class field_base {
         }
     }
 
-    function __get($name) {
+    /**
+     * 返回字段可选的值列表
+     * @return array 
+     */
+    public function getList(){
+        return array();
+    }
+    
+    /**
+     * 读取未设置属性时返回空值
+     * @param string $name
+     * @return null 
+     */
+    public function __get($name) {
         return null;
     }
 

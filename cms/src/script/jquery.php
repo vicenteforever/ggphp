@@ -76,20 +76,4 @@ EOF;
         $this->ready($code);
     }
        
-    /**
-     * 生成tinymce编辑器
-     * @param string $selector 
-     */
-    function widget_text_tinymce($selector){
-        response()->addScriptFile('js/tiny_mce/jquery.tinymce.js');
-        response()->addScriptFile('js/tiny_mce/tiny_mce.js');
-        $code = <<<EOF
-$('$selector').tinymce({
-    'language':'zh-cn',
-    theme : "advanced"
-});        
-EOF;
-        $this->ready($code);
-    }
-
 }

@@ -22,6 +22,7 @@ abstract class admin_crud {
 
     function do_edit() {
         $helper = $this->_model->helper();
+        $helper->addField(array('name'=>'zsq', 'field'=>'string'));
         $helper->url = url('admin', $this->_modelName, 'save');
         $helper->entity = $this->_model->get(param('id'));
         $buf = widget('form', $this->_modelName, $helper)->render();
