@@ -14,6 +14,6 @@ class field_file extends field_base {
     }
 
     /**
-     * @todo goodzsq 文件字段
+     * @todo goodzsq field_file not implement
      */
 }

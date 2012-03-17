@@ -45,6 +45,7 @@ class script_jquery {
      * @param string $selector jquery的form选择器 
      */
     function ajaxSubmit($selector) {
+        $csrf_key = util_csrf::key();
         $code = <<<EOF
 $("$selector").submit(function(){
     var form = $(this);
@@ -61,9 +62,18 @@ $("$selector").submit(function(){
             }
         }
         else if(xml.status=='fail'){
+            window.ddd = xml;
+            if(xml.error.{$csrf_key}){
+                alert(xml.error.{$csrf_key});
+            }
             form.find('.tip').html('');
             for(field in xml.error){
                 form.find('.tip[name='+field+']').html(xml.error[field]).css({color:'red'});
+            }
+            if(xml.error.captcha=='fail'){
+                var img = form.find('img#captcha');
+                var url = img.attr('src') + '?' + Math.random();
+                img.attr('src', url);
             }
         }
         else{

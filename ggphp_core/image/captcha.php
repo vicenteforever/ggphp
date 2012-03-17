@@ -13,8 +13,8 @@ class image_captcha {
         return $code;
     }
 
-    public static function output($width='120', $height='40', $characters='6') {
-        $font = dirname(__FILE__).DS.'monofont.ttf';
+    public static function output($width = '120', $height = '40', $characters = '6') {
+        $font = dirname(__FILE__) . DS . 'monofont.ttf';
         $code = self::generateCode($characters);
         $font_size = $height * 0.75;
         $image = @imagecreate($width, $height) or die('Cannot initialize new GD image stream');
@@ -36,6 +36,20 @@ class image_captcha {
         imagedestroy($image);
         session()->captcha = $code;
         exit;
+    }
+
+    /**
+     * 交易验证码 
+     */
+    static public function validate() {
+        $captcha = session()->captcha;
+        if (!empty($captcha)) {
+            if ($captcha != param('captcha', false)) {
+                //验证码作废 必须重新生成
+                session()->captcha = util_string::token();
+                return 'fail';
+            }
+        }
     }
 
 }

@@ -60,7 +60,7 @@ class core_request {
             else
                 return null;
         }
-        //echo $isFilter;
+
         if ($isFilter) {
             $input_filters = config('app', 'input_filters');
             foreach ($input_filters as $filter) {

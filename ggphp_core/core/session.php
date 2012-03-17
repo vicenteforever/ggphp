@@ -62,5 +62,3 @@ class core_session {
     }
 
 }
-
-?>

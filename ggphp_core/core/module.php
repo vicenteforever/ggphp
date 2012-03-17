@@ -71,6 +71,14 @@ class core_module {
         return $action[$module];
     }
 
+    /**
+     * 生成类代理对象并执行方法
+     * @staticvar core_aop $object
+     * @param string $className
+     * @param string $method
+     * @return mixed
+     * @throws Exception 
+     */
     static function call($className, $method) {
         static $object;
         if (!preg_match("/^[_0-9a-zA-Z]+$/", $className))
@@ -98,12 +106,25 @@ class core_module {
         }
     }
 
+    /**
+     * 执行模块的admin控制器方法
+     * @param string $module
+     * @param string $method
+     * @return mixed 
+     */
     static function admin($module, $method) {
         $className = "{$module}_admin";
         $methodName = "do_{$method}";
         return self::call($className, $methodName);
     }
 
+    
+    /**
+     * 执行模块的controller控制器方法
+     * @param string $module
+     * @param string $method
+     * @return mixed 
+     */
     static function controller($module, $method) {
         $className = "{$module}_controller";
         $method = "do_{$method}";

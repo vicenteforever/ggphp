@@ -23,7 +23,7 @@ class widget_breadcrumb extends widget_base {
     
     
     public function theme_default() {
-        //@todo goodzsq breadcrumb
+        //@todo goodzsq breadcrumb style not implement
         return $this->html($this->_data);
     }
 }

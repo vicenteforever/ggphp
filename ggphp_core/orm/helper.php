@@ -32,11 +32,11 @@ class orm_helper {
      * 增加字段
      * @param array $fieldInfo 
      */
-    public function addField($fieldInfo){
+    public function addField($fieldInfo) {
         $fieldName = "field_{$fieldInfo['field']}";
         $this->_fields[$fieldInfo['name']] = new $fieldName($fieldInfo);
     }
-    
+
     /**
      * 根据字段名称获取字段对象
      * @param string $fieldName

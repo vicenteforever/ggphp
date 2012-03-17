@@ -10,25 +10,37 @@ abstract class admin_crud {
     protected $_modelName;
     protected $_model;
     protected $_displayCount = 20;
+    protected $_formStyle = '';
 
     public function __construct() {
         $this->_model = orm($this->_modelName);
     }
 
+    /**
+     * 重建表
+     */
     function do_migrate() {
+        util_csrf::validate();
         $this->_model->migrate();
         $this->_model->debug();
+        return $this->_model->helper()->schema() . '表已生成';
     }
 
+    /**
+     * 编辑
+     * @return type 
+     */
     function do_edit() {
         $helper = $this->_model->helper();
-        $helper->addField(array('name'=>'zsq', 'field'=>'string'));
         $helper->url = url('admin', $this->_modelName, 'save');
         $helper->entity = $this->_model->get(param('id'));
-        $buf = widget('form', $this->_modelName, $helper)->render();
+        $buf = widget('form', $this->_modelName, $helper)->render($this->_formStyle);
         return $buf;
     }
 
+    /**
+     * 保存 
+     */
     function do_save() {
         $id = param('id');
         if (empty($id)) {
@@ -46,12 +58,18 @@ abstract class admin_crud {
         //redirect(url('admin', $this->_modelName, 'index'));
     }
 
+    /**
+     * 删除 
+     */
     function do_delete() {
         $id = param('id');
         $this->_model->delete(array('id' => $id));
         redirect(url('admin', $this->_modelName, 'index'));
     }
 
+    /**
+     * 列表
+     */
     function do_index() {
         $header = array();
         foreach ($this->_model->helper()->fields() as $key => $value) {
@@ -59,8 +77,11 @@ abstract class admin_crud {
         }
         $header['admin'] = '管理';
         $data = array($header);
+        $buf = '';
         $url = url('admin', $this->_modelName, 'edit');
-        $buf = util_html::a($url, '添加');
+        $buf .= util_html::a($url, '添加');
+        $url = url('admin', $this->_modelName, 'migrate');
+        $buf .= ' ' . util_html::a($url, '创建表');
 
         $query = $this->_model->all();
         $pager = new orm_pager($query, param('page'), $this->_displayCount);
@@ -81,19 +102,45 @@ abstract class admin_crud {
     }
 
     /**
+     * 发现错误则结束程序并返回json错误消息，无错误则继续
+     * @param string $key 发生错误的字段
+     * @param mixed $data 发生错误的消息
+     */
+    protected function errorCheck($key, $value) {
+        //把单条错误消息处理成数组
+        $data = array();
+        if(is_array($value)){
+            $data = $value;
+        }
+        else if(!empty($value)){
+            $data[$key] = $value;
+        }
+
+        if (!empty($data)) {
+            $result = array('status' => 'fail', 'error' => $data);
+            echo response()->json($result);
+            exit; //终止程序
+        }
+    }
+
+    /**
      * 填充数据并校验
      * @param phpDataMapper_Entity $entity 
      */
-    private function fillData(phpDataMapper_Entity &$entity) {
+    protected function fillData(phpDataMapper_Entity &$entity) {
+        //检查是否为csrf攻击
+        $this->errorCheck(util_csrf::key(), util_csrf::validate());
+        //填充数据到entity
         foreach ($this->_model->helper()->fields() as $key => $value) {
             $entity->$key = trim(param($key));
         }
-        $error = $this->_model->helper()->validate($entity);
-        if (!empty($error)) {
-            $result = array('status' => 'fail', 'error' => $error);
-            echo response()->json($result);
-            exit;
+        //检查数据校验是否正确
+        $this->errorCheck('', $this->_model->helper()->validate($entity));
+        //检查验证码
+        if ($this->_formStyle == 'captcha') {
+            $this->errorCheck('captcha', image_captcha::validate());
         }
+
     }
 
 }
