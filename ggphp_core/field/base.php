@@ -27,9 +27,10 @@ abstract class field_base {
 
     /**
      * 返回字段可选的值列表
+     * @param string $source
      * @return array 
      */
-    public function getList(){
+    public function getList($source){
         return array();
     }
     

@@ -13,8 +13,11 @@ class field_list extends field_base {
         return true;
     }
     
-    public function getList() {
-        return dict($this->dict)->getData();
+    public function getList($source) {
+        if($source == 'dict'){
+            return dict($this->dict)->getData();
+        }
+        return array();
     }
     
 }

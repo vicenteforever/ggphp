@@ -45,14 +45,25 @@ class widget_field extends widget_base {
     public function field_list_default(field_base $field) {
         $buf = "<label>{$field->label}\n  <select name='{$field->name}'>\n";
         $buf .= "    <option></option>";
-        foreach ($field->getList() as $k => $v) {
+        foreach ($field->getList('dict') as $k => $v) {
             if ($k == $field->value) {
                 $selected = ' selected';
             } else {
                 $selected = '';
             }
-            $buf .= "    <option value='{$k}'{$selected}>{$v}</option>\n";
+            $buf .= "    <option value='{$k}'{$selected}>[$k] {$v}</option>\n";
         }
+        $buf .= "  </select>\n<label class='tip' name='{$field->name}'></label></label>";
+        return $buf;
+    }
+    
+    public function field_list_ajaxlist(field_base $field){
+        $selector = "#{$this->_id} :input[name={$field->name}]";
+        jquery()->ajaxlist($selector);
+        if(strpos($field->dict, '://') === false){
+            $field->dict = base_url() . $field->dict;
+        }
+        $buf = "<label>{$field->label}\n  <select data='{$field->dict}' name='{$field->name}' />\n";
         $buf .= "  </select>\n<label class='tip' name='{$field->name}'></label></label>";
         return $buf;
     }
@@ -64,7 +75,7 @@ class widget_field extends widget_base {
      */
     public function field_list_radio(field_base $field) {
         $buf = "<label>{$field->label} <br />\n";
-        foreach ($field->getList() as $k => $v) {
+        foreach ($field->getList('dict') as $k => $v) {
             if ($k == $field->value) {
                 $checked = ' checked="checked"';
             } else {

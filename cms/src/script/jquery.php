@@ -39,6 +39,11 @@ class script_jquery {
         response()->addScriptFile('js/gg_table.js');
         $this->ready("$('$selector').gg_table();");
     }
+    
+    function ajaxlist($selector){
+        response()->addScriptFile('js/gg_level.js');
+        $this->ready("$('$selector').gg_level();");
+    }
 
     /**
      * 以ajax方式提交窗体
