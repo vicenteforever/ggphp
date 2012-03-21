@@ -57,14 +57,15 @@ class widget_field extends widget_base {
         return $buf;
     }
     
-    public function field_list_ajaxlist(field_base $field){
+    public function field_list_level(field_base $field){
         $selector = "#{$this->_id} :input[name={$field->name}]";
-        jquery()->ajaxlist($selector);
         if(strpos($field->dict, '://') === false){
             $field->dict = base_url() . $field->dict;
         }
-        $buf = "<label>{$field->label}\n  <select data='{$field->dict}' name='{$field->name}' />\n";
-        $buf .= "  </select>\n<label class='tip' name='{$field->name}'></label></label>";
+        jquery()->ajaxLevelSelect($selector, $field->dict);
+
+        $buf = "<label>{$field->label}\n  <input type='text' name='{$field->name}' value='{$field->value}'>\n";
+        $buf .= "<label class='tip' name='{$field->name}'></label></label>";
         return $buf;
     }
 

@@ -40,9 +40,14 @@ class script_jquery {
         $this->ready("$('$selector').gg_table();");
     }
     
-    function ajaxlist($selector){
+    function ajaxLevelSelect($selector, $url){
         response()->addScriptFile('js/gg_level.js');
-        $this->ready("$('$selector').gg_level();");
+        $code = <<<EOF
+$.post('$url', {}, function(data){
+    $('$selector').gg_level(data);      
+}, 'json');
+EOF;
+        $this->ready($code);
     }
 
     /**
