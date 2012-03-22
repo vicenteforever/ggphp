@@ -36,6 +36,16 @@ class widget_field extends widget_base {
     public function field_text_default(field_base $field) {
         return "<label>{$field->label}<input type='text' name={$field->name} value='{$field->value}'><label class='tip' name='{$field->name}'></label></label>";
     }
+    
+    /**
+     * 自动完成输入文本框
+     * @param field_base $field
+     * @return string 
+     */
+    public function field_text_autocomplete(field_base $field){
+        //@todo goodzsq 自动完成文本框
+        return '自动完成字段尚未实现';
+    }
 
     /**
      * 下拉列表
@@ -123,6 +133,10 @@ $('$selector').tinymce({
 EOF;
         jquery()->ready($code);
         return $this->field_textarea_default($field);
+    }
+    
+    public function field_file_default(field_base $field){
+        return "<label>{$field->label}<input type='file' name={$field->name}><label class='tip' name='{$field->name}' /></label></label>";
     }
 
 }

@@ -44,18 +44,22 @@ class widget_form extends widget_base {
     }
 
     protected function html(orm_helper $helper, $captcha) {
-        $buf = "<form method=\"POST\" id=\"{$this->_id}\" action=\"$helper->url\">\n";
+        $buf = "";
+        $enctype = '';
         foreach ($helper->fields() as $k => $field) {
+            if($field instanceof field_file){
+                $enctype = ' enctype="multipart/form-data"';
+            }
             $field->value = $helper->fieldValue($k, $helper->entity);
             $buf .= widget('field', $this->_id, $field)->render() . " </br>\n";
         }
         if ($captcha) {
             $buf .= $this->captcha();
         }
-        $buf .= "<input type='hidden' name='".util_csrf::key()."' value='".util_csrf::token()."' />";
+        $buf .= "<input type='hidden' name='" . util_csrf::key() . "' value='" . util_csrf::token() . "' />";
         $buf .= "<input type=submit />";
-        $buf .= "</form>";
-        return $buf;
+        $result = "<form method=\"POST\" id=\"{$this->_id}\" action=\"$helper->url\"{$enctype}>\n{$buf}\n</form>";
+        return $result;
     }
 
 }

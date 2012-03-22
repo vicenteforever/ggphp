@@ -8,7 +8,7 @@
 
         var settings = {
             level:['省', '市', '区'],
-            data:[1,2,3,4,5]
+            data:[{name:'aaa', child:[]}]
         };
         
         var fillData = function(object, data, defaultValue){

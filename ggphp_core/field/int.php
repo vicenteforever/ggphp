@@ -7,8 +7,7 @@ class field_int extends field_base {
     public $defaultWidget = 'text';
 
     function validate($value) {
-        $value2 = (int) $value . '';
-        if ($value != $value2) {
+        if ( ($val === true) || ((string)(int) $val) !== ((string) $val)) {
             return "{$this->label} is not integer";
         }
         return true;

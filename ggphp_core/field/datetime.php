@@ -27,9 +27,5 @@ class field_datetime extends field_type {
 		return true;
 	}
 
-	public function widget_input($value){
-		return "<label>{$this->label}</label> <input type=\"text\" name=\"{$this->name}\" value=\"{$value}\" />";
-	}
-
 
 }

@@ -7,7 +7,7 @@
  */
 class field_file extends field_base {
 
-    public $defaultWidget = 'text';
+    public $defaultWidget = 'file';
     
     public function validate($value) {
         return true;
