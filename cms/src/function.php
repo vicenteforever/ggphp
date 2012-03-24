@@ -22,7 +22,7 @@ function widget($widgetName, $id, $data) {
 }
 
 /**
- * 取得jquery对象
+ * jquery对象
  * @return \script_jquery 
  */
 function jquery() {

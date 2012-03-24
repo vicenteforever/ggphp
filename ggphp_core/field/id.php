@@ -6,7 +6,7 @@ class field_id extends field_base {
     public $length = 11;
     public $primary = true;
     public $serial = true;
-    public $defaultWidget = 'hidden';
+    public $widgetType = 'hidden';
 
     function validate($value) {
         if (empty($value)) {

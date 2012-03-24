@@ -49,15 +49,17 @@ class core_session {
         }
     }
 
+    /**
+     * session的安全性检查
+     */
     function check() {
-        $user_agent = core_request::ip() . $_SERVER['HTTP_USER_AGENT'];
+        $user_agent = md5(core_request::ip() . $_SERVER['HTTP_USER_AGENT']);
         if (!isset($_SESSION['user_agent'])) {
             $_SESSION['user_agent'] = $user_agent;
         }
         //如果用户session ID是伪造
-        elseif ($_SESSION['user_agent'] != $user_agent) {
-            session_regenerate_id();
-            echo "session_regenerate_id()";
+        if ($_SESSION['user_agent'] != $user_agent) {
+            die('会话错误，请关闭浏览器重新打开页面');
         }
     }
 

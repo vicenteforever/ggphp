@@ -10,6 +10,11 @@ class util_uploader {
     static public $allowFileTypes = array('jpeg', 'jpg', 'gif', 'bmp', 'png', 'zip', 'rar');
     static public $maxFileSize = 8388608;
 
+    /**
+     *设置允许上传的文件类型,例如"jpg,png,gif,zip,rar"
+     * @param type $fileTypes
+     * @return type 
+     */
     static public function setAllowExt($fileTypes) {
         if (!is_array($fileTypes)) {
             self::$allowFileTypes = explode(',', $fileTypes);
@@ -18,16 +23,29 @@ class util_uploader {
         }
         return;
     }
+     
+    /**
+     * 获取文件扩展名
+     * @param string $filename 
+     */
+    static public function ext($filename){
+        return util_file::ext($filename);
+    }
 
     /**
      * 上传文件
-     * @param array $fileField 来自$_FILES[fieldname]变量
-     * @param string $destFolder 目标目录
-     * @param integer $fileNameType 上传文件命名规则
+     * @param string $fieldName 字段名称
+     * @param string $filename 目标文件
      * @return string 保存的文件名称
      * @throws Exception 上传失败扔出异常
      */
-    static public function upload($fileField, $destFolder = './') {
+    static public function upload($fieldName, $filename) {
+        if(empty($_FILES[$fieldName])){
+            $fileField['error'] = UPLOAD_ERR_FORM_SIZE;
+        }
+        else{
+            $fileField = $_FILES[$fieldName];
+        }
         switch ($fileField['error']) {
             case UPLOAD_ERR_OK : //其值为 0，没有错误发生，文件上传成功。
                 $upload_succeed = true;
@@ -71,26 +89,19 @@ class util_uploader {
                 $upload_succeed = false;
             }
             if ($upload_succeed) {
-                $fileExt = util_file::ext($fileField['name']);
-                if (!in_array(strtolower($fileExt), self::$allowFileTypes)) {
-                    $errorMsg = '文件上传失败！失败原因：文件类型不被允许！';
+                $fileExt = self::ext($fileField['name']);
+                if (!in_array($fileExt, self::$allowFileTypes)) {
+                    $errorMsg = "文件上传失败！失败原因：文件类型[{$fileField['name']}]{$fileExt}不被允许！";
                     $errorCode = -104;
                     $upload_succeed = false;
                 }
             }
         }
         if ($upload_succeed) {
-            if (!is_dir($destFolder) && $destFolder != './' && $destFolder != '../') {
-                mkdir($destFolder, 0777, true); //创建目录
-            }
-
-            //生成唯一的文件名称
-            $fileFullName = util_string::token();
-
-            if (move_uploaded_file($fileField["tmp_name"], $destFolder . $fileFullName)) {
-                return $fileFullName;
+            if (move_uploaded_file($fileField["tmp_name"], $filename)) {
+                return $filename;
             } else {
-                $errorMsg = $destFolder . $fileFullName . " 文件上传失败！失败原因：本地文件系统读写权限出错！";
+                $errorMsg = "{$fileField['name']} 文件上传失败！失败原因：本地文件系统读写权限出错！";
                 $errorCode = -105;
                 $upload_succeed = false;
             }

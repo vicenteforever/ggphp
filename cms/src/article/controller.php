@@ -28,12 +28,12 @@ class article_controller {
         }
     }
 
-    function admin_news() {
-        return '新闻管理';
-    }
-
+    /**
+     * 上传测试
+     */
     function do_test() {
-        echo 'hello world';
+        jquery()->uploadify('#zsq', 'saver.php');
+        return html('<div id=zsq>uppppp</div>');
     }
 
     //private function //

@@ -7,13 +7,10 @@
  */
 class field_file extends field_base {
 
-    public $defaultWidget = 'file';
+    public $widgetType = 'file';
     
     public function validate($value) {
         return true;
     }
 
-    /**
-     * @todo goodzsq field_file not implement
-     */
 }

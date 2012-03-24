@@ -23,8 +23,12 @@ class core_response {
         return $instance;
     }
 
-    public function addScriptFile($jsFile) {
-        $this->_script[$jsFile] = $jsFile;
+    public function addScriptFile($file) {
+        //相对路径变成绝对路径
+        if(strpos($file, '://')===false && substr($file, 0,1)!='/'){
+            $file = base_url() . $file;
+        }
+        $this->_script[$file] = $file;
     }
 
     public function addScriptInline($jsCode) {
@@ -34,7 +38,6 @@ class core_response {
     public function script() {
         $buffer = "";
         foreach ($this->_script as $key => $value) {
-            $value = base_url() . $value;
             $buffer .= "<script type=\"text/javascript\" src=\"{$value}\"></script>\n";
         }
         $buffer .= "<script type=\"text/javascript\">\n";
@@ -45,8 +48,12 @@ class core_response {
         return $buffer;
     }
 
-    public function addCssFile($cssFile) {
-        $this->_css[$cssFile] = $cssFile;
+    public function addCssFile($file) {
+        //相对路径变成绝对路径
+        if(strpos($file, '://')===false && substr($file, 0,1)!='/'){
+            $file = base_url() . $file;
+        }
+        $this->_css[$file] = $file;
     }
 
     public function addCssInline($cssStyle) {
@@ -56,7 +63,6 @@ class core_response {
     public function css() {
         $buffer = "";
         foreach ($this->_css as $key => $value) {
-            $value = base_url() . $value;
             $buffer .= "<link href=\"$value\" rel=\"stylesheet\" type=\"text/css\" />\n";
         }
         $buffer .= "<style>\n";

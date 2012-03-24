@@ -3,7 +3,7 @@
 class field_text extends field_base {
 
     public $type = 'text';
-    public $defaultWidget = 'textarea';
+    public $widgetType = 'textarea';
 
     function validate($value) {
         return true;

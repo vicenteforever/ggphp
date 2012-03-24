@@ -4,7 +4,7 @@ class field_string extends field_base {
 
     public $type = 'string';
     public $length = 255;
-    public $defaultWidget = 'text';
+    public $widgetType = 'text';
 
     function validate($value) {
         if (strlen($value) > $this->length) {

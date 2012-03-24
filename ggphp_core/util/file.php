@@ -17,7 +17,7 @@ class util_file {
         if ($pos !== false) {
             return strtolower(trim(substr($filename, $pos + 1)));
         } else {
-            return 'no';
+            return '';
         }
     }
 

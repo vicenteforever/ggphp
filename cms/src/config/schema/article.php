@@ -8,5 +8,5 @@ return array(
     array('name' => 'radio', 'label' => '单选性别', 'field' => 'list', 'dict' => 'sex', 'widget' => 'radio'),
     array('name' => 'country', 'label' => '国家', 'field' => 'list', 'dict' => 'country', 'required' => true, 'widget' => 'list'),
     array('name' => 'province', 'label' => '地区', 'field' => 'list', 'dict' => 'dict/province', 'widget' => 'level'),
-    array('name' => 'attach', 'label' => '附件', 'field' => 'file'),
+    array('name' => 'attach', 'label' => '附件', 'field' => 'file', 'settings'=>array()),
 );

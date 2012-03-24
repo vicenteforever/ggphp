@@ -7,7 +7,7 @@
  */
 class field_list extends field_base {
 
-    public $defaultWidget = 'list';
+    public $widgetType = 'list';
     
     public function validate($value) {
         return true;

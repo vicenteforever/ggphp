@@ -3,7 +3,7 @@
  * @author goodzsq@gmail.com
  */
 (function( $ ){
-  $.fn.gg_menu = function( options ) {
+  $.fn.goodzsq_menu = function( options ) {
 
     var settings = {
       'width': 120,

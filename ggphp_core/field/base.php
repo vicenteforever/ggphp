@@ -11,7 +11,7 @@ abstract class field_base {
     public $required = false;
     public $number = 1;
     public $hidden = false;
-    public $defaultWidget = 'text';
+    public $widgetType = 'text';
 
     public function __construct(array $arr) {
         foreach ($arr as $k => $v) {
@@ -35,7 +35,7 @@ abstract class field_base {
     }
     
     /**
-     * 读取未设置属性时返回空值
+     * 读取未设置属性时返回空值,屏蔽警告错误
      * @param string $name
      * @return null 
      */

@@ -4,7 +4,7 @@ class field_image extends field_file {
 
     public $type = 'varchar';
     public $length = 255;
-    public $defaultWidget = 'text';
+    public $widgetType = 'text';
 
     function isValidFormat($value) {
         if (!parent::isValidFormat($value))

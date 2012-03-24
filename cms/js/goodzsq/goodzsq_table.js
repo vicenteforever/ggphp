@@ -3,7 +3,7 @@
  * @author goodzsq@gmail.com
  */
 (function( $ ){
-    $.fn.gg_table = function( options ) {
+    $.fn.goodzsq_table = function( options ) {
 
         var settings = {
             'odd': 'odd',

@@ -4,7 +4,7 @@ class field_int extends field_base {
 
     public $type = 'int';
     public $length = 11;
-    public $defaultWidget = 'text';
+    public $widgetType = 'text';
 
     function validate($value) {
         if ( ($val === true) || ((string)(int) $val) !== ((string) $val)) {

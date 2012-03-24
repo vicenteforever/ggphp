@@ -4,7 +4,7 @@
  */
 (function( $ ){
   
-    $.fn.gg_level = function( options ) {
+    $.fn.goodzsq_level = function( options ) {
 
         var settings = {
             level:['省', '市', '区'],

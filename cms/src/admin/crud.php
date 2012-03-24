@@ -33,6 +33,7 @@ abstract class admin_crud {
     function do_edit() {
         $helper = $this->_model->helper();
         $helper->url = url('admin', $this->_modelName, 'save');
+        $helper->upload = url('admin', $this->_modelName, 'upload');
         $helper->entity = $this->_model->get(param('id'));
         $buf = widget('form', $this->_modelName, $helper)->render($this->_formStyle);
         return $buf;
@@ -56,6 +57,21 @@ abstract class admin_crud {
         echo response()->json($result);
         exit;
         //redirect(url('admin', $this->_modelName, 'index'));
+    }
+
+    /**
+     * 文件上传 
+     */
+    function do_upload() {
+        $filename = APP_DIR . DS . config('app', 'upload_dir') . DS . util_string::token();
+        try {
+            util_uploader::setAllowExt('pdf,zip,rar');
+            util_uploader::upload('Filedata', $filename);
+            echo 'ok';
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        exit;
     }
 
     /**
@@ -109,10 +125,9 @@ abstract class admin_crud {
     protected function errorCheck($key, $value) {
         //把单条错误消息处理成数组
         $data = array();
-        if(is_array($value)){
+        if (is_array($value)) {
             $data = $value;
-        }
-        else if(!empty($value)){
+        } else if (!empty($value)) {
             $data[$key] = $value;
         }
 
@@ -140,7 +155,6 @@ abstract class admin_crud {
         if ($this->_formStyle == 'captcha') {
             $this->errorCheck('captcha', image_captcha::validate());
         }
-
     }
 
 }

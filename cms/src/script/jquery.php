@@ -1,7 +1,7 @@
 <?php
 
 /**
- * script_jquery
+ * jquery常用组件包装
  * @package script
  * @author goodzsq@gmail.com
  */
@@ -27,8 +27,8 @@ class script_jquery {
      * @param string $selector jquery选择器 
      */
     function menu($selector) {
-        response()->addScriptFile('js/gg_menu.js');
-        $this->ready("$('$selector').gg_menu();");
+        response()->addScriptFile('js/goodzsq/goodzsq_menu.js');
+        $this->ready("$('$selector').goodzsq_menu();");
     }
     
     /**
@@ -36,15 +36,20 @@ class script_jquery {
      * @param type $selector 
      */
     function table($selector) {
-        response()->addScriptFile('js/gg_table.js');
-        $this->ready("$('$selector').gg_table();");
+        response()->addScriptFile('js/goodzsq/goodzsq_table.js');
+        $this->ready("$('$selector').goodzsq_table();");
     }
     
+    /**
+     * ajax级联下拉框 用于选择类似省->市->区的例子
+     * @param type $selector
+     * @param type $url 
+     */
     function ajaxLevelSelect($selector, $url){
-        response()->addScriptFile('js/gg_level.js');
+        response()->addScriptFile('js/goodzsq/goodzsq_level.js');
         $code = <<<EOF
 $.post('$url', {}, function(data){
-    $('$selector').gg_level(data);      
+    $('$selector').goodzsq_level(data);      
 }, 'json');
 EOF;
         $this->ready($code);
@@ -91,6 +96,53 @@ $("$selector").submit(function(){
         }
     }, 'json');
     return false;
+});
+EOF;
+        $this->ready($code);
+    }
+    
+    /**
+     * tinymce富文本编辑器
+     * @param string $selector 
+     */
+    public function tinymce($selector){
+        response()->addScriptFile('js/tiny_mce/jquery.tinymce.js');
+        response()->addScriptFile('js/tiny_mce/tiny_mce.js');
+        $code = <<<EOF
+$('$selector').tinymce({
+    'language':'zh-cn',
+    theme : "advanced"
+});
+EOF;
+        jquery()->ready($code);        
+    }
+    
+    /**
+     * uploadify上传组件支持多文件上传显示进度
+     * @param string $selector jquery选择器
+     * @param string $saver 处理上传文件的url
+     */
+    public function uploadify($selector, $saver){
+        $basepath = base_url().'js/uploadify';
+        response()->addCssFile("$basepath/uploadify.css");
+        response()->addScriptFile('js/swfobject.js');
+        response()->addScriptFile("$basepath/jquery.uploadify.js");
+        $code = <<<EOF
+$("$selector").uploadify({
+    uploader:'$basepath/uploadify.swf',
+    script : '$saver',
+    cancelImg:'$basepath/cancel.png',
+    auto:true,
+    multi:true,
+    simUploadLimit : 2,
+    removeCompleted : true,
+    buttonText:'upload',
+    'onError' : function (event,ID,fileObj,errorObj) {
+        console.log(errorObj.type + ' Error: ' + errorObj.info);
+    },
+    onComplete: function(){
+        console.log(arguments)
+    }
 });
 EOF;
         $this->ready($code);

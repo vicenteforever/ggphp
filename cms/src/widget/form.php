@@ -46,9 +46,10 @@ class widget_form extends widget_base {
     protected function html(orm_helper $helper, $captcha) {
         $buf = "";
         $enctype = '';
+        //$enctype = ' enctype="multipart/form-data"';
         foreach ($helper->fields() as $k => $field) {
             if($field instanceof field_file){
-                $enctype = ' enctype="multipart/form-data"';
+                $field->upload = $helper->upload;
             }
             $field->value = $helper->fieldValue($k, $helper->entity);
             $buf .= widget('field', $this->_id, $field)->render() . " </br>\n";

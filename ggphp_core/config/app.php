@@ -14,4 +14,5 @@ return array(
     'hook_app_start' => array(''),
     'hook_controller_start' => array('rbac'),
     'hook_controller_end' => array(''),
+    'upload_dir' => 'userfile',
 );

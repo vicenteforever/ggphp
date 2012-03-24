@@ -9,9 +9,9 @@ class widget_field extends widget_base {
 
     public function theme_default() {
         if ($this->_data instanceof field_base) {
-            $methodName = "field_{$this->_data->defaultWidget}_{$this->_data->widget}";
+            $methodName = "field_{$this->_data->widgetType}_{$this->_data->widget}";
             if (!method_exists($this, $methodName)) {
-                $methodName = "field_{$this->_data->defaultWidget}_default";
+                $methodName = "field_{$this->_data->widgetType}_default";
             }
             return $this->$methodName($this->_data);
         } else {
@@ -123,20 +123,15 @@ class widget_field extends widget_base {
      */
     public function field_textarea_tinymce(field_base $field) {
         $selector = "#{$this->_id} :input[name={$field->name}]";
-        response()->addScriptFile('js/tiny_mce/jquery.tinymce.js');
-        response()->addScriptFile('js/tiny_mce/tiny_mce.js');
-        $code = <<<EOF
-$('$selector').tinymce({
-    'language':'zh-cn',
-    theme : "advanced"
-});        
-EOF;
-        jquery()->ready($code);
+        jquery()->tinymce($selector);
         return $this->field_textarea_default($field);
     }
     
     public function field_file_default(field_base $field){
-        return "<label>{$field->label}<input type='file' name={$field->name}><label class='tip' name='{$field->name}' /></label></label>";
+        $selector = "#{$this->_id} :input[name={$field->name}]";
+        jquery()->uploadify($selector, $field->upload);
+        return "<label>{$field->label}<input type='file' id='{$field->name}' name='{$field->name}'><label class='tip' name='{$field->name}' /></label></label>";
+        
     }
 
 }
