@@ -5,7 +5,7 @@
  * @package script
  * @author goodzsq@gmail.com
  */
-class script_jquery {
+class script_jquery_plugin {
 
     public function __construct() {
         response()->addScriptFile('js/jquery.js');
@@ -68,6 +68,10 @@ $("$selector").submit(function(){
     var data = form.serializeArray();
 
     $.post(url, data, function(xml){
+        if(!xml){
+            console.log('no data');
+            return false;
+        }
         if(xml.status=='ok'){
             if(xml.redirect){
                 location.href=xml.redirect;
@@ -92,7 +96,7 @@ $("$selector").submit(function(){
             }
         }
         else{
-            alert('保存失败' + xml);
+            console.log(xml);
         }
     }, 'json');
     return false;
@@ -114,21 +118,24 @@ $('$selector').tinymce({
     theme : "advanced"
 });
 EOF;
-        jquery()->ready($code);        
+        jquery_plugin()->ready($code);        
     }
     
     /**
      * uploadify上传组件支持多文件上传显示进度
      * @param string $selector jquery选择器
      * @param string $saver 处理上传文件的url
+     * @param mixed $params 上传文件的附加参数
      */
-    public function uploadify($selector, $saver){
+    public function uploadify($selector, $saver, $params){
         $basepath = base_url().'js/uploadify';
         response()->addCssFile("$basepath/uploadify.css");
         response()->addScriptFile('js/swfobject.js');
         response()->addScriptFile("$basepath/jquery.uploadify.js");
+        $scriptData = json_encode($params);
         $code = <<<EOF
 $("$selector").uploadify({
+    scriptData: $scriptData,
     uploader:'$basepath/uploadify.swf',
     script : '$saver',
     cancelImg:'$basepath/cancel.png',

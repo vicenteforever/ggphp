@@ -563,6 +563,8 @@ class phpDataMapper_Base
 			throw new $this->_exceptionClass(__METHOD__ . " first argument must be entity object or array");
 		}
 		
+                /**
+                 * modify by goodzsq
 		$data = array();
 		$entityData = $entity->toArray();
 		foreach($entityData as $field => $value) {
@@ -571,7 +573,11 @@ class phpDataMapper_Base
 				$data[$field] = $this->isEmpty($value) ? null : $value;
 			}
 		}
-		
+                 */
+                // add by goodzsq
+                $data = $entity->toArray();
+                // end add by goodzsq
+                
 		// Ensure there is actually data to update
 		if(count($data) > 0) {
 			$result = $this->adapter()->create($this->datasource(), $data);

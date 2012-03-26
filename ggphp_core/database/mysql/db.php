@@ -54,7 +54,7 @@ class database_mysql_db {
      * @param string $sql
      * @return database_mysql_result 
      */
-    function sqlQuery($sql) {
+    function sqlQuery($sql) {echo $query;exit;
         $sql = mysql_escape_string($sql);
         $rs = $this->sql($sql);
         return new database_mysql_result($rs);

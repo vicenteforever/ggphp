@@ -32,7 +32,7 @@ class article_controller {
      * 上传测试
      */
     function do_test() {
-        jquery()->uploadify('#zsq', 'saver.php');
+        jquery_plugin()->uploadify('#zsq', 'saver.php');
         return html('<div id=zsq>uppppp</div>');
     }
 

@@ -33,15 +33,15 @@ class util_csrf {
      */
     static public function validate() {
         if(!core_request::isPost()){
-            return '请用post方法提交数据';
+            return 'c请用post方法提交数据';
         }
         $key = self::key();
         $token_session = session()->$key;
         $token_param = param($key);
         if (empty($token_session)) {
-            return '数据已经过期[token为空]， 请关闭此窗口';
+            return 'a数据已经过期[token为空]， 请关闭此窗口';
         } else if ($token_session != $token_param) {
-            return '数据已经过期[token不一致]，请关闭此窗口';
+            return 'b数据已经过期[token不一致]，请关闭此窗口';
         } else {
             return ;
         };

@@ -18,7 +18,7 @@ class widget_form extends widget_base {
      */
     public function theme_default() {
         if ($this->_data instanceof orm_helper) {
-            jquery()->ajaxSubmit('#' . $this->_id);
+            jquery_plugin()->ajaxSubmit('#' . $this->_id);
             return $this->html($this->_data, false);
         }
     }
@@ -29,7 +29,7 @@ class widget_form extends widget_base {
      */
     public function theme_captcha() {
         if ($this->_data instanceof orm_helper) {
-            jquery()->ajaxSubmit('#' . $this->_id);
+            jquery_plugin()->ajaxSubmit('#' . $this->_id);
             return $this->html($this->_data, true);
         }
     }
@@ -47,17 +47,25 @@ class widget_form extends widget_base {
         $buf = "";
         $enctype = '';
         //$enctype = ' enctype="multipart/form-data"';
+        $csrfToken = util_csrf::token();
         foreach ($helper->fields() as $k => $field) {
             if($field instanceof field_file){
-                $field->upload = $helper->upload;
+                $field->uploadurl = $helper->uploadurl;
+                $field->token = $csrfToken;
             }
-            $field->value = $helper->fieldValue($k, $helper->entity);
-            $buf .= widget('field', $this->_id, $field)->render() . " </br>\n";
+            $field->setValue($helper->fieldValue($k, $helper->entity));
+            if($field->required){
+                $required = ' *';
+            }
+            else{
+                $required = '';
+            }
+            $buf .= widget('field', $this->_id, $field)->render() . "$required </br>\n";
         }
         if ($captcha) {
             $buf .= $this->captcha();
         }
-        $buf .= "<input type='hidden' name='" . util_csrf::key() . "' value='" . util_csrf::token() . "' />";
+        $buf .= "<input type='hidden' name='" . util_csrf::key() . "' value='$csrfToken' />";
         $buf .= "<input type=submit />";
         $result = "<form method=\"POST\" id=\"{$this->_id}\" action=\"$helper->url\"{$enctype}>\n{$buf}\n</form>";
         return $result;

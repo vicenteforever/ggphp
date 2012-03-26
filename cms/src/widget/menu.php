@@ -14,7 +14,7 @@ class widget_menu extends widget_base {
 
     public function theme_default() {
         $selector = "#{$this->_id}";
-        jquery()->menu($selector);
+        jquery_plugin()->menu($selector);
         return $this->html();
     }
 

@@ -28,7 +28,7 @@ $selector .last{}
 $selector .hover{background:yellow;}
 EOF;
         response()->addCssInline($style);
-        jquery()->table($selector);
+        jquery_plugin()->table($selector);
         return $this->html();
     }
 

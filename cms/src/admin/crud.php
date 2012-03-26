@@ -20,20 +20,24 @@ abstract class admin_crud {
      * 重建表
      */
     function do_migrate() {
-        util_csrf::validate();
-        $this->_model->migrate();
-        $this->_model->debug();
-        return $this->_model->helper()->schema() . '表已生成';
+        try {
+            util_csrf::validate();
+            $this->_model->migrate();
+            $this->_model->debug();
+            return $this->_model->helper()->schema() . '表已生成';
+        } catch (Exception $e) {
+            echo $this->_model->debug();
+            return $e->getMessage();
+        }
     }
 
     /**
      * 编辑
-     * @return type 
      */
     function do_edit() {
         $helper = $this->_model->helper();
         $helper->url = url('admin', $this->_modelName, 'save');
-        $helper->upload = url('admin', $this->_modelName, 'upload');
+        $helper->uploadurl = url('admin', $this->_modelName, 'upload');
         $helper->entity = $this->_model->get(param('id'));
         $buf = widget('form', $this->_modelName, $helper)->render($this->_formStyle);
         return $buf;
@@ -44,18 +48,35 @@ abstract class admin_crud {
      */
     function do_save() {
         $id = param('id');
-        if (empty($id)) {
-            $entity = $this->_model->get();
-            $this->fillData($entity);
-            $this->_model->insert($entity);
-        } else {
+        try {
+
             $entity = $this->_model->get(param('id'));
             $this->fillData($entity);
-            $this->_model->save($entity);
+            $newid = $this->_model->save($entity);
+            if(empty($id)){
+                $id = $newid;
+            }
+            //@todo goodzsq save attach file
+            $token = param(util_csrf::key());
+            $session_key = 'upload_' . $token;
+            $uploadlist = session()->$session_key;
+            if (is_array($uploadlist)) {
+                foreach ($uploadlist as $idx => $fileinfo) {
+                    $oldname = $fileinfo['filename'];
+                    $newname = str_replace($token, $id, $oldname);
+                    rename($oldname, $newname);
+                }
+            }
+            session()->$session_key = null;
+            //end save attach file
+            $result = array('status' => 'ok', 'redirect' => url('admin', $this->_modelName, 'index'));
+            echo response()->json($result);
+            exit;
+        } catch (Exception $e) {
+            echo '[' . $this->_model->debug() . ']';
+            echo $e->getMessage();
+            exit;
         }
-        $result = array('status' => 'ok', 'redirect' => url('admin', $this->_modelName, 'index'));
-        echo response()->json($result);
-        exit;
         //redirect(url('admin', $this->_modelName, 'index'));
     }
 
@@ -63,15 +84,37 @@ abstract class admin_crud {
      * 文件上传 
      */
     function do_upload() {
-        $filename = APP_DIR . DS . config('app', 'upload_dir') . DS . util_string::token();
+        $formToken = param('token');
+        $fileToken = util_string::token();
+        //参数安全检查
+        if (!preg_match("/^\w+$/", $formToken)) {
+            die("token invalid $formToken");
+        }
+        $filename = APP_DIR . DS . config('app', 'upload_dir') . DS . $formToken . '_' . $fileToken;
         try {
             util_uploader::setAllowExt('pdf,zip,rar');
-            util_uploader::upload('Filedata', $filename);
+            $result = util_uploader::upload('Filedata', $filename);
+            $session_key = 'upload_' . $formToken;
+            $uploadlist = session()->$session_key;
+            if (empty($uploadlist)) {
+                $uploadlist = array();
+            }
+            $uploadlist[] = $result;
+            session()->$session_key = $uploadlist;
             echo 'ok';
         } catch (Exception $e) {
             echo $e->getMessage();
         }
         exit;
+    }
+
+    /**
+     * 文件下载 
+     */
+    function do_download() {
+        //@todo goodzsq file download
+        $id = param('id');
+        response()->download($filename, $content);
     }
 
     /**
@@ -146,8 +189,9 @@ abstract class admin_crud {
         //检查是否为csrf攻击
         $this->errorCheck(util_csrf::key(), util_csrf::validate());
         //填充数据到entity
-        foreach ($this->_model->helper()->fields() as $key => $value) {
-            $entity->$key = trim(param($key));
+        foreach ($this->_model->helper()->fields() as $key => $field) {
+            $field->setValue(param($key));
+            $entity->$key = $field->getValue();
         }
         //检查数据校验是否正确
         $this->errorCheck('', $this->_model->helper()->validate($entity));

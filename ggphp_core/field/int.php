@@ -6,7 +6,7 @@ class field_int extends field_base {
     public $length = 11;
     public $widgetType = 'text';
 
-    function validate($value) {
+    function validate($val) {
         if ( ($val === true) || ((string)(int) $val) !== ((string) $val)) {
             return "{$this->label} is not integer";
         }

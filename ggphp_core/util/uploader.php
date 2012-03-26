@@ -11,7 +11,7 @@ class util_uploader {
     static public $maxFileSize = 8388608;
 
     /**
-     *设置允许上传的文件类型,例如"jpg,png,gif,zip,rar"
+     * 设置允许上传的文件类型,例如"jpg,png,gif,zip,rar"
      * @param type $fileTypes
      * @return type 
      */
@@ -23,12 +23,12 @@ class util_uploader {
         }
         return;
     }
-     
+
     /**
      * 获取文件扩展名
      * @param string $filename 
      */
-    static public function ext($filename){
+    static public function ext($filename) {
         return util_file::ext($filename);
     }
 
@@ -36,14 +36,13 @@ class util_uploader {
      * 上传文件
      * @param string $fieldName 字段名称
      * @param string $filename 目标文件
-     * @return string 保存的文件名称
+     * @return array 上传文件信息
      * @throws Exception 上传失败扔出异常
      */
     static public function upload($fieldName, $filename) {
-        if(empty($_FILES[$fieldName])){
+        if (empty($_FILES[$fieldName])) {
             $fileField['error'] = UPLOAD_ERR_FORM_SIZE;
-        }
-        else{
+        } else {
             $fileField = $_FILES[$fieldName];
         }
         switch ($fileField['error']) {
@@ -99,7 +98,13 @@ class util_uploader {
         }
         if ($upload_succeed) {
             if (move_uploaded_file($fileField["tmp_name"], $filename)) {
-                return $filename;
+                $result = array();
+                $result['filename'] = $filename;
+                $result['name'] = $fileField['name'];
+                $result['ext'] = $fileExt;
+                $result['mime'] = $fileField['type'];
+                $result['size'] = $fileField['size'];
+                return $result;
             } else {
                 $errorMsg = "{$fileField['name']} 文件上传失败！失败原因：本地文件系统读写权限出错！";
                 $errorCode = -105;
@@ -109,6 +114,7 @@ class util_uploader {
         if (!$upload_succeed) {
             throw new Exception($errorMsg, $errorCode);
         }
+        return array();
     }
 
 }

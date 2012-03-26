@@ -25,10 +25,23 @@ function widget($widgetName, $id, $data) {
  * jquery对象
  * @return \script_jquery 
  */
-function jquery() {
+function jquery_plugin() {
     static $jquery;
     if (!isset($jquery)) {
-        $jquery = new script_jquery();
+        $jquery = new script_jquery_plugin();
+    }
+    return $jquery;
+}
+
+/**
+ * jquery ui对象
+ * @staticvar script_jquery_ui $jquery
+ * @return \script_jquery_ui 
+ */
+function jquery_ui(){
+    static $jquery;
+    if(!isset($jquery)){
+        $jquery = new script_jquery_ui();
     }
     return $jquery;
 }
