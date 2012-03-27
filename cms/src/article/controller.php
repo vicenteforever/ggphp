@@ -32,11 +32,11 @@ class article_controller {
      * 上传测试
      */
     function do_test() {
-        jquery_plugin()->uploadify('#zsq', 'saver.php');
-        return html('<div id=zsq>uppppp</div>');
+        //$vars = array('swf'=>'/keyboard.swf', 'flashvars'=>array('var1'=>'aa', 'var2'=>'bb'));
+        //return html(widget('swfobject', 'test', '/keyboard.swf')->render());
+        return html(widget('marquee', '', 'hello world')->render());
     }
 
     //private function //
 }
 
-?>

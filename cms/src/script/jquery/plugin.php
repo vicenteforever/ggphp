@@ -7,8 +7,10 @@
  */
 class script_jquery_plugin {
 
+    const jquery_ver = '1.7.1';
+
     public function __construct() {
-        response()->addScriptFile('js/jquery.js');
+        response()->addScriptFile("js/jquery/jquery-".self::jquery_ver.".min.js");
     }
 
     /**
@@ -20,6 +22,21 @@ class script_jquery_plugin {
         $buf .= $code;
         $buf .= "\n});";
         response()->addScriptInline($buf);
+    }
+    
+    /**
+     * 转换为flash对象
+     * @param string $selector
+     * @param array $params 
+     * @see http://jquery.thewikies.com/swfobject/
+     */
+    function swfobject($selector, array $params=array()){
+        $flashvars = json_encode($params);
+        response()->addScriptFile("js/swfobject/jquery.swfobject.1-1-1.min.js");
+        $code = <<<EOF
+$("$selector").flash($flashvars);
+EOF;
+        $this->ready($code);
     }
     
     /**
@@ -107,7 +124,8 @@ EOF;
     
     /**
      * tinymce富文本编辑器
-     * @param string $selector 
+     * @param string $selector
+     * @see http://www.tinymce.com/
      */
     public function tinymce($selector){
         response()->addScriptFile('js/tiny_mce/jquery.tinymce.js');
@@ -126,11 +144,12 @@ EOF;
      * @param string $selector jquery选择器
      * @param string $saver 处理上传文件的url
      * @param mixed $params 上传文件的附加参数
+     * @see http://www.uploadify.com/
      */
     public function uploadify($selector, $saver, $params){
         $basepath = base_url().'js/uploadify';
         response()->addCssFile("$basepath/uploadify.css");
-        response()->addScriptFile('js/swfobject.js');
+        response()->addScriptFile('js/swfobject/swfobject.js');
         response()->addScriptFile("$basepath/jquery.uploadify.js");
         $scriptData = json_encode($params);
         $code = <<<EOF
@@ -154,5 +173,14 @@ $("$selector").uploadify({
 EOF;
         $this->ready($code);
     }
-       
+
+    /**
+     * marquee插件
+     * @param string $selector
+     * @see http://remysharp.com/tag/marquee
+     */
+    function marquee($selector){
+        response()->addScriptFile("js/plugins/jquery.marquee.js");
+        $this->ready("$('$selector').marquee();");
+    }
 }
