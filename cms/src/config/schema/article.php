@@ -10,4 +10,5 @@ array('name' => 'id', 'label' => 'ID', 'field' => 'id'),
  array('name' => 'country', 'label' => '国家', 'field' => 'list', 'dict' => 'country', 'required' => true, 'widget' => 'list'),
  array('name' => 'province', 'label' => '地区', 'field' => 'list', 'dict' => 'dict/province', 'widget' => 'level', 'default'=>''),
  array('name' => 'attach', 'label' => '附件', 'field' => 'file', 'settings' => array()),
+ array('name' => 'picture', 'label' => '图片', 'field' => 'file', 'settings' => array()),    
 );

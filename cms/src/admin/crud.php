@@ -1,7 +1,7 @@
 <?php
 
 /**
- * model crud
+ * CRUD创建查询修改删除
  * @package admin
  * @author goodzsq@gmail.com
  */
@@ -49,26 +49,12 @@ abstract class admin_crud {
     function do_save() {
         $id = param('id');
         try {
-
             $entity = $this->_model->get(param('id'));
             $this->fillData($entity);
             $newid = $this->_model->save($entity);
-            if(empty($id)){
+            if (empty($id)) {
                 $id = $newid;
             }
-            //@todo goodzsq save attach file
-            $token = param(util_csrf::key());
-            $session_key = 'upload_' . $token;
-            $uploadlist = session()->$session_key;
-            if (is_array($uploadlist)) {
-                foreach ($uploadlist as $idx => $fileinfo) {
-                    $oldname = $fileinfo['filename'];
-                    $newname = str_replace($token, $id, $oldname);
-                    rename($oldname, $newname);
-                }
-            }
-            session()->$session_key = null;
-            //end save attach file
             $result = array('status' => 'ok', 'redirect' => url('admin', $this->_modelName, 'index'));
             echo response()->json($result);
             exit;
@@ -84,23 +70,18 @@ abstract class admin_crud {
      * 文件上传 
      */
     function do_upload() {
-        $formToken = param('token');
+        $formToken = param(util_csrf::key());
         $fileToken = util_string::token();
+        $field = param('field');
         //参数安全检查
         if (!preg_match("/^\w+$/", $formToken)) {
             die("token invalid $formToken");
         }
-        $filename = APP_DIR . DS . config('app', 'upload_dir') . DS . $formToken . '_' . $fileToken;
+        $filename = APP_DIR . DS . config('app', 'upload_dir') . DS . 'tmp_' . $fileToken;
         try {
-            util_uploader::setAllowExt('pdf,zip,rar');
+            util_uploader::setAllowExt('pdf,zip,rar,srt,txt');
             $result = util_uploader::upload('Filedata', $filename);
-            $session_key = 'upload_' . $formToken;
-            $uploadlist = session()->$session_key;
-            if (empty($uploadlist)) {
-                $uploadlist = array();
-            }
-            $uploadlist[] = $result;
-            session()->$session_key = $uploadlist;
+            $this->uploadedFile($field, $result);
             echo 'ok';
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -121,13 +102,14 @@ abstract class admin_crud {
      * 删除 
      */
     function do_delete() {
+        //@todo goodzsq record delete
         $id = param('id');
         $this->_model->delete(array('id' => $id));
         redirect(url('admin', $this->_modelName, 'index'));
     }
 
     /**
-     * 列表
+     * 查询列表以及分页
      */
     function do_index() {
         $header = array();
@@ -190,8 +172,17 @@ abstract class admin_crud {
         $this->errorCheck(util_csrf::key(), util_csrf::validate());
         //填充数据到entity
         foreach ($this->_model->helper()->fields() as $key => $field) {
-            $field->setValue(param($key));
-            $entity->$key = $field->getValue();
+            if ($field instanceof field_file) {
+                $uploadlist = $this->uploadedFile($key);
+                if (!empty($uploadlist)) {
+                    $field->setValue($entity->$key);
+                    $field->setValue($uploadlist); //文件列表追加
+                    $entity->$key = $field->getValue();
+                }
+            } else {
+                $field->setValue(param($key));
+                $entity->$key = $field->getValue();
+            }
         }
         //检查数据校验是否正确
         $this->errorCheck('', $this->_model->helper()->validate($entity));
@@ -199,6 +190,22 @@ abstract class admin_crud {
         if ($this->_formStyle == 'captcha') {
             $this->errorCheck('captcha', image_captcha::validate());
         }
+    }
+
+    protected function uploadedFile($field, $newValue = null) {
+        $result = array();
+        $token = param(util_csrf::key());
+        $session_key = 'upload_' . $token . '_' . $field;
+        $uploadlist = session()->$session_key;
+
+        if (is_array($uploadlist)) {
+            $result = $uploadlist;
+        }
+        if (isset($newValue)) {
+            $result[] = $newValue;
+            session()->$session_key = $result;
+        }
+        return $result;
     }
 
 }

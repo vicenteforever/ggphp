@@ -49,15 +49,15 @@ class widget_form extends widget_base {
         //$enctype = ' enctype="multipart/form-data"';
         $csrfToken = util_csrf::token();
         foreach ($helper->fields() as $k => $field) {
-            if($field instanceof field_file){
+            if ($field instanceof field_file) {
                 $field->uploadurl = $helper->uploadurl;
                 $field->token = $csrfToken;
+            } else {
+                $field->setValue($helper->fieldValue($k, $helper->entity));
             }
-            $field->setValue($helper->fieldValue($k, $helper->entity));
-            if($field->required){
+            if ($field->required) {
                 $required = ' *';
-            }
-            else{
+            } else {
                 $required = '';
             }
             $buf .= widget('field', $this->_id, $field)->render() . "$required </br>\n";

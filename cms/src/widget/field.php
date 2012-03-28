@@ -130,10 +130,9 @@ class widget_field extends widget_base {
     
     public function field_file_default(field_base $field){
         $selector = "#{$this->_id} :input[name={$field->name}]";
-        $params = array('token'=>$field->token, 'field'=>$field->name);
+        $params = array(util_csrf::key()=>$field->token, 'field'=>$field->name);
         jquery_plugin()->uploadify($selector, $field->uploadurl, $params);
-        return "<label>{$field->label}<input type='file' id='{$field->name}' name='{$field->name}'><label class='tip' name='{$field->name}' /></label></label>";
-        
+        return "<label>{$field->label}<input type='file' id='{$field->name}' name='{$field->name}'><label class='tip' name='{$field->name}' /></label></label>";        
     }
 
 }

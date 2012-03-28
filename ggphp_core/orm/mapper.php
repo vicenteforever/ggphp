@@ -64,6 +64,7 @@ class orm_mapper extends phpDataMapper_Base {
         $buf = "Executed " . $this->queryCount() . " queries:</p>";
         $buf .= trace(self::$_queryLog);
         app()->log($buf);
+        return $buf;
     }
 
 }
