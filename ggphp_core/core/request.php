@@ -162,10 +162,10 @@ class core_request {
      * @staticvar string $path
      * @return string 
      */
-    static function path() {
+    static function path($path=null) {
         return trim(self::server("PATH_INFO"), '/');
     }
-
+    
     /**
      * 获取提交的raw数据
      * @return type 

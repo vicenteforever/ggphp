@@ -12,10 +12,10 @@ class default_controller {
      */
     function do_index(){
         $buf = view(block('menu', 'main', 'left'));
-        return html($buf);
+        return $buf;
     }
     
     function do_test(){
-        return html('test');
+        return path();
     }
 }

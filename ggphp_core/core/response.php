@@ -24,11 +24,7 @@ class core_response {
     }
 
     public function addScriptFile($file) {
-        //相对路径变成绝对路径
-        if(strpos($file, '://')===false && substr($file, 0,1)!='/'){
-            $file = base_url() . $file;
-        }
-        $this->_script[$file] = $file;
+        $this->_script[$file] = abs_url($file);
     }
 
     public function addScriptInline($jsCode) {
@@ -48,12 +44,14 @@ class core_response {
         return $buffer;
     }
 
-    public function addCssFile($file) {
-        //相对路径变成绝对路径
-        if(strpos($file, '://')===false && substr($file, 0,1)!='/'){
-            $file = base_url() . $file;
-        }
-        $this->_css[$file] = $file;
+    /**
+     * 添加css外部文件
+     * @param string $url
+     * @param string $media [screen projection print]
+     * @param string $condition borwser test: "lt IE 8"
+     */
+    public function addCssFile($url, $media='screen, projection', $condition='') {
+        $this->_css[$url] = array('url'=>abs_url($url), 'media'=>$media, 'condition'=>$condition);
     }
 
     public function addCssInline($cssStyle) {
@@ -63,7 +61,11 @@ class core_response {
     public function css() {
         $buffer = "";
         foreach ($this->_css as $key => $value) {
-            $buffer .= "<link href=\"$value\" rel=\"stylesheet\" type=\"text/css\" />\n";
+            $css = "<link href=\"{$value['url']}\" rel=\"stylesheet\" type=\"text/css\" media=\"{$value['media']}\" />";
+            if(!empty($value['condition'])){
+                $css = "<!--[if {$value['condition']}]>$css<![endif]-->";
+            }
+            $buffer .= $css . "\n";
         }
         $buffer .= "<style>\n";
         foreach ($this->_cssInline as $key => $value) {
@@ -73,19 +75,24 @@ class core_response {
         return $buffer;
     }
 
-    static function html($title, $content) {
-        if (!isset($title)) {
+    static function html($data) {
+        if (is_string($data)) {
             $controller = app()->getControllerName() . '_controller';
             $action = config('app', 'action_prefix') . '_' . app()->getActionName();
             //$title = reflect($controller)->doc();
             $title = reflect($controller)->doc($action);
+            return view(array('title' => $title, 'content' => $data), 'html');
         }
-        return view(array('title' => $title, 'content' => $content), 'html');
+    }
+    
+    static function text($data){
+        return $data;
     }
 
     static function download($filename, $content) {
         header("Content-Disposition: attachment; filename=$filename");
-        return $content;
+        echo $content;
+        exit;
     }
 
     static function error($errorMessage) {

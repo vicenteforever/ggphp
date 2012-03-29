@@ -14,7 +14,7 @@ class article_controller {
     function do_index() {
         $buf = block('menu', 'main');
         $buf .= block('menu', 'tree');
-        return html($buf);
+        return $buf;
     }
 
     /**
@@ -29,12 +29,13 @@ class article_controller {
     }
 
     /**
-     * 上传测试
+     * 测试
      */
     function do_test() {
-        //$vars = array('swf'=>'/keyboard.swf', 'flashvars'=>array('var1'=>'aa', 'var2'=>'bb'));
-        //return html(widget('swfobject', 'test', '/keyboard.swf')->render());
-        return html(widget('marquee', '', 'hello world')->render());
+        $s = new script_css_blueprint();
+        $buf =  path().'<br>';
+        $buf .= app()->getPageType();
+        return $buf;
     }
 
     //private function //

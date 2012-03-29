@@ -8,6 +8,7 @@ class core_app {
 
     private $_controllerName;
     private $_actionName;
+    private $_pageType;
 
     private function __construct() {
         //设为私有方法禁止构造新实例
@@ -39,8 +40,18 @@ class core_app {
         } else {
             $this->parseFromParam();
         }
-        echo core_module::controller($this->_controllerName, $this->_actionName);
+        $result = core_module::controller($this->_controllerName, $this->_actionName);
+        $pageType = $this->getPageType();
+        if (method_exists(core_response::instance(), $pageType)) {
+            echo core_response::$pageType($result);
+        }
+        else{
+            echo core_response::error("$pageType not exist");
+        }
         $this->log('application end');
+        if ($pageType == 'html') {
+            $this->report();
+        }
     }
 
     /**
@@ -61,6 +72,8 @@ class core_app {
     private function parseFromPath() {
         $path = core_request::path();
         $path = str_replace('..', '', $path);
+        list($path, $this->_pageType) = $this->getBasenameAndType($path);
+        $_SERVER['PATH_INFO'] = $path;
         $args = explode('/', $path);
         $defaultAction = config('app', 'default_action');
         $defaultController = config('app', 'default_controller');
@@ -109,6 +122,22 @@ class core_app {
     }
 
     /**
+     * 获取页面输出格式类型
+     * @return string 
+     */
+    function getPageType() {
+        return $this->_pageType;
+    }
+
+    /**
+     * 设置页面输出格式类型(html json xml ...)
+     * @param string $type 
+     */
+    function setPageType($type) {
+        $this->_pageType = $type;
+    }
+
+    /**
      * 记录系统日志
      * @param string $message
      */
@@ -121,6 +150,10 @@ class core_app {
         }
     }
 
+    /**
+     * url重写
+     * @return boolean 
+     */
     private function rewriteUrl() {
         $path = core_request::path();
         $config = config('router');
@@ -131,6 +164,46 @@ class core_app {
             }
         }
         return false;
+    }
+
+    /**
+     * 分解字符串为基本名称和扩展名
+     * @param type $str
+     * @return type 
+     */
+    private function getBasenameAndType($str) {
+        $pos = strrpos($str, '.');
+        if ($pos === false) {
+            $basename = $str;
+            $ext = '';
+        } else {
+            $basename = substr($str, 0, $pos);
+            $ext = substr($str, $pos + 1);
+        }
+        if (empty($ext)) {
+            $ext = 'html';
+        }
+        return array($basename, $ext);
+    }
+
+    private function report() {
+        $report = '<hr/>';
+        if (!config('app', 'debug')) {
+            $report = "程序运行状态只能在调试模式下运行";
+        } else {
+            $log = app()->log();
+            $time = $log[0]['time'];
+            foreach ($log as $k => $v) {
+                $timespan = sprintf("%.4f", $v['time'] - $time);
+                $time = $v['time'];
+                $report .= "[{$timespan}] {$v['message']} <br/>";
+            }
+            $total = sprintf("%.4f", $time - $log[0]['time']);
+            $report .= "程序运行时间:$total ms, memory:" . util_string::size_hum_read(memory_get_usage()) . " <br>";
+            $report .= "<a href='" . base_url() . "unittest'>运行单元测试</a>";
+            $report .= "url rewrite:" . core_request::isRewrite();
+        }
+        echo $report;
     }
 
 }

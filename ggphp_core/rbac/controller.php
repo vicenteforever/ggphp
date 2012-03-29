@@ -3,7 +3,7 @@
 class rbac_controller {
 
     function do_index() {
-        return html('rbac基于角色的权限控制模块');
+        return 'rbac基于角色的权限控制模块';
     }
 
     /**

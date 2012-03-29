@@ -3,7 +3,7 @@
 class orm_controller{
 
 	function do_index(){
-		return html('ORM data mapper');
+		return 'ORM data mapper';
 	}
 
 	function do_test(){
@@ -15,7 +15,7 @@ class orm_controller{
 		//}
 		$buf = print_r($mapper->first(), true);
 		$buf .= $mapper->debug();
-		return html($buf);
+		return $buf;
 	
 	}
 }

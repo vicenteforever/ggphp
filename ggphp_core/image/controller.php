@@ -3,7 +3,7 @@
 class image_controller {
 
     function do_index() {
-        return html('image 图像处理模块');
+        return 'image 图像处理模块';
     }
 
     function do_cache() {

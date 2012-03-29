@@ -11,7 +11,7 @@ class rbac_advice_auth extends advice_base {
         $perm = strtolower($name);
         if (!rbac_auth::access($perm)) {
             session()->redirect_url = uri();
-            redirect(url('rbac', 'login'));
+            redirect(make_url('rbac', 'login'));
         }
     }
 

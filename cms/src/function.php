@@ -17,6 +17,9 @@ function block($moduleName, $methodName, $style = '') {
  * @return widget_base
  */
 function widget($widgetName, $id, $data) {
+    if(empty($id)){
+        $id = serial();
+    }
     $className = "widget_$widgetName";
     return new $className($id, $data);
 }

@@ -228,8 +228,19 @@ function base_url() {
  * @param mixed $params string or array
  * @return string 
  */
-function url($controller = '', $action = '', $path = '', $params = '') {
+function make_url($controller = '', $action = '', $path = '', $params = '') {
     return core_request::makeUrl($controller, $action, $path, $params);
+}
+
+/**
+ * 把相对路径变成绝对路径
+ * @param type $url 
+ */
+function abs_url($url) {
+    if (strpos($url, '://') === false && substr($url, 0, 1) != '/') {
+        $url = base_url() . $url;
+    }
+    return $url;
 }
 
 /**
@@ -304,6 +315,14 @@ function mydb($configName = 'default') {
  * 取得response对象
  * @return core_response 
  */
-function response(){
+function response() {
     return core_response::instance();
+}
+
+/**
+ * 生成自动增加的序列号 
+ */
+function serial(){
+    static $serial = 0;
+    return $serial++;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 视图类
+ * PHP视图模板
  * @package core
  */
 class core_view {
@@ -46,7 +46,7 @@ class core_view {
     function smarty() {
         $modulePath = core_module::path(app()->getControllerName());
         $path = str_replace('/', DS, "{$modulePath}/template/");
-        require_once(GG_DIR . '/lib/Smarty-3.1.6/libs/Smarty.class.php');
+        require_once(GG_DIR . '/lib/smarty/libs/Smarty.class.php');
         $smarty = new Smarty();
         $smarty->setTemplateDir($path);
         return $smarty;

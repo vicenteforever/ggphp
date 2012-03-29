@@ -16,7 +16,6 @@ class core_advice_log extends advice_base {
     }
 
     public function except($name, $args, $except) {
-
         app()->log("$name exception: " . $except->getMessage());
     }
 

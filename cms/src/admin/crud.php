@@ -17,27 +17,12 @@ abstract class admin_crud {
     }
 
     /**
-     * 重建表
-     */
-    function do_migrate() {
-        try {
-            util_csrf::validate();
-            $this->_model->migrate();
-            $this->_model->debug();
-            return $this->_model->helper()->schema() . '表已生成';
-        } catch (Exception $e) {
-            echo $this->_model->debug();
-            return $e->getMessage();
-        }
-    }
-
-    /**
      * 编辑
      */
     function do_edit() {
         $helper = $this->_model->helper();
-        $helper->url = url('admin', $this->_modelName, 'save');
-        $helper->uploadurl = url('admin', $this->_modelName, 'upload');
+        $helper->url = make_url('admin', $this->_modelName, 'save');
+        $helper->uploadurl = make_url('admin', $this->_modelName, 'upload');
         $helper->entity = $this->_model->get(param('id'));
         $buf = widget('form', $this->_modelName, $helper)->render($this->_formStyle);
         return $buf;
@@ -47,46 +32,22 @@ abstract class admin_crud {
      * 保存 
      */
     function do_save() {
+        app()->setPageType('json');
         $id = param('id');
+
         try {
             $entity = $this->_model->get(param('id'));
             $this->fillData($entity);
-            $newid = $this->_model->save($entity);
-            if (empty($id)) {
-                $id = $newid;
+            $this->_model->save($entity);
+            foreach ($this->_model->helper()->fields() as $key => $field) {
+                if($field instanceof field_file){
+                    file_model::save($field->value);
+                }
             }
-            $result = array('status' => 'ok', 'redirect' => url('admin', $this->_modelName, 'index'));
-            echo response()->json($result);
-            exit;
+            return array('status' => 'ok', 'redirect' => make_url('admin', $this->_modelName, 'index'));
         } catch (Exception $e) {
-            echo '[' . $this->_model->debug() . ']';
-            echo $e->getMessage();
-            exit;
+            return array('status' => 'fail', 'message' => $e.getMessage());
         }
-        //redirect(url('admin', $this->_modelName, 'index'));
-    }
-
-    /**
-     * 文件上传 
-     */
-    function do_upload() {
-        $formToken = param(util_csrf::key());
-        $fileToken = util_string::token();
-        $field = param('field');
-        //参数安全检查
-        if (!preg_match("/^\w+$/", $formToken)) {
-            die("token invalid $formToken");
-        }
-        $filename = APP_DIR . DS . config('app', 'upload_dir') . DS . 'tmp_' . $fileToken;
-        try {
-            util_uploader::setAllowExt('pdf,zip,rar,srt,txt');
-            $result = util_uploader::upload('Filedata', $filename);
-            $this->uploadedFile($field, $result);
-            echo 'ok';
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-        exit;
     }
 
     /**
@@ -105,7 +66,7 @@ abstract class admin_crud {
         //@todo goodzsq record delete
         $id = param('id');
         $this->_model->delete(array('id' => $id));
-        redirect(url('admin', $this->_modelName, 'index'));
+        redirect(make_url('admin', $this->_modelName, 'index'));
     }
 
     /**
@@ -119,25 +80,23 @@ abstract class admin_crud {
         $header['admin'] = '管理';
         $data = array($header);
         $buf = '';
-        $url = url('admin', $this->_modelName, 'edit');
+        $url = make_url('admin', $this->_modelName, 'edit');
         $buf .= util_html::a($url, '添加');
-        $url = url('admin', $this->_modelName, 'migrate');
-        $buf .= ' ' . util_html::a($url, '创建表');
 
         $query = $this->_model->all();
         $pager = new orm_pager($query, param('page'), $this->_displayCount);
         foreach ($query as $row) {
             $param = array('id' => $row->id);
-            $url = url('admin', $this->_modelName, 'edit', $param);
+            $url = make_url('admin', $this->_modelName, 'edit', $param);
             $edit = util_html::a($url, '编辑');
-            $url = url('admin', $this->_modelName, 'delete', $param);
+            $url = make_url('admin', $this->_modelName, 'delete', $param);
             $delete = util_html::a($url, '删除');
             $rowData = $row->toArray();
             $rowData['admin'] = "$edit $delete";
             $data[] = $rowData;
         }
         $buf .= widget('table', $this->_modelName, $data)->render();
-        $buf .= $pager->render(url('admin', $this->_modelName, 'index') . '?');
+        $buf .= $pager->render(make_url('admin', $this->_modelName, 'index') . '?');
         $this->_model->debug();
         return $buf;
     }
@@ -172,17 +131,8 @@ abstract class admin_crud {
         $this->errorCheck(util_csrf::key(), util_csrf::validate());
         //填充数据到entity
         foreach ($this->_model->helper()->fields() as $key => $field) {
-            if ($field instanceof field_file) {
-                $uploadlist = $this->uploadedFile($key);
-                if (!empty($uploadlist)) {
-                    $field->setValue($entity->$key);
-                    $field->setValue($uploadlist); //文件列表追加
-                    $entity->$key = $field->getValue();
-                }
-            } else {
-                $field->setValue(param($key));
-                $entity->$key = $field->getValue();
-            }
+            $field->setValue(param($key));
+            $entity->$key = $field->getValue();
         }
         //检查数据校验是否正确
         $this->errorCheck('', $this->_model->helper()->validate($entity));
@@ -190,22 +140,6 @@ abstract class admin_crud {
         if ($this->_formStyle == 'captcha') {
             $this->errorCheck('captcha', image_captcha::validate());
         }
-    }
-
-    protected function uploadedFile($field, $newValue = null) {
-        $result = array();
-        $token = param(util_csrf::key());
-        $session_key = 'upload_' . $token . '_' . $field;
-        $uploadlist = session()->$session_key;
-
-        if (is_array($uploadlist)) {
-            $result = $uploadlist;
-        }
-        if (isset($newValue)) {
-            $result[] = $newValue;
-            session()->$session_key = $result;
-        }
-        return $result;
     }
 
 }

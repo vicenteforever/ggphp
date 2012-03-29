@@ -70,10 +70,7 @@ class widget_field extends widget_base {
     
     public function field_list_level(field_base $field){
         $selector = "#{$this->_id} :input[name={$field->name}]";
-        if(strpos($field->dict, '://') === false){
-            $field->dict = base_url() . $field->dict;
-        }
-        jquery_plugin()->ajaxLevelSelect($selector, $field->dict);
+        jquery_plugin()->ajaxLevelSelect($selector, abs_url($field->dict));
 
         $buf = "<label>{$field->label}\n  <input type='text' name='{$field->name}' value='{$field->getValue()}'>\n";
         $buf .= "<label class='tip' name='{$field->name}'></label></label>";
@@ -129,10 +126,14 @@ class widget_field extends widget_base {
     }
     
     public function field_file_default(field_base $field){
+        if(empty($field->value)){
+            $field->value = util_string::token();
+        }
+        
         $selector = "#{$this->_id} :input[name={$field->name}]";
-        $params = array(util_csrf::key()=>$field->token, 'field'=>$field->name);
-        jquery_plugin()->uploadify($selector, $field->uploadurl, $params);
-        return "<label>{$field->label}<input type='file' id='{$field->name}' name='{$field->name}'><label class='tip' name='{$field->name}' /></label></label>";        
+        $params = array('token'=>$field->value);
+        jquery_plugin()->uploadify($selector, abs_url($field->uploadurl), $params);
+        return "<label>{$field->label}<input type='hidden' id='{$field->name}' name='{$field->name}' value='{$field->value}'><label class='tip' name='{$field->name}' /></label></label>";        
     }
 
 }

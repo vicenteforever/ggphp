@@ -12,9 +12,9 @@ class unittest_controller {
             foreach ($modules as $module => $path) {
                 test()->testModule($module, $module);
             }
-            return html(test()->report(), '单元测试');
+            return test()->report();
         } else {
-            return html('单元测试只能在debug模式下运行, 请修改config/app.php相关配置');
+            return '单元测试只能在debug模式下运行, 请修改config/app.php相关配置';
         }
     }
 

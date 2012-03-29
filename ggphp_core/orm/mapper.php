@@ -67,4 +67,13 @@ class orm_mapper extends phpDataMapper_Base {
         return $buf;
     }
 
+    public function execute($sql, $binds) {
+        self::logQuery($sql, $binds);
+        if ($stmt = $this->adapter()->prepare($sql)) {
+            $results = $stmt->execute($binds);
+        } else {
+            throw new $this->_exceptionClass(__METHOD__ . " Error: Unable to execute SQL query - failed to create prepared statement from given SQL");
+        }
+    }
+
 }
