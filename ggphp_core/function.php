@@ -326,3 +326,24 @@ function serial(){
     static $serial = 0;
     return $serial++;
 }
+
+/**
+ * 获取校验器
+ * @param string $rule
+ * @return validator_interface
+ * @throws Exception 
+ */
+function validator($rule){
+    static $validator;
+    if(!isset($validator[$rule])){
+        $className = 'validator_'.$rule;
+        $object = new $className();
+        if($object instanceof validator_interface){
+            $validator[$rule] = $object;
+        }
+        else{
+            $validator[$rule] = '';
+        }
+    }
+    return $validator[$rule];
+}

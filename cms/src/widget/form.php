@@ -48,6 +48,7 @@ class widget_form extends widget_base {
         $enctype = '';
         //$enctype = ' enctype="multipart/form-data"';
         $csrfToken = util_csrf::token();
+        /* @var $field field_base */
         foreach ($helper->fields() as $k => $field) {           
             $field->setValue($helper->fieldValue($k, $helper->entity));
             if ($field->required) {
@@ -55,7 +56,8 @@ class widget_form extends widget_base {
             } else {
                 $required = '';
             }
-            $buf .= widget('field', $this->_id, $field)->render() . "$required </br>\n";
+            //$buf .= widget('field', $this->_id, $field)->render() . "$required <br />\n";
+            $buf .= $field->widget() . "$required <br />\n";
         }
         if ($captcha) {
             $buf .= $this->captcha();

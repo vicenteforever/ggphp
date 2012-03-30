@@ -8,7 +8,8 @@
 </head>
 
 <body>
-<h1><?php echo $data['title']?></h1>
+<div class='container'>
 <?php echo $data['content']?>
+</div>
 </body>
 </html>

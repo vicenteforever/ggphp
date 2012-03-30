@@ -77,18 +77,12 @@ class orm_helper {
 
     /**
      * 校验检查值
-     * @param type $entity 
      * @return array
      */
-    public function validate($entity) {
+    public function validate() {
         $error = array();
-        foreach ($this->_fields as $k => $v) {
-            $value = $this->fieldValue($k, $entity);
-            if ($v->required && empty($value)) {
-                $err = "{$v->label}必须填写";
-            } else {
-                $err = $v->validate($value);
-            }
+        foreach ($this->_fields as $k => $field) {
+            $err = $field->validate();
             if ($err !== true) {
                 $error[$k] = $err;
             }

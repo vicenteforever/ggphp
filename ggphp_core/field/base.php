@@ -2,8 +2,6 @@
 
 abstract class field_base {
 
-    abstract function validate($value);
-
     public $name;
     public $label;
     public $type = 'string';
@@ -11,8 +9,11 @@ abstract class field_base {
     public $required = false;
     public $number = 1;
     public $hidden = false;
-    public $widgetType = 'text';
+    public $widgetType = 'string';
+    public $widgetStyle = 'default';
     public $default = null;
+    public $value;
+    public $validators = array();
 
     public function __construct(array $arr) {
         foreach ($arr as $k => $v) {
@@ -66,6 +67,44 @@ abstract class field_base {
      */
     public function __get($name) {
         return null;
+    }
+
+    /**
+     * 字段校验
+     * @return mixed 校验通过返回true 校验失败返回错误消息字符串 
+     */
+    public function validate() {
+        if ($this->required && empty($this->value)) {
+            return "{$this->label}必须填写";
+        }
+        foreach ($this->validators as $key => $rule) {
+            $validator = validator($rule);
+                    //var_dump($validator);
+            if(empty($validator)){
+                return "校验器{$rule}不存在";
+            }
+            $err = $validator->validate($this);
+            if ($err !== true) {
+                return $err;
+            }
+        }
+        return true;
+    }
+    
+    public function widget(){
+        $className = "widget_field_{$this->widgetType}";
+        $methodName = "style_{$this->widgetStyle}";
+        try{
+            if(class_exists($className)){
+                return call_user_func(array($className, $methodName), $this);
+            }
+            else{
+                return "$className 不存在";
+            }
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
 }

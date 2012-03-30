@@ -10,8 +10,4 @@ class field_file extends field_base {
     public $widgetType = 'file';
     public $type = 'string';
 
-    public function validate($value) {
-        return true;
-    }
-
 }

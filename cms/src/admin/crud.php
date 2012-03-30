@@ -135,7 +135,7 @@ abstract class admin_crud {
             $entity->$key = $field->getValue();
         }
         //检查数据校验是否正确
-        $this->errorCheck('', $this->_model->helper()->validate($entity));
+        $this->errorCheck('', $this->_model->helper()->validate());
         //检查验证码
         if ($this->_formStyle == 'captcha') {
             $this->errorCheck('captcha', image_captcha::validate());

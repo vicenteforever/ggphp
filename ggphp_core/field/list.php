@@ -8,11 +8,7 @@
 class field_list extends field_base {
 
     public $widgetType = 'list';
-    
-    public function validate($value) {
-        return true;
-    }
-    
+     
     public function getList($source) {
         if($source == 'dict'){
             return dict($this->dict)->getData();

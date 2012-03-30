@@ -5,12 +5,5 @@ class field_string extends field_base {
     public $type = 'string';
     public $length = 255;
     public $widgetType = 'text';
-
-    function validate($value) {
-        if (strlen($value) > $this->length) {
-            return "{$this->label} must little then {$this->length}";
-        }
-        return true;
-    }
-
+    public $validators = array('string');
 }
