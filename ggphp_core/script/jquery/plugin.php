@@ -8,9 +8,11 @@
 class script_jquery_plugin {
 
     const jquery_ver = '1.7.1';
+    private $_commonPath;
 
     public function __construct() {
-        response()->addScriptFile("js/jquery/jquery-".self::jquery_ver.".min.js");
+        $this->_commonPath = config('app', 'common_path') . 'js';
+        response()->addScriptFile("{$this->_commonPath}/jquery/jquery-".self::jquery_ver.".min.js");
     }
 
     /**
@@ -32,7 +34,7 @@ class script_jquery_plugin {
      */
     function swfobject($selector, array $params=array()){
         $flashvars = json_encode($params);
-        response()->addScriptFile("js/swfobject/jquery.swfobject.1-1-1.min.js");
+        response()->addScriptFile("{$this->_commonPath}/swfobject/jquery.swfobject.1-1-1.min.js");
         $code = <<<EOF
 $("$selector").flash($flashvars);
 EOF;
@@ -44,7 +46,7 @@ EOF;
      * @param string $selector jquery选择器 
      */
     function menu($selector) {
-        response()->addScriptFile('js/goodzsq/goodzsq_menu.js');
+        response()->addScriptFile("{$this->_commonPath}/goodzsq/goodzsq_menu.js");
         $this->ready("$('$selector').goodzsq_menu();");
     }
     
@@ -53,7 +55,7 @@ EOF;
      * @param type $selector 
      */
     function table($selector) {
-        response()->addScriptFile('js/goodzsq/goodzsq_table.js');
+        response()->addScriptFile("{$this->_commonPath}/goodzsq/goodzsq_table.js");
         $this->ready("$('$selector').goodzsq_table();");
     }
     
@@ -63,7 +65,7 @@ EOF;
      * @param type $url 
      */
     function ajaxLevelSelect($selector, $url){
-        response()->addScriptFile('js/goodzsq/goodzsq_level.js');
+        response()->addScriptFile("{$this->_commonPath}/goodzsq/goodzsq_level.js");
         $code = <<<EOF
 $.post('$url', {}, function(data){
     $('$selector').goodzsq_level(data);      
@@ -128,8 +130,8 @@ EOF;
      * @see http://www.tinymce.com/
      */
     public function tinymce($selector){
-        response()->addScriptFile('js/tiny_mce/jquery.tinymce.js');
-        response()->addScriptFile('js/tiny_mce/tiny_mce.js');
+        response()->addScriptFile("{$this->_commonPath}/tiny_mce/jquery.tinymce.js");
+        response()->addScriptFile("{$this->_commonPath}/tiny_mce/tiny_mce.js");
         $code = <<<EOF
 $('$selector').tinymce({
     'language':'zh-cn',
@@ -147,10 +149,10 @@ EOF;
      * @see http://www.uploadify.com/
      */
     public function uploadify($selector, $saver, $params){
-        $basepath = base_url().'js/uploadify';
-        response()->addCssFile("$basepath/uploadify.css");
-        response()->addScriptFile('js/swfobject/swfobject.js');
-        response()->addScriptFile("$basepath/jquery.uploadify.js");
+        $basepath = $this->_commonPath . '/uploadify';
+        response()->addCssFile("{$this->_commonPath}/uploadify/uploadify.css");
+        response()->addScriptFile("{$this->_commonPath}/swfobject/swfobject.js");
+        response()->addScriptFile("{$this->_commonPath}/uploadify/jquery.uploadify.js");
         $scriptData = json_encode($params);
         $code = <<<EOF
 $("$selector").uploadify({
@@ -180,7 +182,7 @@ EOF;
      * @see http://remysharp.com/tag/marquee
      */
     function marquee($selector){
-        response()->addScriptFile("js/plugins/jquery.marquee.js");
+        response()->addScriptFile("{$this->_commonPath}/plugins/jquery.marquee.js");
         $this->ready("$('$selector').marquee();");
     }
 }

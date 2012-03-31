@@ -16,6 +16,6 @@ class default_controller {
     }
     
     function do_test(){
-        return path();
+        return base_url();
     }
 }

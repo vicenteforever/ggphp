@@ -5,7 +5,7 @@
  * @package struct
  * @author goodzsq@gmail.com
  */
-class struct_tree {
+class util_tree {
 
     private $_parent = null;
     private $_children = array();

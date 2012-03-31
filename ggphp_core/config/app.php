@@ -15,4 +15,5 @@ return array(
     'hook_controller_start' => array('rbac'),
     'hook_controller_end' => array(''),
     'upload_dir' => 'userfile',
+    'common_path' => '/ggphp/common/', //通用资源文件
 );

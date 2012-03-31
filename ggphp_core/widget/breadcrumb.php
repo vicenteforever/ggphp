@@ -12,7 +12,7 @@ class widget_breadcrumb extends widget_base {
         $this->_id = 'breadcrumb_'.$id;
     }
     
-    private function html(struct_tree $data){
+    private function html(util_tree $data){
         $buf = "<ul id='{$this->_id}'>";
         foreach($data->getChildren() as $key=>$child){
             $buf .= "<li><a href='{$child->url}'>{$child->title}</a></li>";

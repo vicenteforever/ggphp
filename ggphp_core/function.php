@@ -234,7 +234,7 @@ function make_url($controller = '', $action = '', $path = '', $params = '') {
 
 /**
  * 把相对路径变成绝对路径
- * @param type $url 
+ * @param string $url
  */
 function abs_url($url) {
     if (strpos($url, '://') === false && substr($url, 0, 1) != '/') {
@@ -322,7 +322,7 @@ function response() {
 /**
  * 生成自动增加的序列号 
  */
-function serial(){
+function serial() {
     static $serial = 0;
     return $serial++;
 }
@@ -333,15 +333,14 @@ function serial(){
  * @return validator_interface
  * @throws Exception 
  */
-function validator($rule){
+function validator($rule) {
     static $validator;
-    if(!isset($validator[$rule])){
-        $className = 'validator_'.$rule;
+    if (!isset($validator[$rule])) {
+        $className = 'validator_' . $rule;
         $object = new $className();
-        if($object instanceof validator_interface){
+        if ($object instanceof validator_interface) {
             $validator[$rule] = $object;
-        }
-        else{
+        } else {
             $validator[$rule] = '';
         }
     }

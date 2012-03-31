@@ -19,7 +19,7 @@ class widget_menu extends widget_base {
     }
 
     private function html(){
-        if(!$this->_data instanceof struct_tree){
+        if(!$this->_data instanceof util_tree){
             throw new Exception('widget_menu set_data param must be struct_tree');
         }
         $buf = "<ul id='{$this->_id}'>";
@@ -30,7 +30,7 @@ class widget_menu extends widget_base {
         return $buf;        
     }
     
-    private function htmlItem(struct_tree $tree) {
+    private function htmlItem(util_tree $tree) {
         $buf = "<li><a href='{$tree->url}'>{$tree->title}</a>";
         if($tree->hasChildren()){
             $buf .= "<ul>";
