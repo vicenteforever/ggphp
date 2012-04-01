@@ -1,6 +1,6 @@
 <?php
 
-class field_password extends field_base {
+class field_type_password extends field_type_base {
 
     public $type = 'string';
     public $length = 255;

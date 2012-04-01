@@ -5,8 +5,8 @@
  * @package validator
  * @author goodzsq@gmail.com
  */
-interface validator_interface {
-    public function validate(field_base $field);
+interface field_validator_interface {
+    public function validate(field_type_base $field);
     public function setting();
 }
 

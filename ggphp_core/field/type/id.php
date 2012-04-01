@@ -1,6 +1,6 @@
 <?php
 
-class field_id extends field_base {
+class field_type_id extends field_type_base {
 
     public $type = 'int';
     public $length = 11;

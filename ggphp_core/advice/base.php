@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 增强对象基类
+ * 拦截器对象基类
  * @package advise 
  */
 class advice_base implements advice_interface {

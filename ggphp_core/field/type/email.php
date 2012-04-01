@@ -1,6 +1,6 @@
 <?php
 
-class field_email extends field_type {
+class field_type_email extends field_type {
 
     public $type = 'varchar';
     public $length = 255;

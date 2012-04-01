@@ -22,7 +22,7 @@ class orm_helper {
             if (empty($v['name'])) {
                 throw new Exception('field name not assign');
             }
-            $fieldType = "field_{$v['field']}";
+            $fieldType = "field_type_{$v['field']}";
             $fieldObject = new $fieldType($v);
             $this->_fields[$v['name']] = $fieldObject;
         }
@@ -126,7 +126,7 @@ class orm_helper {
      * @param string $config
      * @return PDO 
      */
-    static public function pdo($config) {
+    static public function pdo($config = null) {
         return self::adapter($config)->connection();
     }
 

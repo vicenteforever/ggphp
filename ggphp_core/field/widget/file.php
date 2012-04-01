@@ -5,14 +5,14 @@
  * @package widget_field
  * @author goodzsq@gmail.com
  */
-class widget_field_file {
+class field_widget_file {
 
     /**
      * uploadify多文件上传组件
-     * @param field_base $field
+     * @param field_type_base $field
      * @return type 
      */
-    public function style_default(field_base $field){
+    public function style_default(field_type_base $field){
         if(empty($field->value)){
             $field->value = util_string::token();
         }

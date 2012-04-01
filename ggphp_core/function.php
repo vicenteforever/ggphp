@@ -336,7 +336,7 @@ function serial() {
 function validator($rule) {
     static $validator;
     if (!isset($validator[$rule])) {
-        $className = 'validator_' . $rule;
+        $className = 'field_validator_' . $rule;
         $object = new $className();
         if ($object instanceof validator_interface) {
             $validator[$rule] = $object;

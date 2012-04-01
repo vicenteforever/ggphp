@@ -4,7 +4,7 @@
  * 系统日志
  * @package advice
  */
-class core_advice_log extends advice_base {
+class advice_log extends advice_base {
 
     public function after($name, $args, $return) {
         app()->log("$name end");

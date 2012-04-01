@@ -44,7 +44,8 @@ class core_aop {
 
     static function getAdvice($name) {
         static $advice;
-        $className = str_replace('::', '_advice_', $name);
+        //$className = str_replace('::', '_advice_', $name);
+        $className = 'advice_'.$name;
         if (!isset($advice[$className])) {
             if (class_exists($className)) {
                 $advice[$className] = new $className;

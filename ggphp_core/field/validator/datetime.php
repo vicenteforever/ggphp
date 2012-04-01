@@ -5,9 +5,9 @@
  * @package validator
  * @author goodzsq@gmail.com
  */
-class validator_datetime implements validator_interface {
+class field_validator_datetime implements field_validator_interface {
 
-    public function validate(field_base $field) {
+    public function validate(field_type_base $field) {
         @list($date, $time) = explode(' ', trim($field->value));
         //判断日期
         if (!preg_match("/^(\d{4})-?(\d{1,2})-?(\d{1,2})$/", $date, $match)) {

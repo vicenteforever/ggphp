@@ -5,14 +5,14 @@
  * @package widget_field
  * @author goodzsq@gmail.com
  */
-class widget_field_hidden {
+class field_widget_hidden {
 
     /**
      * 隐藏字段
-     * @param field_base $field
+     * @param field_type_base $field
      * @return type 
      */
-    public function style_default(field_base $field) {
+    public function style_default(field_type_base $field) {
         return "<input type='hidden' name='{$field->name}' value='{$field->getValue()}' />";
     }
 

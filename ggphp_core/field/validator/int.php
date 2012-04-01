@@ -5,9 +5,9 @@
  * @package validator
  * @author goodzsq@gmail.com
  */
-class validator_int implements validator_interface {
+class field_validator_int implements field_validator_interface {
 
-    public function validate(field_base $field) {
+    public function validate(field_type_base $field) {
         if (($field->value === true) || ((string) (int) $field->value) !== ((string) $field->value)) {
             return "{$field->label} 不是整数";
         }

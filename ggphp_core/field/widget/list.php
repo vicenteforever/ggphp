@@ -5,14 +5,14 @@
  * @package widget_field
  * @author goodzsq@gmail.com
  */
-class widget_field_list {
+class field_widget_list {
 
     /**
      * 下拉列表
-     * @param field_base $field
+     * @param field_type_base $field
      * @return string
      */
-    public function style_default(field_base $field) {
+    public function style_default(field_type_base $field) {
         $buf = "<label>{$field->label}\n  <select name='{$field->name}'>\n";
         $buf .= "    <option></option>";
         foreach ($field->getList('dict') as $k => $v) {
@@ -29,10 +29,10 @@ class widget_field_list {
     
     /**
      * 级联下拉列表
-     * @param field_base $field
+     * @param field_type_base $field
      * @return type 
      */
-    public function style_level(field_base $field){
+    public function style_level(field_type_base $field){
         $selector = ":input[name={$field->name}]";
         jquery_plugin()->ajaxLevelSelect($selector, abs_url($field->dict));
 
@@ -43,10 +43,10 @@ class widget_field_list {
 
     /**
      * 单选按钮组
-     * @param field_base $field
+     * @param field_type_base $field
      * @return string 
      */
-    public function style_radio(field_base $field) {
+    public function style_radio(field_type_base $field) {
         $buf = "<label>{$field->label} \n";
         foreach ($field->getList('dict') as $k => $v) {
             if ($k == $field->getValue()) {

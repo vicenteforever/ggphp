@@ -1,6 +1,6 @@
 <?php
 
-abstract class field_base {
+abstract class field_type_base {
 
     public $name;
     public $label;
@@ -92,7 +92,7 @@ abstract class field_base {
     }
     
     public function widget(){
-        $className = "widget_field_{$this->widgetType}";
+        $className = "field_widget_{$this->widgetType}";
         $methodName = "style_{$this->widgetStyle}";
         try{
             if(class_exists($className)){

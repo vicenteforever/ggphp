@@ -16,6 +16,6 @@ class default_controller {
     }
     
     function do_test(){
-        return base_url();
+        return util_string::base36('我是谁是我');
     }
 }

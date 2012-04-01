@@ -5,9 +5,9 @@
  * @package validator
  * @author goodzsq@gmail.com
  */
-class validator_string implements validator_interface {
+class field_validator_email implements field_validator_interface {
 
-    public function validate(field_base $field) {
+    public function validate(field_type_base $field) {
         if (!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,6}$/i", $field->value)) {
             return "{$field->label}格式错误";
         }

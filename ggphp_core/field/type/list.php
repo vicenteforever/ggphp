@@ -5,7 +5,7 @@
  * @package field
  * @author goodzsq@gmail.com
  */
-class field_list extends field_base {
+class field_type_list extends field_type_base {
 
     public $widgetType = 'list';
      

@@ -5,9 +5,9 @@
  * @package validator
  * @author goodzsq@gmail.com
  */
-class validator_string implements validator_interface {
+class field_validator_string implements field_validator_interface {
 
-    public function validate(field_base $field) {
+    public function validate(field_type_base $field) {
         if (strlen($field->value) > $field->length) {
             return "{$field->label}长度必须小于{$field->length}";
         }
