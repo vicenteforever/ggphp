@@ -40,7 +40,7 @@ class core_app {
         } else {
             $this->parseFromParam();
         }
-        $result = core_module::controller($this->_controllerName, $this->_actionName);
+        $result = core_module::controller("{$this->_controllerName}_controller", $this->_actionName);
         $pageType = $this->getPageType();
         if (method_exists(core_response::instance(), $pageType)) {
             echo core_response::$pageType($result);

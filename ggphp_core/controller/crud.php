@@ -1,11 +1,11 @@
 <?php
 
 /**
- * CRUD创建查询修改删除
+ * CRUD创建查询修改删除控制器
  * @package admin
  * @author goodzsq@gmail.com
  */
-abstract class admin_crud {
+abstract class controller_crud {
 
     protected $_modelName;
     protected $_model;

@@ -24,29 +24,15 @@ class admin_controller {
             if (empty($method)) {
                 $method = 'index';
             }
-            $content = core_module::admin($module, $method);
+            $content = core_module::controller("{$module}_admin", $method);
             return $content;
         }
     }
 
-    /**
-     * 重建表
-     */
-    function do_migrate() {
-        $schema = param(0);
-        try {
-            $model = orm($schema);
-            util_csrf::validate();
-            $model->migrate();
-            $model->debug();
-            $result = $model->helper()->schema() . '表已重建';
-        } catch (Exception $e) {
-            $result = $model->debug();
-            $result .= $e->getMessage();
-        }
-        return $result;
+    function do_migrate(){
+        return core_module::controller('controller_migrate', param(0));
     }
-
+    
     private function homepage() {
         $buf = widget('breadcrumb', 'adminmenu', menu_model::admin())->render();
         return $buf;

@@ -107,26 +107,15 @@ class core_module {
     }
 
     /**
-     * 执行模块的admin控制器方法
-     * @param string $module
-     * @param string $method
-     * @return mixed 
-     */
-    static function admin($module, $method) {
-        $className = "{$module}_admin";
-        $methodName = "do_{$method}";
-        return self::call($className, $methodName);
-    }
-
-    
-    /**
      * 执行模块的controller控制器方法
-     * @param string $module
+     * @param string $className
      * @param string $method
      * @return mixed 
      */
-    static function controller($module, $method) {
-        $className = "{$module}_controller";
+    static function controller($className, $method=null) {
+        if(empty($method)){
+            $method = 'index';
+        }
         $method = "do_{$method}";
         return self::call($className, $method);
     }
