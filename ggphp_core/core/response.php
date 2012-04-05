@@ -138,5 +138,9 @@ class core_response {
             return $data;
         }
     }
+    
+    static function auto($data){
+        return 'render auto';
+    }
 
 }

@@ -7,12 +7,19 @@
  */
 class advice_auth extends advice_base {
 
-    public function before($name, $args) {
-        $perm = strtolower($name);
+    public function before($class, $method, $args) {
+        $config = config('advice', $class);
+        $roles = $config[$method]['roles'];
         if (!rbac_auth::access($perm)) {
             session()->redirect_url = uri();
             redirect(make_url('rbac', 'login'));
         }
+    }
+    
+    public function setting(){
+        return array(
+            array('name' => 'auth_role', 'label' => '角色', 'field' => 'string'),
+        );
     }
 
 }

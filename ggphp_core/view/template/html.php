@@ -8,8 +8,6 @@
 </head>
 
 <body>
-<div class='container'>
 <?php echo $data['content']?>
-</div>
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 /**
  * 树形结构
- * @package struct
+ * @package util
  * @author goodzsq@gmail.com
  */
 class util_tree {

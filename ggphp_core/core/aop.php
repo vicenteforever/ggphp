@@ -26,22 +26,6 @@ class core_aop {
         return $this->_target;
     }
 
-    static function getAdvisor($caller) {
-        static $advisor = array();
-        if (!isset($advisor[$caller])) {
-            $config = config('advice');
-            $result = array();
-            foreach ($config as $pattern => $value) {
-                if (preg_match($pattern, $caller)) {
-                    $result = array_merge($result, $value['allow']);
-                    $result = array_diff($result, $value['forbidden']);
-                }
-            }
-            $advisor[$caller] = array_unique($result);
-        }
-        return $advisor[$caller];
-    }
-
     static function getAdvice($name) {
         static $advice;
         //$className = str_replace('::', '_advice_', $name);
@@ -58,30 +42,26 @@ class core_aop {
 
     function __call($methodName, $args) {
         if (method_exists($this->_target, $methodName)) {
-            $caller = "{$this->_targetClass}::{$methodName}";
             //获取增强对象列表
-            $advisor = self::getAdvisor($caller);
+            $advisor = config('app', 'advice');
             //业务方法调用之前增强
             foreach ($advisor as $advice) {
-                self::getAdvice($advice)->before($caller, $args);
-            }
-
-            //执行真正的业务方法
+                self::getAdvice($advice)->before($this->_targetClass, $methodName, $args);
+            }        
             try {
+                //执行真正的业务方法
                 $result = call_user_func_array(array($this->_target, $methodName), $args);
             } catch (Exception $except) {
                 //发生异常时增强
                 $result = null;
                 foreach ($advisor as $advice) {
-                    self::getAdvice($advice)->except($caller, $args, $except);
+                    self::getAdvice($advice)->except($this->_targetClass, $methodName, $args, $except);
                 }
             }
-
             //业务方法调用之后增强
             foreach ($advisor as $advice) {
-                $result = self::getAdvice($advice)->after($caller, $args, $result);
+                $result = self::getAdvice($advice)->after($this->_targetClass, $methodName, $args, $result);
             }
-
             //返回业务方法返回值
             return $result;
         } else {

@@ -6,18 +6,20 @@
  */
 class advice_base implements advice_interface {
 
-    public function after($name, $args, $return) {
+    public function after($class, $method, $args, $return) {
         return $return;
     }
 
-    public function before($name, $args) {
+    public function before($class, $method, $args) {
         
     }
 
-    public function except($name, $args, $except) {
+    public function except($class, $method, $args, $except) {
         
     }
 
+    public function setting() {
+
+    }
+    
 }
-
-?>

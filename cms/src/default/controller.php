@@ -16,6 +16,9 @@ class default_controller {
     }
     
     function do_test(){
-        return util_string::base36('我是谁是我');
+        $str = file_get_contents('i:\\test.mkv');
+        //$str1 = $str;
+        return 'sdf'.strlen($str);
+        //return util_string::base36('我是谁是我');
     }
 }
