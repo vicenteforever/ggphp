@@ -38,6 +38,10 @@ class layout_model {
     }
     
     public function content(){
+        if(is_object($this->content)){
+            
+        }
+        //if(is_string($var))
         return print_r($this->content, true);
     }
 

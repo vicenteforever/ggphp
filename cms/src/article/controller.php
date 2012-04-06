@@ -32,7 +32,8 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        return 'hello world';
+        $entity = orm('article')->get(9);
+        return $entity;
     }
 
     //private function //

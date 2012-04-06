@@ -24,6 +24,42 @@ function session() {
 }
 
 /**
+ * 设置或者获取全局共享的数据变量 
+ * @staticvar array $share
+ * @param string $key
+ * @param mixed $data
+ * @return mixed 
+ */
+function share($key, $data = null) {
+    static $share;
+    if (!isset($data)) {
+        if (isset($share[$key])) {
+            return $share[$key];
+        } else {
+            return null;
+        }
+    } else {
+        $share[$key] = $data;
+        return;
+    }
+}
+
+/**
+ * 检查两个类名称是否具有继承或者是否实现其接口
+ * @param string $child 子类名称
+ * @param string $parent 父类或者接口名称
+ * @return boolean 
+ */
+function is_subclass($child, $parent) {
+    $reflect = new ReflectionClass($child);
+    if ($reflect->isSubclassOf($parent)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
  * 获取nosql键值存储对象
  * @staticvar className $nosql
  * @param string $adapter 适配器类文件名称

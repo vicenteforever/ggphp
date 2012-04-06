@@ -4,16 +4,17 @@ include_once(GG_DIR . '/lib/phpDataMapper/Base.php');
 
 class orm_mapper extends phpDataMapper_Base {
 
-    protected $_helper;
+    protected $_fieldset;
+    protected $_schema;
 
     /**
      * orm构造器
      * @param string $schemaName config/schema配置文件名 
      */
     public function __construct($schemaName) {
-        $helper = new orm_helper($schemaName);
-        foreach ($helper->fields() as $fieldName => $field) {
-            $this->_datasource = $helper->schema();
+        $fieldset = new orm_fieldset($schemaName);
+        foreach ($fieldset->fields() as $fieldName => $field) {
+            $this->_datasource = $fieldset->schema();
             $arr = array();
             $arr['type'] = $field->type;
             $arr['default'] = $field->default;
@@ -28,16 +29,48 @@ class orm_mapper extends phpDataMapper_Base {
             $arr['relation'] = $field->relation;
             $this->$fieldName = $arr;
         }
-        $this->_helper = $helper;
-        parent::__construct(orm_helper::adapter());
+        $this->_fieldset = $fieldset;
+        parent::__construct(self::getAdapterFromConfig());
     }
 
     /**
-     * 获取orm_helper
-     * @return orm_helper
+     * 获取phpDataMapper数据库适配器
+     * @staticvar phpDataMapper_Adapter_Mysql $adapter
+     * @param type $config
+     * @return \phpDataMapper_Adapter_Mysql 
      */
-    public function helper() {
-        return $this->_helper;
+    static public function getAdapterFromConfig($config = 'default') {
+        static $adapter;
+        if (!isset($adapter)) {
+            include(GG_DIR . '/lib/phpDataMapper/Adapter/PDO.php');
+            include(GG_DIR . '/lib/phpDataMapper/Adapter/Mysql.php');
+            $dbconfig = config('database', 'default');
+            $adapter = new phpDataMapper_Adapter_Mysql(
+                            $dbconfig['host'],
+                            $dbconfig['database'],
+                            $dbconfig['username'],
+                            $dbconfig['password'],
+                            $dbconfig['driver_opts']
+            );
+        }
+        return $adapter;
+    }
+
+    /**
+     * 获取pdo链接
+     * @param string $config
+     * @return PDO 
+     */
+    static public function pdo($config = null) {
+        return self::getAdapterFromConfig($config)->connection();
+    }
+    
+    /**
+     * 获取字段集
+     * @return orm_fieldset
+     */
+    public function fieldset() {
+        return $this->_fieldset;
     }
 
     /**
@@ -46,7 +79,7 @@ class orm_mapper extends phpDataMapper_Base {
      * @return boolean 
      */
     public function validate(phpDataMapper_Entity $entity) {
-        $error = $this->_helper->validate($entity);
+        $error = $this->_fieldset->validate($entity);
         if (empty($error)) {
             return true;
         } else {

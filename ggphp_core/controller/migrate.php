@@ -27,7 +27,7 @@ class controller_migrate {
             util_csrf::validate();
             $model->migrate();
             $model->debug();
-            $result = $model->helper()->schema() . '表已重建';
+            $result = $model->fieldset()->schema() . '表已重建';
         } catch (Exception $e) {
             $result = $model->debug();
             $result .= $e->getMessage();

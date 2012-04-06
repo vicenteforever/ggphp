@@ -30,7 +30,7 @@ class advice_layout extends advice_base {
         $buf = "<div class='container'>\n";
         foreach($layout as $key=>$row){
             if($row['content']=='[content]'){
-                $row['content'] = 'content:'.$value;  
+                $row['content'] = $value;  
             }
             //print_r($row['content']);
             $widget = new layout_model($row);

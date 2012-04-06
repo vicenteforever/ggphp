@@ -17,7 +17,7 @@ class widget_form extends widget_base {
      * @return type 
      */
     public function theme_default() {
-        if ($this->_data instanceof orm_helper) {
+        if ($this->_data instanceof orm_fieldset) {
             jquery_plugin()->ajaxSubmit('#' . $this->_id);
             return $this->html($this->_data, false);
         }
@@ -28,7 +28,7 @@ class widget_form extends widget_base {
      * @return string 
      */
     public function theme_captcha() {
-        if ($this->_data instanceof orm_helper) {
+        if ($this->_data instanceof orm_fieldset) {
             jquery_plugin()->ajaxSubmit('#' . $this->_id);
             return $this->html($this->_data, true);
         }
@@ -43,7 +43,7 @@ class widget_form extends widget_base {
         return "<input type='text' name='captcha'><img id='captcha' src='$url' />\n";
     }
 
-    protected function html(orm_helper $helper, $captcha) {
+    protected function html(orm_fieldset $helper, $captcha) {
         $buf = "";
         $enctype = '';
         //$enctype = ' enctype="multipart/form-data"';

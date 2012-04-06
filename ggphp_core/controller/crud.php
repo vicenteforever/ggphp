@@ -20,11 +20,11 @@ abstract class controller_crud {
      * 编辑
      */
     function do_edit() {
-        $helper = $this->_model->helper();
-        $helper->url = make_url('admin', $this->_modelName, 'save');
-        $helper->uploadurl = make_url('admin', $this->_modelName, 'upload');
-        $helper->entity = $this->_model->get(param('id'));
-        $buf = widget('form', $this->_modelName, $helper)->render($this->_formStyle);
+        $fieldset = $this->_model->fieldset();
+        $fieldset->url = make_url('admin', $this->_modelName, 'save');
+        $fieldset->uploadurl = make_url('admin', $this->_modelName, 'upload');
+        $fieldset->entity = $this->_model->get(param('id'));
+        $buf = widget('form', $this->_modelName, $fieldset)->render($this->_formStyle);
         return $buf;
     }
 
@@ -39,7 +39,7 @@ abstract class controller_crud {
             $entity = $this->_model->get(param('id'));
             $this->fillData($entity);
             $this->_model->save($entity);
-            foreach ($this->_model->helper()->fields() as $key => $field) {
+            foreach ($this->_model->fieldset()->fields() as $key => $field) {
                 if($field instanceof field_file){
                     file_model::save($field->value);
                 }
@@ -74,7 +74,7 @@ abstract class controller_crud {
      */
     function do_index() {
         $header = array();
-        foreach ($this->_model->helper()->fields() as $key => $value) {
+        foreach ($this->_model->fieldset()->fields() as $key => $value) {
             $header[$key] = $value->label;
         }
         $header['admin'] = '管理';
@@ -130,12 +130,12 @@ abstract class controller_crud {
         //检查是否为csrf攻击
         $this->errorCheck(util_csrf::key(), util_csrf::validate());
         //填充数据到entity
-        foreach ($this->_model->helper()->fields() as $key => $field) {
+        foreach ($this->_model->fieldset()->fields() as $key => $field) {
             $field->setValue(param($key));
             $entity->$key = $field->getValue();
         }
         //检查数据校验是否正确
-        $this->errorCheck('', $this->_model->helper()->validate());
+        $this->errorCheck('', $this->_model->fieldset()->validate());
         //检查验证码
         if ($this->_formStyle == 'captcha') {
             $this->errorCheck('captcha', image_captcha::validate());

@@ -1,6 +1,6 @@
 <?php
 
-class orm_helper {
+class orm_fieldset {
 
     protected $_fields;
     protected $_schema;
@@ -33,7 +33,7 @@ class orm_helper {
      * @param array $fieldInfo 
      */
     public function addField($fieldInfo) {
-        $fieldName = "field_{$fieldInfo['field']}";
+        $fieldName = "field_type_{$fieldInfo['field']}";
         $this->_fields[$fieldInfo['name']] = new $fieldName($fieldInfo);
     }
 
@@ -99,37 +99,9 @@ class orm_helper {
     }
 
     /**
-     * 获取phpDataMapper数据库适配器
-     * @staticvar phpDataMapper_Adapter_Mysql $adapter
-     * @param type $config
-     * @return \phpDataMapper_Adapter_Mysql 
+     * 屏蔽未定义属性警告
+     * @param type $name 
      */
-    static public function adapter($config = 'default') {
-        static $adapter;
-        if (!isset($adapter)) {
-            include(GG_DIR . '/lib/phpDataMapper/Adapter/PDO.php');
-            include(GG_DIR . '/lib/phpDataMapper/Adapter/Mysql.php');
-            $dbconfig = config('database', 'default');
-            $adapter = new phpDataMapper_Adapter_Mysql(
-                            $dbconfig['host'],
-                            $dbconfig['database'],
-                            $dbconfig['username'],
-                            $dbconfig['password'],
-                            $dbconfig['driver_opts']
-            );
-        }
-        return $adapter;
-    }
-
-    /**
-     * 获取pdo链接
-     * @param string $config
-     * @return PDO 
-     */
-    static public function pdo($config = null) {
-        return self::adapter($config)->connection();
-    }
-
     public function __get($name) {
         ;
     }
