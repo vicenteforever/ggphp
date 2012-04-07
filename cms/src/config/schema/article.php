@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    array('name' => 'id', 'label' => 'ID', 'field' => 'id'),
+    array('name' => 'id', 'label' => 'ID', 'field' => 'serial'),
     array('name' => 'inttest', 'label' => '整数测试', 'field' => 'int', 'required' => true),
     array('name' => 'title', 'label' => '标题', 'field' => 'string', 'required' => true, 'length' => 5),
     array('name' => 'content', 'label' => '正文', 'field' => 'text', 'widgetStyle' => 'tinymce'),

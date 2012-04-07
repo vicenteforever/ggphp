@@ -5,15 +5,21 @@ abstract class field_type_base {
     public $name;
     public $label;
     public $type = 'string';
-    public $length = 255;
+    public $length = null;
+    public $unsigned = false;
+    public $allowNull = false;
     public $required = false;
+    public $default = null;
+    public $primary = false;
+    public $unique = false;
+    public $index = false;
+    public $serial = false;
     public $number = 1;
     public $hidden = false;
     public $widgetType = 'string';
     public $widgetStyle = 'default';
-    public $default = null;
-    public $value;
     public $validators = array();
+    public $value;
 
     public function __construct(array $arr) {
         foreach ($arr as $k => $v) {
@@ -79,8 +85,8 @@ abstract class field_type_base {
         }
         foreach ($this->validators as $key => $rule) {
             $validator = validator($rule);
-                    //var_dump($validator);
-            if(empty($validator)){
+            //var_dump($validator);
+            if (empty($validator)) {
                 return "校验器{$rule}不存在";
             }
             $err = $validator->validate($this);
@@ -90,19 +96,17 @@ abstract class field_type_base {
         }
         return true;
     }
-    
-    public function widget(){
+
+    public function widget() {
         $className = "field_widget_{$this->widgetType}";
         $methodName = "style_{$this->widgetStyle}";
-        try{
-            if(class_exists($className)){
+        try {
+            if (class_exists($className)) {
                 return call_user_func(array($className, $methodName), $this);
-            }
-            else{
+            } else {
                 return "$className 不存在";
             }
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }

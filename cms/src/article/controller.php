@@ -32,8 +32,8 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        $entity = orm('article')->get(9);
-        return $entity;
+        $a = new orm_adapter();
+        var_dump($a->exists('article'));
     }
 
     //private function //

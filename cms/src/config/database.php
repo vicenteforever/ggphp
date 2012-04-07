@@ -1,18 +1,19 @@
 <?php
 
 $config['default'] = array(
+    'dsn' => 'mysql:host=localhost;dbname=ggcms',
     'host' => 'localhost',
     'database' => 'ggcms',
     'username' => 'root',
     'password' => 'root',
-    'driver_opts' => array(),
+    'options' => array(),
 );
 
 $config['test'] = array(
-    'DSN' => 'mysql:host=localhost;dbname=test',
+    'dsn' => 'mysql:host=localhost;dbname=test',
     'username' => 'root',
     'password' => 'root',
-    'driver_opts' => array(),
+    'options' => array(),
 );
 
 return $config;

@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    array('name' => 'id', 'label' => 'ID', 'field' => 'id'),
+    array('name' => 'id', 'label' => 'ID', 'field' => 'serial'),
     array('name' => 'owner', 'label' => '文件所属', 'field' => 'string', 'index'=>true),
     array('name' => 'filename', 'label' => '文件', 'field' => 'string'),
     array('name' => 'name', 'label' => '名称', 'field' => 'string'),
