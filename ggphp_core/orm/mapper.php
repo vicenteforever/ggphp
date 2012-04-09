@@ -5,16 +5,15 @@ include_once(GG_DIR . '/lib/phpDataMapper/Base.php');
 class orm_mapper extends phpDataMapper_Base {
 
     protected $_fieldset;
-    protected $_schema;
 
     /**
      * orm构造器
-     * @param string $schemaName config/schema配置文件名 
+     * @param string $tableName config/table下配置文件名称
      */
-    public function __construct($schemaName) {
-        $fieldset = new orm_fieldset($schemaName);
+    public function __construct($tableName) {
+        $fieldset = new orm_fieldset($tableName);
         foreach ($fieldset->fields() as $fieldName => $field) {
-            $this->_datasource = $fieldset->schema();
+            $this->_datasource = $fieldset->table();
             $arr = array();
             $arr['type'] = $field->type;
             $arr['default'] = $field->default;
@@ -50,7 +49,7 @@ class orm_mapper extends phpDataMapper_Base {
                             $dbconfig['database'],
                             $dbconfig['username'],
                             $dbconfig['password'],
-                            $dbconfig['driver_opts']
+                            $dbconfig['options']
             );
         }
         return $adapter;

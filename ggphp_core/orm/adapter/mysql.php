@@ -12,6 +12,7 @@ class orm_adapter_mysql extends orm_adapter_pdo {
     private $_collate = 'utf8_general_ci';
     private $_fieldTypeMap = array(
         'string' => 'varchar',
+        'text' => 'text',
         'int' => 'int',
         'integer' => 'int',
         'bool' => 'tinyint',
@@ -58,7 +59,7 @@ class orm_adapter_mysql extends orm_adapter_pdo {
             }
         }
 
-        $syntax = "CREATE TABLE IF NOT EXISTS `" . $fieldset->schema() . "` (\n";
+        $syntax = "CREATE TABLE IF NOT EXISTS `" . $fieldset->table() . "` (\n";
         $syntax .= implode(",\n", $columnsSyntax);
         $syntax .= $primary . $unique . $index;
         $syntax .= "\n) ENGINE={$this->_engine} DEFAULT CHARSET={$this->_charset} COLLATE={$this->_collate};";
@@ -67,48 +68,45 @@ class orm_adapter_mysql extends orm_adapter_pdo {
 
     public function updateTable(orm_fieldset $fieldset) {
         //@todo goodzsq updatetable syntax
-        /*
-          ALTER TABLE `posts`
-          CHANGE `title` `title` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-          CHANGE `status` `status` VARCHAR( 40 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'draft'
-         */
-        $syntax = "ALTER TABLE `" . $fieldset->schema() . "` \n";
-        // Columns
-        $syntax .= implode(",\n", $columnsSyntax);
+        $existsColumns = $this->getColumnsForTable($fieldset->table());
+        $columnsSyntax = array();
+        $primary = '';
+        $unique = '';
+        $index = '';
+        foreach ($fieldset->fields() as $key => $field) {
+            /* @var $field field_type_base */
+            if (isset($existsColumns[$key])) {
+                $columnsSyntax[] = 'MODIFY ' . $this->syntaxField($field);
+            } else {
+                $columnsSyntax[] = 'ADD COLUMN ' . $this->syntaxField($field);
+            }
 
-
-        // Keys...
-        $ki = 0;
-        $usedKeyNames = array();
-        foreach ($formattedFields as $fieldName => $fieldInfo) {
-            // Determine key field name (can't use same key name twice, so we  have to append a number)
-            $fieldKeyName = $fieldName;
-            while (in_array($fieldKeyName, $usedKeyNames)) {
-                $fieldKeyName = $fieldName . '_' . $ki;
+            if ($field->primary) {
+                $primary .= "\n, PRIMARY KEY(`$field->name`)";
             }
-            // Key type
-            if ($fieldInfo['primary']) {
-                $syntax .= ",\n PRIMARY KEY(`" . $fieldName . "`)";
+            if ($field->unique) {
+                $unique .= "\n, UNIQUE KEY `$field->name` (`$field->name`)";
             }
-            if ($fieldInfo['unique']) {
-                $syntax .= ",\n UNIQUE KEY `" . $fieldKeyName . "` (`" . $fieldName . "`)";
-                $usedKeyNames[] = $fieldKeyName;
-                // Example: ALTER TABLE `posts` ADD UNIQUE (`url`)
-            }
-            if ($fieldInfo['index']) {
-                $syntax .= ",\n KEY `" . $fieldKeyName . "` (`" . $fieldName . "`)";
-                $usedKeyNames[] = $fieldKeyName;
+            if ($field->index) {
+                $index .= "\n, KEY `$field->name` (`$field->name`)";
             }
         }
 
-        // Extra
-        $syntax .= ";";
-        return $syntax;
+        $syntax = "ALTER TABLE `" . $fieldset->table() . "` \n";
+        $syntax .= implode(",\n", $columnsSyntax);
+        $syntax .= $primary . $unique . $index;
+        return $this->execute($syntax);
     }
 
+    /**
+     * 创建列的语法
+     * @param field_type_base $field
+     * @return string
+     * @throws phpDataMapper_Exception 
+     */
     public function syntaxField(field_type_base $field) {
         if (!isset($this->_fieldTypeMap[$field->type])) {
-            throw new phpDataMapper_Exception("Field type {$field->type} not supported");
+            throw new exception("Field type {$field->type} not supported");
         }
         $field->type = $this->_fieldTypeMap[$field->type];
         $syntax = "`{$field->name}` " . $field->type;
@@ -138,8 +136,19 @@ class orm_adapter_mysql extends orm_adapter_pdo {
         return $syntax;
     }
 
-    public function syntaxUpdateField(field_type_base $field, $add = false) {
-        return ( $add ? "ADD COLUMN " : "MODIFY " ) . $this->syntaxField($field);
+    /**
+     * 从数据库表获取列信息
+     * @param string $table 表名称
+     * @return array 
+     */
+    public function getColumnsForTable($table) {
+        $sql = "SELECT * FROM information_schema.columns WHERE table_schema = '{$this->_database}' AND table_name = '{$table}'";
+        $stmt = $this->query($sql);
+        $result = array();
+        while ($row = $stmt->fetch()) {
+            $result[$row['COLUMN_NAME']] = $row;
+        }
+        return $result;
     }
 
 }

@@ -32,10 +32,11 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        $a = new orm_adapter();
-        var_dump($a->exists('article'));
+        $a = new orm_adapter_mysql();
+        app()->log('======');
+        app()->log($a->updateTable(orm('article')->fieldset()));
+        app()->log('-----');
     }
 
-    //private function //
 }
 

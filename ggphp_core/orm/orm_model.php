@@ -7,7 +7,7 @@
  */
 class orm_model {
     
-    public function __construct($schema) {
+    public function __construct($tableName) {
         ;
     }
 }

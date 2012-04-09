@@ -6,6 +6,11 @@
  */
 class core_app {
 
+    const LOG_INFORMATION = 0;
+    const LOG_WARNNING = 1;
+    const LOG_ERROR = 2;
+    const LOG_EXCEPTION = 3;
+    
     private $_controllerName;
     private $_actionName;
     private $_pageType;
@@ -44,14 +49,10 @@ class core_app {
         $pageType = $this->getPageType();
         if (method_exists(core_response::instance(), $pageType)) {
             echo core_response::$pageType($result);
-        }
-        else{
+        } else {
             echo core_response::error("$pageType not exist");
         }
         $this->log('application end');
-        if ($pageType == 'html') {
-            $this->report();
-        }
     }
 
     /**
@@ -139,12 +140,13 @@ class core_app {
 
     /**
      * 记录系统日志
-     * @param string $message
+     * @param mixed $data
+     * @param int $level 日志等级
      */
-    function log($message = null) {
+    function log($data = null, $level=0) {
         static $log = array();
-        if (isset($message)) {
-            $log[] = array('time' => microtime(true), 'message' => $message);
+        if (isset($data)) {
+            $log[] = array('time' => microtime(true), 'data' => $data, 'level'=>$level);
         } else {
             return $log;
         }
@@ -184,26 +186,6 @@ class core_app {
             $ext = 'html';
         }
         return array($basename, $ext);
-    }
-
-    private function report() {
-        $report = '<hr/>';
-        if (!config('app', 'debug')) {
-            $report = "程序运行状态只能在调试模式下运行";
-        } else {
-            $log = app()->log();
-            $time = $log[0]['time'];
-            foreach ($log as $k => $v) {
-                $timespan = sprintf("%.4f", $v['time'] - $time);
-                $time = $v['time'];
-                $report .= "[{$timespan}] {$v['message']} <br/>";
-            }
-            $total = sprintf("%.4f", $time - $log[0]['time']);
-            $report .= "程序运行时间:$total ms, memory:" . util_string::size_hum_read(memory_get_usage()) . " <br>";
-            $report .= "<a href='" . base_url() . "unittest'>运行单元测试</a>";
-            $report .= "url rewrite:" . core_request::isRewrite();
-        }
-        echo $report;
     }
 
 }

@@ -8,10 +8,11 @@
 abstract class orm_adapter_pdo {
 
     protected $_connection;
+    protected $_database;
 
-    abstract public function syntaxField(field_type_base $field);
+    abstract public function getColumnsForTable($table);
     
-    abstract public function syntaxUpdateField(field_type_base $field);
+    abstract public function syntaxField(field_type_base $field);
     
     abstract public function createDatabase($source);
     
@@ -29,8 +30,8 @@ abstract class orm_adapter_pdo {
     static public function pdo($config) {
         static $pdo;
         if (!isset($pdo[$config])) {
-            $data = config('database', $config);
-            $pdo[$config] = new PDO($data['dsn'], $data['username'], $data['password'], $data['options']);
+            $configData = config('database', $config);
+            $pdo[$config] = new PDO($configData['dsn'], $configData['username'], $configData['password'], $configData['options']);
         }
         return $pdo[$config];
     }
@@ -40,7 +41,9 @@ abstract class orm_adapter_pdo {
      * @param stirng $config 数据库配置文件config/database.php的某个配置名称
      */
     public function __construct($config = 'default') {
-        $this->_connection = self::pdo($config);
+            $configData = config('database', $config);
+            $this->_database = $configData['database'];
+            $this->_connection = self::pdo($config);
     }
 
     /**
@@ -65,11 +68,11 @@ abstract class orm_adapter_pdo {
                 $this->log('[OK][SQL]' . $sql, $params);
                 return true;
             } else {
-                app()->log('[FAIL][SQL]:' . print_r($stmt->errorInfo(), true));
+                app()->log($stmt, core_app::LOG_EXCEPTION);
                 return false;
             }
         } else {
-            app()->log('[FAIL][SQL]: prepare');
+            app()->log('[FAIL][SQL]: prepare', core_app::LOG_EXCEPTION);
             return false;
         }
     }

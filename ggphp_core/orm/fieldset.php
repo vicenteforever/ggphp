@@ -3,18 +3,18 @@
 class orm_fieldset {
 
     protected $_fields;
-    protected $_schema;
+    protected $_table;
 
     /**
      * orm_helper构造器
-     * @param string $schemaName 数据配置表名称
+     * @param string $tableName 数据配置表名称
      * @throws Exception 
      */
-    public function __construct($schemaName) {
-        $this->_schema = $schemaName;
+    public function __construct($tableName) {
+        $this->_table = $tableName;
         if (!is_array($this->_fields))
             $this->_fields = array();
-        $config = config("schema/{$schemaName}");
+        $config = config("table/{$tableName}");
         if (!is_array($config))
             $config = array();
         $config = array_merge($this->_fields, $config);
@@ -94,8 +94,8 @@ class orm_fieldset {
      * 获取数据配置表名称(表名称)
      * @return string 
      */
-    public function schema() {
-        return $this->_schema;
+    public function table() {
+        return $this->_table;
     }
 
     /**

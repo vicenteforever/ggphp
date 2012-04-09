@@ -16,9 +16,7 @@ class advice_log extends advice_base {
     }
 
     public function except($class, $method, $args, $except) {
-        app()->log("$class::$method exception: " . $except->getMessage());
+        app()->log("$class::$method exception: " . trace($except));
     }
 
 }
-
-?>

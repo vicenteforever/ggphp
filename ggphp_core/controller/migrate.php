@@ -21,13 +21,13 @@ class controller_migrate {
      * 创建数据库 
      */
     public function do_table(){
-        $schema = param(0);
+        $table = param(0);
         try {
-            $model = orm($schema);
+            $model = orm($table);
             util_csrf::validate();
             $model->migrate();
             $model->debug();
-            $result = $model->fieldset()->schema() . '表已重建';
+            $result = $model->fieldset()->table() . '表已重建';
         } catch (Exception $e) {
             $result = $model->debug();
             $result .= $e->getMessage();

@@ -173,17 +173,28 @@ function output($str, $filters = null) {
  * @return string 
  */
 function trace($obj) {
-    if (is_bool($obj)) {
+    $result = '';
+    if (is_string($obj)) {
+        return $obj;
+    } else if (is_bool($obj)) {
         if ($obj === true) {
-            $obj = 'TRUE';
+            return 'TRUE';
         } else {
-            $obj = 'FALSE';
+            return 'FALSE';
         }
+    } else if (is_object($obj)) {
+        if ($obj instanceof Exception) {
+            $result = $obj->getMessage() . "\n" . $obj->getTraceAsString();
+        } 
+        else if($obj instanceof PDOStatement){
+            $result = print_r($obj, true) . print_r($obj->errorInfo(), true);
+        }else {
+            $result = print_r($obj, true);
+        }
+    } else if (is_array($obj)) {
+        $result = print_r($obj, true);
     }
-    $buf = '<pre>';
-    $buf .= print_r($obj, true);
-    $buf .= '</pre>';
-    return $buf;
+    return "<pre>$result</pre>";
 }
 
 /**
@@ -314,7 +325,7 @@ function redirect($url) {
 /**
  * 取得orm模型对象
  * @staticvar orm_mapper $orm
- * @param type $model config/schema配置文件名称
+ * @param type $model config/table配置文件名称
  * @return orm_mapper 
  */
 function orm($model) {
