@@ -47,14 +47,12 @@ class orm_adapter_mysql extends orm_adapter_pdo {
         $index = '';
         foreach ($fieldset->fields() as $key => $field) {
             /* @var $field field_type_base */
-            $columnsSyntax = $this->syntaxField($field);
-            if ($field->primary) {
+            $columnsSyntax[] = $this->syntaxField($field);
+            if ($field->index == 'primary') {
                 $primary .= "\n, PRIMARY KEY(`$field->name`)";
-            }
-            if ($field->unique) {
+            } elseif ($field->index == 'unique') {
                 $unique .= "\n, UNIQUE KEY `$field->name` (`$field->name`)";
-            }
-            if ($field->index) {
+            } elseif ($field->index == 'index') {
                 $index .= "\n, KEY `$field->name` (`$field->name`)";
             }
         }
@@ -67,8 +65,9 @@ class orm_adapter_mysql extends orm_adapter_pdo {
     }
 
     public function updateTable(orm_fieldset $fieldset) {
-        //@todo goodzsq updatetable syntax
-        $existsColumns = $this->getColumnsForTable($fieldset->table());
+        //修改列属性
+        $existsColumns = $this->getColumnsFromTable($fieldset->table());
+        $existsIndexs = $this->getIndexFromTable($fieldset->table());
         $columnsSyntax = array();
         $primary = '';
         $unique = '';
@@ -80,22 +79,47 @@ class orm_adapter_mysql extends orm_adapter_pdo {
             } else {
                 $columnsSyntax[] = 'ADD COLUMN ' . $this->syntaxField($field);
             }
+        }
+        $table = $fieldset->table();
+        $syntax = "ALTER TABLE `$table` \n";
+        $syntax .= implode(",\n", $columnsSyntax);
+        $this->execute($syntax);
 
-            if ($field->primary) {
-                $primary .= "\n, PRIMARY KEY(`$field->name`)";
+        //修改索引
+        foreach ($fieldset->fields() as $key => $field) {
+            //primary
+            if ($field->index == 'primary') {
+                $this->execute("ALTER TABLE `$table` DROP PRIMARY KEY, ADD PRIMARY KEY(`{$field->name}`);");
             }
-            if ($field->unique) {
-                $unique .= "\n, UNIQUE KEY `$field->name` (`$field->name`)";
+            //unique
+            if ($field->index == 'unique') {
+                if (isset($existsIndexs[$key])) {
+                    $this->execute("ALTER TABLE `$table` DROP INDEX `$key` , ADD UNIQUE  `$key` (  `$key` )");
+                } else {
+                    $this->execute("ALTER TABLE `$table` ADD UNIQUE  `$key` (  `$key` )");
+                }
             }
-            if ($field->index) {
-                $index .= "\n, KEY `$field->name` (`$field->name`)";
+            //index
+            if ($field->index == 'index') {
+                if (isset($existsIndexs[$key])) {
+                    $this->execute("ALTER TABLE `$table` DROP INDEX `$key` , ADD INDEX  `$key` (  `$key` )");
+                } else {
+                    $this->execute("ALTER TABLE `$table` ADD INDEX  `$key` (  `$key` )");
+                }
+            }
+            //drop index
+            if (isset($existsIndexs[$key]) && empty($field->index)) {
+                $this->execute("ALTER TABLE `$table` DROP INDEX `$key`");
             }
         }
-
-        $syntax = "ALTER TABLE `" . $fieldset->table() . "` \n";
-        $syntax .= implode(",\n", $columnsSyntax);
-        $syntax .= $primary . $unique . $index;
-        return $this->execute($syntax);
+        
+        //删除多余的列
+        
+        foreach($existsColumns as $key=>$value){
+            if($fieldset->field($key) == null){
+                $this->execute("ALTER TABLE `$table` DROP `$key`");
+            }
+        }
     }
 
     /**
@@ -141,12 +165,27 @@ class orm_adapter_mysql extends orm_adapter_pdo {
      * @param string $table 表名称
      * @return array 
      */
-    public function getColumnsForTable($table) {
+    public function getColumnsFromTable($table) {
         $sql = "SELECT * FROM information_schema.columns WHERE table_schema = '{$this->_database}' AND table_name = '{$table}'";
         $stmt = $this->query($sql);
         $result = array();
         while ($row = $stmt->fetch()) {
             $result[$row['COLUMN_NAME']] = $row;
+        }
+        return $result;
+    }
+
+    /**
+     * 列出表的所有索引
+     * @param string $table
+     * @return array 
+     */
+    public function getIndexFromTable($table) {
+        $sql = "SHOW INDEX FROM $table";
+        $stmt = $this->query($sql);
+        $result = array();
+        while ($row = $stmt->fetch()) {
+            $result[$row['Key_name']] = $row;
         }
         return $result;
     }

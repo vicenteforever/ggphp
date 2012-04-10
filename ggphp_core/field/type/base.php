@@ -10,9 +10,7 @@ abstract class field_type_base {
     public $allowNull = false;
     public $required = false;
     public $default = null;
-    public $primary = false;
-    public $unique = false;
-    public $index = false;
+    public $index = null;
     public $serial = false;
     public $number = 1;
     public $hidden = false;

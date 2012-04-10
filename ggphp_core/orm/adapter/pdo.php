@@ -10,18 +10,20 @@ abstract class orm_adapter_pdo {
     protected $_connection;
     protected $_database;
 
-    abstract public function getColumnsForTable($table);
-    
+    abstract public function getIndexFromTable($table);
+
+    abstract public function getColumnsFromTable($table);
+
     abstract public function syntaxField(field_type_base $field);
-    
+
     abstract public function createDatabase($source);
-    
+
     abstract public function createTable(orm_fieldset $fieldset);
-    
+
     abstract public function updateTable(orm_fieldset $fieldset);
-    
+
     abstract public function tableExists($source);
-    
+
     /**
      * 根据配置文件获取一个pdo对象
      * @param string $config
@@ -41,9 +43,9 @@ abstract class orm_adapter_pdo {
      * @param stirng $config 数据库配置文件config/database.php的某个配置名称
      */
     public function __construct($config = 'default') {
-            $configData = config('database', $config);
-            $this->_database = $configData['database'];
-            $this->_connection = self::pdo($config);
+        $configData = config('database', $config);
+        $this->_database = $configData['database'];
+        $this->_connection = self::pdo($config);
     }
 
     /**
@@ -65,14 +67,14 @@ abstract class orm_adapter_pdo {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
             if ($stmt->execute($params)) {
-                $this->log('[OK][SQL]' . $sql, $params);
+                app()->log(array('sql' => $sql, 'data' => $params), core_app::LOG_OK);
                 return true;
             } else {
                 app()->log($stmt, core_app::LOG_EXCEPTION);
                 return false;
             }
         } else {
-            app()->log('[FAIL][SQL]: prepare', core_app::LOG_EXCEPTION);
+            app()->log('prepare fail:' . $sql, core_app::LOG_EXCEPTION);
             return false;
         }
     }
@@ -101,22 +103,22 @@ abstract class orm_adapter_pdo {
      * @param string $sql
      * @return PDOStatement 
      */
-    public function query($sql, $params=null) {
+    public function query($sql, $params = null) {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
             if ($stmt->execute($params)) {
-                $this->log('[OK][SQL]' . $sql, $params);
+                app()->log(array('sql' => $sql, 'data' => $params), core_app::LOG_OK);
                 return $stmt;
             } else {
-                app()->log('[FAIL][SQL]:' . print_r($stmt->errorInfo(), true));
+                app()->log($stmt, core_app::LOG_EXCEPTION);
                 return false;
             }
         } else {
-            app()->log('[FAIL][SQL]: prepare');
+            app()->log('prepare fail:' . $sql, core_app::LOG_EXCEPTION);
             return false;
         }
     }
-    
+
     /**
      * 更新语句
      * @param string $source
@@ -148,14 +150,13 @@ abstract class orm_adapter_pdo {
 
     public function delete($source, $where) {
         $binds = array();
-        if(is_array($where)){
+        if (is_array($where)) {
             foreach ($where as $k => $v) {
                 $binds[':w_' . $k] = $v;
                 $clauses[] = "$k = :w_$k";
             }
-            $clause = implode(' AND ', $clauses);            
-        }
-        else{
+            $clause = implode(' AND ', $clauses);
+        } else {
             $clause = $where;
         }
         $sql = "DELETE FROM $source WHERE $clause";
@@ -167,15 +168,14 @@ abstract class orm_adapter_pdo {
      * @param string $source
      * @param array $fields 
      */
-    public function migrate($source, array $fields){
-        if($this->exists($source)){
+    public function migrate($source, array $fields) {
+        if ($this->exists($source)) {
             $this->createTable($source, $fields);
-        }
-        else{
+        } else {
             $this->updateTable($source, $fields);
         }
     }
-    
+
     public function truncateTable($source) {
         $sql = "TRUNCATE TABLE " . $source;
         return $this->execute($sql);

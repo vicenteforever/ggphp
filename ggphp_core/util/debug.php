@@ -5,7 +5,7 @@
  * @package
  * @author goodzsq@gmail.com
  */
-class util_report {
+class util_debug {
 
     static public function display() {
         if (app()->getPageType() != 'html') {
@@ -29,7 +29,7 @@ class util_report {
         $report .= "url rewrite:" . core_request::isRewrite();
 
         echo $report;
-        $cssfile = config('app', 'common_path') . 'css/debug/debug.css';
+        $cssfile = config('app', 'common_path') . 'css/ggphp/debug.css';
 $code = <<<EOF
 <script type='text/javascript'>
 (function(){

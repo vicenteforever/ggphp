@@ -21,7 +21,7 @@ class controller_migrate {
      * 创建数据库 
      */
     public function do_table(){
-        $table = param(0);
+        $table = param(1);
         try {
             $model = orm($table);
             util_csrf::validate();

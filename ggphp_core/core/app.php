@@ -7,9 +7,10 @@
 class core_app {
 
     const LOG_INFORMATION = 0;
-    const LOG_WARNNING = 1;
-    const LOG_ERROR = 2;
-    const LOG_EXCEPTION = 3;
+    const LOG_OK = 1;
+    const LOG_WARNNING = 2;
+    const LOG_ERROR = 3;
+    const LOG_EXCEPTION = 4;
     
     private $_controllerName;
     private $_actionName;

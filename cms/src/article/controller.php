@@ -33,9 +33,8 @@ class article_controller {
      */
     function do_test() {
         $a = new orm_adapter_mysql();
-        app()->log('======');
-        app()->log($a->updateTable(orm('article')->fieldset()));
-        app()->log('-----');
+        $fieldset = new orm_fieldset('article');
+        app()->log($a->updateTable($fieldset), core_app::LOG_OK);
     }
 
 }

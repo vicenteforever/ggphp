@@ -44,7 +44,7 @@ class orm_fieldset {
      */
     public function field($fieldName) {
         if (isset($this->_fields[$fieldName])) {
-            $this->_fields[$fieldName];
+            return $this->_fields[$fieldName];
         } else {
             return null;
         }
