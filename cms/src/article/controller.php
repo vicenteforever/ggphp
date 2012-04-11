@@ -32,9 +32,25 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        $a = new orm_adapter_mysql();
-        $fieldset = new orm_fieldset('article');
-        app()->log($a->updateTable($fieldset), core_app::LOG_OK);
+        $model = new orm_model('article');
+        for($i=0;$i<10; $i++){
+            $entity = $model->load();
+            $entity->title = $i.'hello';
+            $model->save($entity);
+        }
+        return 'ok';
+    }
+    
+    function do_test2(){
+        $model = orm('article');
+        
+        for($i=0;$i<10; $i++){
+            $entity = $model->get($i);
+            $entity->id=$i;
+            $entity->title = $i.'hello';
+            //$model->save($entity);
+        }
+        return 'ok';
     }
 
 }

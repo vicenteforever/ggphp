@@ -7,7 +7,10 @@
  */
 abstract class orm_adapter_pdo {
 
+    /** @var PDO PDO数据库对象 */
     protected $_connection;
+    
+    /** @var string 数据库名称 */
     protected $_database;
 
     abstract public function getIndexFromTable($table);
@@ -23,6 +26,12 @@ abstract class orm_adapter_pdo {
     abstract public function updateTable(orm_fieldset $fieldset);
 
     abstract public function tableExists($source);
+    
+    /**
+     * 分页查询
+     * @return PDOStatement 
+     */
+    abstract public function queryLimit($sql, $params, $numrow, $offset);
 
     /**
      * 根据配置文件获取一个pdo对象
@@ -120,7 +129,7 @@ abstract class orm_adapter_pdo {
     }
 
     /**
-     * 更新语句
+     * 更新记录
      * @param string $source
      * @param array $data
      * @param mixed $where array or string
@@ -148,6 +157,12 @@ abstract class orm_adapter_pdo {
         return $this->execute($sql, $binds);
     }
 
+    /**
+     * 删除记录
+     * @param string $source
+     * @param mixed $where
+     * @return boolean 
+     */
     public function delete($source, $where) {
         $binds = array();
         if (is_array($where)) {
@@ -176,28 +191,34 @@ abstract class orm_adapter_pdo {
         }
     }
 
+    /**
+     * 清空表
+     * @param string $source
+     * @return boolean 
+     */
     public function truncateTable($source) {
         $sql = "TRUNCATE TABLE " . $source;
         return $this->execute($sql);
     }
 
+    /**
+     * 删除表
+     * @param string $source 表名称
+     * @return boolean 
+     */
     public function dropTable($source) {
         $sql = "DROP TABLE $source";
         return $this->execute($sql);
     }
 
-    public function dropDatabase() {
+    /**
+     * 删除数据库
+     * @param string $source 数据库名称
+     * @return boolean 
+     */
+    public function dropDatabase($source) {
         $sql = "DROP DATABASE $source";
         return $this->execute($sql);
-    }
-
-    /**
-     * 记录sql语句
-     * @param type $sql
-     * @param type $data 
-     */
-    public function log($sql, $data) {
-        app()->log($sql . "\n" . print_r($data, true));
     }
 
     /**
@@ -210,14 +231,6 @@ abstract class orm_adapter_pdo {
             $result[':' . $key] = $val;
         }
         return $result;
-    }
-
-    protected function fields($fields) {
-        if (is_array($fields)) {
-            return implode(',', $fields);
-        } else {
-            return $fields;
-        }
     }
 
 }

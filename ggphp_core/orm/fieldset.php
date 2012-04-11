@@ -1,12 +1,23 @@
 <?php
 
+/**
+ * 字段集对象
+ * @package orm
+ * @author goodzsq@gmail.com
+ */
 class orm_fieldset {
 
+    /** @var array 字段集关联数组 */
     protected $_fields;
+    
+    /** @var string 表名称 */
     protected $_table;
 
+    /** @var string 主键名称 */
+    protected $_primaryKey;
+    
     /**
-     * orm_helper构造器
+     * 创建字段集对象
      * @param string $tableName 数据配置表名称
      * @throws Exception 
      */
@@ -23,8 +34,13 @@ class orm_fieldset {
                 throw new Exception('field name not assign');
             }
             $fieldType = "field_type_{$v['field']}";
+            
+            /** @var field_type_base 字段 */
             $fieldObject = new $fieldType($v);
             $this->_fields[$v['name']] = $fieldObject;
+            if($fieldObject->index == 'primary'){
+                $this->_primaryKey = $fieldObject->name;
+            }
         }
     }
 
@@ -61,10 +77,10 @@ class orm_fieldset {
     /**
      * 获取字段值
      * @param string $field
-     * @param phpDataMapper_Entity $entity
+     * @param orm_entity $entity
      * @return mixed 
      */
-    public function fieldValue($field, phpDataMapper_Entity $entity) {
+    public function fieldValue($field, orm_entity $entity) {
         if (!isset($this->_fields[$field])) {
             return null;
         }
@@ -96,6 +112,14 @@ class orm_fieldset {
      */
     public function table() {
         return $this->_table;
+    }
+    
+    /**
+     * 获取主键名称
+     * @return string 
+     */
+    public function primaryKey(){
+        return $this->_primaryKey;
     }
 
     /**

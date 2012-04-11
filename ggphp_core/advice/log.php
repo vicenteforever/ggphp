@@ -16,7 +16,7 @@ class advice_log extends advice_base {
     }
 
     public function except($class, $method, $args, $except) {
-        app()->log("$class::$method exception: " . trace($except));
+        app()->log(array('message'=>"控制器出现异常 $class->$method()", 'data'=> $except), core_app::LOG_EXCEPTION);
     }
 
 }

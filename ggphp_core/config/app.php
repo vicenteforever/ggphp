@@ -14,4 +14,5 @@ return array(
     'upload_dir' => 'userfile',
     'common_path' => '/ggphp/common/', //通用资源文件
     'advice' => array('log', 'layout'),
+    'orm' => array('adapter'=>'orm_adapter_mysql', 'database'=>'default'),
 );

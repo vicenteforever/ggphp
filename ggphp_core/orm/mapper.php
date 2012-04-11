@@ -5,7 +5,7 @@ include_once(GG_DIR . '/lib/phpDataMapper/Base.php');
 class orm_mapper extends phpDataMapper_Base {
 
     protected $_fieldset;
-
+    
     /**
      * orm构造器
      * @param string $tableName config/table下配置文件名称

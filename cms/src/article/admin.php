@@ -7,6 +7,7 @@
  */
 class article_admin extends controller_crud {
 
-    protected $_modelName = 'article';
-    //protected $_formStyle = 'captcha';
+    public function modelName() {
+        return 'article';
+    }
 }

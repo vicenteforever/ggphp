@@ -7,13 +7,13 @@
  */
 abstract class controller_crud {
 
-    protected $_modelName;
-    protected $_model;
+    abstract public function modelName();
+
     protected $_displayCount = 20;
     protected $_formStyle = '';
 
     public function __construct() {
-        $this->_model = orm($this->_modelName);
+        $this->_model = orm($this->modelName());
     }
 
     /**
@@ -21,10 +21,10 @@ abstract class controller_crud {
      */
     function do_edit() {
         $fieldset = $this->_model->fieldset();
-        $fieldset->url = make_url('admin', $this->_modelName, 'save');
-        $fieldset->uploadurl = make_url('admin', $this->_modelName, 'upload');
-        $fieldset->entity = $this->_model->get(param('id'));
-        $buf = widget('form', $this->_modelName, $fieldset)->render($this->_formStyle);
+        $fieldset->url = make_url('admin', $this->modelName(), 'save');
+        $fieldset->uploadurl = make_url('admin', $this->modelName(), 'upload');
+        $fieldset->entity = $this->_model->load(param('id'));
+        $buf = widget('form', $this->modelName(), $fieldset)->render($this->_formStyle);
         return $buf;
     }
 
@@ -44,7 +44,7 @@ abstract class controller_crud {
                     file_model::save($field->value);
                 }
             }
-            return array('status' => 'ok', 'redirect' => make_url('admin', $this->_modelName, 'index'));
+            return array('status' => 'ok', 'redirect' => make_url('admin', $this->modelName(), 'index'));
         } catch (Exception $e) {
             return array('status' => 'fail', 'message' => $e.getMessage());
         }
@@ -66,7 +66,7 @@ abstract class controller_crud {
         //@todo goodzsq record delete
         $id = param('id');
         $this->_model->delete(array('id' => $id));
-        redirect(make_url('admin', $this->_modelName, 'index'));
+        redirect(make_url('admin', $this->modelName(), 'index'));
     }
 
     /**
@@ -80,25 +80,36 @@ abstract class controller_crud {
         $header['admin'] = '管理';
         $data = array($header);
         $buf = '';
-        $url = make_url('admin', $this->_modelName, 'edit');
+        $url = make_url('admin', $this->modelName(), 'edit');
         $buf .= util_html::a($url, '添加');
 
+        $stmt = $this->_model->query(1);
+        $data = $stmt->fetchAll();
+        foreach($data as $row){
+            
+        }
+        $buf .= widget('table', $this->modelName(), $data)->render();
+        return $buf;
+        /*
         $query = $this->_model->all();
         $pager = new orm_pager($query, param('page'), $this->_displayCount);
+        $recordset = $this->_model->query();
         foreach ($query as $row) {
             $param = array('id' => $row->id);
-            $url = make_url('admin', $this->_modelName, 'edit', $param);
+            $url = make_url('admin', $this->modelName(), 'edit', $param);
             $edit = util_html::a($url, '编辑');
-            $url = make_url('admin', $this->_modelName, 'delete', $param);
+            $url = make_url('admin', $this->modelName(), 'delete', $param);
             $delete = util_html::a($url, '删除');
             $rowData = $row->toArray();
             $rowData['admin'] = "$edit $delete";
             $data[] = $rowData;
         }
-        $buf .= widget('table', $this->_modelName, $data)->render();
-        $buf .= $pager->render(make_url('admin', $this->_modelName, 'index') . '?');
+        $buf .= widget('table', $this->modelName(), $data)->render();
+        $buf .= $pager->render(make_url('admin', $this->modelName(), 'index') . '?');
         $this->_model->debug();
         return $buf;
+         * 
+         */
     }
 
     /**

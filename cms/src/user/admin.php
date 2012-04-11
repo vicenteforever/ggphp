@@ -7,6 +7,8 @@
  */
 class user_admin extends controller_crud {
 
-    protected $_modelName = 'user';
-       
+    public function modelName() {
+        return 'user';
+    }
+
 }

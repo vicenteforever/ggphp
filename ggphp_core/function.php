@@ -325,15 +325,15 @@ function redirect($url) {
 /**
  * 取得orm模型对象
  * @staticvar orm_mapper $orm
- * @param type $model config/table配置文件名称
+ * @param string $table config/table配置文件名称
  * @return orm_mapper 
  */
-function orm($model) {
+function orm($table) {
     static $orm;
-    if (!isset($orm[$model])) {
-        $orm[$model] = new orm_mapper($model);
+    if (!isset($orm[$table])) {
+        $orm[$table] = new orm_model($table);
     }
-    return $orm[$model];
+    return $orm[$table];
 }
 
 /**

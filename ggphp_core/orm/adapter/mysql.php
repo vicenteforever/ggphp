@@ -25,11 +25,21 @@ class orm_adapter_mysql extends orm_adapter_pdo {
         'time' => 'time',
     );
 
+    /**
+     * 创建数据库
+     * @param string $source 数据库名称
+     * @return bool 
+     */
     public function createDatabase($source) {
         $sql = "CREATE DATABASE `$source` DEFAULT CHARACTER SET {$this->_charset} COLLATE {$this->_collate}";
         return $this->execute($sql);
     }
 
+    /**
+     * 检查表是否存在
+     * @param string $source 表名称
+     * @return boolean 
+     */
     public function tableExists($source) {
         $sql = "SHOW TABLES LIKE :source";
         $stmt = $this->query($sql, array(':source' => $source));
@@ -40,6 +50,11 @@ class orm_adapter_mysql extends orm_adapter_pdo {
         }
     }
 
+    /**
+     * 创建表
+     * @param orm_fieldset $fieldset 字段集对象
+     * @return boolean 
+     */
     public function createTable(orm_fieldset $fieldset) {
         $columnsSyntax = array();
         $primary = '';
@@ -64,6 +79,10 @@ class orm_adapter_mysql extends orm_adapter_pdo {
         return $this->execute($syntax);
     }
 
+    /**
+     * 更新表
+     * @param orm_fieldset $fieldset 字段集对象
+     */
     public function updateTable(orm_fieldset $fieldset) {
         //修改列属性
         $existsColumns = $this->getColumnsFromTable($fieldset->table());
@@ -123,7 +142,7 @@ class orm_adapter_mysql extends orm_adapter_pdo {
     }
 
     /**
-     * 创建列的语法
+     * 创建列语法
      * @param field_type_base $field
      * @return string
      * @throws phpDataMapper_Exception 
@@ -188,6 +207,18 @@ class orm_adapter_mysql extends orm_adapter_pdo {
             $result[$row['Key_name']] = $row;
         }
         return $result;
+    }
+
+    /**
+     * 执行分页查询
+     * @param string $sql
+     * @param int $nrow
+     * @param int $offset 
+     * @return PDOStatement
+     */
+    public function queryLimit($sql, $params, $numrow, $offset) {
+        $sql .= " LIMIT $offset, $numrow";
+        return $this->query($sql, $params);
     }
 
 }
