@@ -56,7 +56,7 @@ class orm_fieldset {
     /**
      * 根据字段名称获取字段对象
      * @param string $fieldName
-     * @return mixed 
+     * @return field_type_base 
      */
     public function field($fieldName) {
         if (isset($this->_fields[$fieldName])) {
@@ -66,6 +66,18 @@ class orm_fieldset {
         }
     }
 
+    /**
+     * 判断字段是否存在
+     * @param string $fieldName 
+     */
+    public function fieldExists($fieldName){
+        if (isset($this->_fields[$fieldName])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * 获取所有字段对象数组
      * @return array 

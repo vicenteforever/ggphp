@@ -32,11 +32,12 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        $model = new orm_model('article');
+        $model = orm('article');
         for($i=0;$i<10; $i++){
-            $entity = $model->load();
-            $entity->title = $i.'hello';
-            $model->save($entity);
+            $entity = $model->load($i+10);
+            $entity->id = $i+10;
+            $entity->title = $i.'ppp';
+            $entity->save();
         }
         return 'ok';
     }

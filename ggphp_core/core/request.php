@@ -71,7 +71,7 @@ class core_request {
             return $value;
         }
     }
-
+    
     /**
      * 判断请求是否为get方法
      * @return bool

@@ -31,7 +31,7 @@ abstract class orm_adapter_pdo {
      * 分页查询
      * @return PDOStatement 
      */
-    abstract public function queryLimit($sql, $params, $numrow, $offset);
+    abstract public function queryLimit($sql, $params, $limit, $offset);
 
     /**
      * 根据配置文件获取一个pdo对象
@@ -75,6 +75,7 @@ abstract class orm_adapter_pdo {
     public function execute($sql, $params = null) {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
+            print_r($params);exit;
             if ($stmt->execute($params)) {
                 app()->log(array('sql' => $sql, 'data' => $params), core_app::LOG_OK);
                 return true;
@@ -232,6 +233,6 @@ abstract class orm_adapter_pdo {
         }
         return $result;
     }
-
+    
 }
 

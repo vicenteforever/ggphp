@@ -17,10 +17,8 @@ class widget_form extends widget_base {
      * @return type 
      */
     public function theme_default() {
-        if ($this->_data instanceof orm_fieldset) {
-            jquery_plugin()->ajaxSubmit('#' . $this->_id);
-            return $this->html($this->_data, false);
-        }
+        jquery_plugin()->ajaxSubmit('#' . $this->_id);
+        return $this->html($this->_data, false);
     }
 
     /**
@@ -28,10 +26,8 @@ class widget_form extends widget_base {
      * @return string 
      */
     public function theme_captcha() {
-        if ($this->_data instanceof orm_fieldset) {
-            jquery_plugin()->ajaxSubmit('#' . $this->_id);
-            return $this->html($this->_data, true);
-        }
+        jquery_plugin()->ajaxSubmit('#' . $this->_id);
+        return $this->html($this->_data, true);
     }
 
     /**
@@ -43,14 +39,15 @@ class widget_form extends widget_base {
         return "<input type='text' name='captcha'><img id='captcha' src='$url' />\n";
     }
 
-    protected function html(orm_fieldset $helper, $captcha) {
+    protected function html(orm_entity $entity, $captcha=null) {
         $buf = "";
         $enctype = '';
         //$enctype = ' enctype="multipart/form-data"';
         $csrfToken = util_csrf::token();
+        $fieldset = $entity->model()->fieldset();
         /* @var $field field_base */
-        foreach ($helper->fields() as $k => $field) {           
-            $field->setValue($helper->fieldValue($k, $helper->entity));
+        foreach ($fieldset->fields() as $k => $field) {
+            $field->setValue($entity->$k);
             if ($field->required) {
                 $required = ' *';
             } else {
@@ -64,7 +61,7 @@ class widget_form extends widget_base {
         }
         $buf .= "<input type='hidden' name='" . util_csrf::key() . "' value='$csrfToken' />";
         $buf .= "<input type=submit />";
-        $result = "<form method=\"POST\" id=\"{$this->_id}\" action=\"$helper->url\"{$enctype}>\n{$buf}\n</form>";
+        $result = "<form method=\"POST\" id=\"{$this->_id}\" action=\"$fieldset->url\"{$enctype}>\n{$buf}\n</form>";
         return $result;
     }
 

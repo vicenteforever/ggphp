@@ -7,24 +7,73 @@
  */
 class orm_entity {
 
+    /** @var boolean */
     protected $_loaded = false;
+
+    /** @var array */
     protected $_data = array();
-    
+
+    /** @var orm_model */
+    protected $_model;
+
     /**
-     * 设置或者读取实体数据是否从数据库中加载
+     * constructor
+     * @param orm_fieldset $fieldset 
+     */
+    public function __construct(orm_model $model) {
+        $this->_model = $model;
+        app()->log('-------------------------', core_app::LOG_WARNNING);
+    }
+
+    /**
+     * 设置或者读取实体数据是否是从数据库中加载的，根据此变量来决定是insert还是update到数据库
      * @param boolean $val
      * @return boolean 
      */
-    public function loaded($val=null){
-        if(isset($val)){
-            $this->_loaded = (boolean)$val;
-        }
-        else{
+    public function loaded($val = null) {
+        if (isset($val)) {
+            $this->_loaded = (boolean) $val;
+        } else {
             return $this->_loaded;
         }
     }
-    
-    public function getData() {
+
+    /**
+     * 数据校验 
+     */
+    public function validate() {
+        
+    }
+
+    /**
+     * 实体所属的模型
+     * @return orm_model 
+     */
+    public function model() {
+        return $this->_model;
+    }
+
+    /**
+     * 保存到持久对象 
+     * @return boolean
+     */
+    public function save() {
+        return $this->_model->save($this);
+    }
+
+    /**
+     * 从持久对象中删除 
+     * @return boolean
+     */
+    public function delete() {
+        return $this->_model->delete($this);
+    }
+
+    /**
+     * 转换成数组
+     * @return array 
+     */
+    public function toArray() {
         return $this->_data;
     }
 
@@ -46,6 +95,9 @@ class orm_entity {
     }
 
     public function __set($name, $value) {
+        app()->log('construct', core_app::LOG_WARNNING);
+        app()->log($this->_model);
+        app()->log('end', core_app::LOG_WARNNING);
         $method_name = 'set_' . $name;
         if (method_exists($this, $method_name)) {
             $this->$method_name($value);

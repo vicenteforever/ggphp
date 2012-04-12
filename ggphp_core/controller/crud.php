@@ -23,8 +23,8 @@ abstract class controller_crud {
         $fieldset = $this->_model->fieldset();
         $fieldset->url = make_url('admin', $this->modelName(), 'save');
         $fieldset->uploadurl = make_url('admin', $this->modelName(), 'upload');
-        $fieldset->entity = $this->_model->load(param('id'));
-        $buf = widget('form', $this->modelName(), $fieldset)->render($this->_formStyle);
+        $entity = $this->_model->load(param('id'));
+        $buf = widget('form', $this->modelName(), $entity)->render($this->_formStyle);
         return $buf;
     }
 
@@ -34,19 +34,23 @@ abstract class controller_crud {
     function do_save() {
         app()->setPageType('json');
         $id = param('id');
-
-        try {
-            $entity = $this->_model->get(param('id'));
-            $this->fillData($entity);
-            $this->_model->save($entity);
-            foreach ($this->_model->fieldset()->fields() as $key => $field) {
-                if($field instanceof field_file){
-                    file_model::save($field->value);
-                }
-            }
+        $entity = $this->_model->load(param('id'));
+        foreach($_REQUEST as $key=>$value){
+            $entity->$key = param($key);
+        }   
+        //检查是否为csrf攻击
+        $this->errorCheck(util_csrf::key(), util_csrf::validate());
+        //检查数据校验是否正确
+        $this->errorCheck('', $entity->validate());
+        //检查验证码
+        if ($this->_formStyle == 'captcha') {
+            $this->errorCheck('captcha', image_captcha::validate());
+        }
+        //保存
+        if ($entity->save()) {
             return array('status' => 'ok', 'redirect' => make_url('admin', $this->modelName(), 'index'));
-        } catch (Exception $e) {
-            return array('status' => 'fail', 'message' => $e.getMessage());
+        } else {
+            return array('status' => 'fail', 'message' => '保存数据失败');
         }
     }
 
@@ -83,31 +87,28 @@ abstract class controller_crud {
         $url = make_url('admin', $this->modelName(), 'edit');
         $buf .= util_html::a($url, '添加');
 
-        $stmt = $this->_model->query(1);
+        $stmt = $this->_model->query();
         $data = $stmt->fetchAll();
-        foreach($data as $row){
-            
-        }
         $buf .= widget('table', $this->modelName(), $data)->render();
         return $buf;
         /*
-        $query = $this->_model->all();
-        $pager = new orm_pager($query, param('page'), $this->_displayCount);
-        $recordset = $this->_model->query();
-        foreach ($query as $row) {
-            $param = array('id' => $row->id);
-            $url = make_url('admin', $this->modelName(), 'edit', $param);
-            $edit = util_html::a($url, '编辑');
-            $url = make_url('admin', $this->modelName(), 'delete', $param);
-            $delete = util_html::a($url, '删除');
-            $rowData = $row->toArray();
-            $rowData['admin'] = "$edit $delete";
-            $data[] = $rowData;
-        }
-        $buf .= widget('table', $this->modelName(), $data)->render();
-        $buf .= $pager->render(make_url('admin', $this->modelName(), 'index') . '?');
-        $this->_model->debug();
-        return $buf;
+          $query = $this->_model->all();
+          $pager = new orm_pager($query, param('page'), $this->_displayCount);
+          $recordset = $this->_model->query();
+          foreach ($query as $row) {
+          $param = array('id' => $row->id);
+          $url = make_url('admin', $this->modelName(), 'edit', $param);
+          $edit = util_html::a($url, '编辑');
+          $url = make_url('admin', $this->modelName(), 'delete', $param);
+          $delete = util_html::a($url, '删除');
+          $rowData = $row->toArray();
+          $rowData['admin'] = "$edit $delete";
+          $data[] = $rowData;
+          }
+          $buf .= widget('table', $this->modelName(), $data)->render();
+          $buf .= $pager->render(make_url('admin', $this->modelName(), 'index') . '?');
+          $this->_model->debug();
+          return $buf;
          * 
          */
     }
@@ -130,26 +131,6 @@ abstract class controller_crud {
             $result = array('status' => 'fail', 'error' => $data);
             echo response()->json($result);
             exit; //终止程序
-        }
-    }
-
-    /**
-     * 填充数据并校验
-     * @param phpDataMapper_Entity $entity 
-     */
-    protected function fillData(phpDataMapper_Entity &$entity) {
-        //检查是否为csrf攻击
-        $this->errorCheck(util_csrf::key(), util_csrf::validate());
-        //填充数据到entity
-        foreach ($this->_model->fieldset()->fields() as $key => $field) {
-            $field->setValue(param($key));
-            $entity->$key = $field->getValue();
-        }
-        //检查数据校验是否正确
-        $this->errorCheck('', $this->_model->fieldset()->validate());
-        //检查验证码
-        if ($this->_formStyle == 'captcha') {
-            $this->errorCheck('captcha', image_captcha::validate());
         }
     }
 

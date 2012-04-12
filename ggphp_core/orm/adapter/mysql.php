@@ -216,8 +216,8 @@ class orm_adapter_mysql extends orm_adapter_pdo {
      * @param int $offset 
      * @return PDOStatement
      */
-    public function queryLimit($sql, $params, $numrow, $offset) {
-        $sql .= " LIMIT $offset, $numrow";
+    public function queryLimit($sql, $params, $limit, $offset) {
+        $sql .= " LIMIT $offset, $limit";
         return $this->query($sql, $params);
     }
 
