@@ -7,15 +7,16 @@
  */
 class advice_sqltrace extends advice_base {
     public function after($class, $method, $args, $return) {
-        app()->log('sql execute end');
+        app()->log('SQL执行完毕');
         return $return;
     }
     
     public function before($class, $method, $args) {
-        app()->log('sql execute start:' . $args[0]);
+        app()->log('SQL开始执行', $args[0]);
     }
     
     public function except($class, $method, $args, $except) {
-        app()->log('sql execute fail:' . $except->getMessage());
+        $message = $except->getMessage() . "@" . addslashes($except->getFile()) . ' ' . $except->getLine() . '行';
+        app()->log("SQL执行失败 [$message]", $except->getTrace(), core_app::LOG_ERROR);
     }
 }

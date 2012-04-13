@@ -22,7 +22,6 @@ class orm_entity {
      */
     public function __construct(orm_model $model) {
         $this->_model = $model;
-        app()->log('-------------------------', core_app::LOG_WARNNING);
     }
 
     /**
@@ -95,9 +94,6 @@ class orm_entity {
     }
 
     public function __set($name, $value) {
-        app()->log('construct', core_app::LOG_WARNNING);
-        app()->log($this->_model);
-        app()->log('end', core_app::LOG_WARNNING);
         $method_name = 'set_' . $name;
         if (method_exists($this, $method_name)) {
             $this->$method_name($value);

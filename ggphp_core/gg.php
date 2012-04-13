@@ -11,9 +11,10 @@ define("DS", DIRECTORY_SEPARATOR);
 
 //自动加载类
 class GGLoader {
+
     public static function load($className) {
         if (!preg_match("/^[_0-9a-zA-Z]+$/", $className)) {
-            app()->log('invalid autoload:' . $className);
+            app()->log('自动加载非法的类名称', $className, core_app::LOG_ERROR);
             return;
         }
         $basepath = str_replace('_', DS, $className);
@@ -25,13 +26,15 @@ class GGLoader {
             if (file_exists($path)) {
                 include($path);
             } else {
-                app()->log('class not exists:' . $className);
+                //app()->log('类不存在', $className, core_app::LOG_WARN);
                 return;
             }
         }
     }
+
 }
-spl_autoload_register( "GGLoader::load" );
+
+spl_autoload_register("GGLoader::load");
 
 //加载常用函数
 require(GG_DIR . '/function.php');

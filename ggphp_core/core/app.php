@@ -6,12 +6,10 @@
  */
 class core_app {
 
-    const LOG_INFORMATION = 0;
-    const LOG_OK = 1;
-    const LOG_WARNNING = 2;
+    const LOG_INFO = 0;
+    const LOG_WARN = 2;
     const LOG_ERROR = 3;
-    const LOG_EXCEPTION = 4;
-    
+
     private $_controllerName;
     private $_actionName;
     private $_pageType;
@@ -144,10 +142,10 @@ class core_app {
      * @param mixed $data
      * @param int $level 日志等级
      */
-    function log($data = null, $level=0) {
+    function log($message = null, $data = null, $level = 0) {
         static $log = array();
-        if (isset($data)) {
-            $log[] = array('time' => microtime(true), 'data' => $data, 'level'=>$level);
+        if (isset($message)) {
+            $log[] = array('time' => microtime(true), 'message' => $message, 'data' => $data, 'level' => $level);
         } else {
             return $log;
         }

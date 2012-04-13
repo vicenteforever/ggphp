@@ -160,8 +160,20 @@ class orm_model {
         return $this->_adapter->delete($this->_tableName, array($primary => $primaryValue));
     }
 
+    /**
+     * 校验数据
+     * @param orm_entity $entity
+     * @return mixed 
+     */
     public function validate(orm_entity $entity) {
         return $this->_fieldset->validate($entity);
+    }
+    
+    /**
+     * 重建数据库 
+     */
+    public function migrate(){
+        return $this->_adapter->migrate($this->_fieldset);
     }
 
 }

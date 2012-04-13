@@ -9,7 +9,7 @@ abstract class orm_adapter_pdo {
 
     /** @var PDO PDO数据库对象 */
     protected $_connection;
-    
+
     /** @var string 数据库名称 */
     protected $_database;
 
@@ -25,8 +25,8 @@ abstract class orm_adapter_pdo {
 
     abstract public function updateTable(orm_fieldset $fieldset);
 
-    abstract public function tableExists($source);
-    
+    abstract public function tableExists($table);
+
     /**
      * 分页查询
      * @return PDOStatement 
@@ -75,16 +75,15 @@ abstract class orm_adapter_pdo {
     public function execute($sql, $params = null) {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
-            print_r($params);exit;
             if ($stmt->execute($params)) {
-                app()->log(array('sql' => $sql, 'data' => $params), core_app::LOG_OK);
+                app()->log("SQL执行语句成功:$sql", $params, core_app::LOG_INFO);
                 return true;
             } else {
-                app()->log($stmt, core_app::LOG_EXCEPTION);
+                app()->log("SQL执行语句失败:$sql", $stmt, core_app::LOG_ERROR);
                 return false;
             }
         } else {
-            app()->log('prepare fail:' . $sql, core_app::LOG_EXCEPTION);
+            app()->log("数据库准备失败:$sql", core_app::LOG_ERROR);
             return false;
         }
     }
@@ -117,14 +116,14 @@ abstract class orm_adapter_pdo {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
             if ($stmt->execute($params)) {
-                app()->log(array('sql' => $sql, 'data' => $params), core_app::LOG_OK);
+                app()->log("SQL查询语句成功:$sql", $params, core_app::LOG_INFO);
                 return $stmt;
             } else {
-                app()->log($stmt, core_app::LOG_EXCEPTION);
+                app()->log("SQL查询语句失败:$sql", $stmt, core_app::LOG_ERROR);
                 return false;
             }
         } else {
-            app()->log('prepare fail:' . $sql, core_app::LOG_EXCEPTION);
+            app()->log("数据库准备失败:$sql", core_app::LOG_ERROR);
             return false;
         }
     }
@@ -181,14 +180,15 @@ abstract class orm_adapter_pdo {
 
     /**
      * 重建表
-     * @param string $source
-     * @param array $fields 
+     * @param string $table
+     * @param orm_fieldset $fieldset 
      */
-    public function migrate($source, array $fields) {
-        if ($this->exists($source)) {
-            $this->createTable($source, $fields);
+    public function migrate(orm_fieldset $fieldset) {
+        $table = $fieldset->table();
+        if (!$this->tableExists($table)) {
+            $this->createTable($fieldset);
         } else {
-            $this->updateTable($source, $fields);
+            $this->updateTable($fieldset);
         }
     }
 
@@ -233,6 +233,6 @@ abstract class orm_adapter_pdo {
         }
         return $result;
     }
-    
+
 }
 

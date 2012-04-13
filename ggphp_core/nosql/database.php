@@ -52,13 +52,13 @@ class nosql_database extends nosql_object {
             $this->_update->bindParam(':key', $this->_source);
             $this->_update->bindParam(':value', $value);
             if(!$this->_update->execute()){
-                app()->log('database error'. print_r($this->_update->errorInfo(), true));
+                app()->log('数据库错误', $this->_update->errorInfo(), core_app::LOG_ERROR);
             }
         } else {
             $this->_insert->bindParam(':key', $this->_source);
             $this->_insert->bindParam(':value', $value);
             if(!$this->_insert->execute()){
-                app()->log('database error'. print_r($this->_insert->errorInfo(), true));
+                app()->log('数据库错误', $this->_insert->errorInfo(), core_app::LOG_ERROR);
             }
         }
     }

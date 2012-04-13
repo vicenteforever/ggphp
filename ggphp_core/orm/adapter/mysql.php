@@ -37,12 +37,12 @@ class orm_adapter_mysql extends orm_adapter_pdo {
 
     /**
      * 检查表是否存在
-     * @param string $source 表名称
+     * @param string $table 表名称
      * @return boolean 
      */
-    public function tableExists($source) {
+    public function tableExists($table) {
         $sql = "SHOW TABLES LIKE :source";
-        $stmt = $this->query($sql, array(':source' => $source));
+        $stmt = $this->query($sql, array(':source' => $table));
         if ($stmt) {
             return $stmt->rowCount() == 1 ? true : false;
         } else {

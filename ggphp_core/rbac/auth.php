@@ -16,7 +16,7 @@ class rbac_auth {
 	if (empty($roles) || is_array($roles)) {
 	    //如果权限指定允许匿名访问 通过权限认证
 	    if (in_array('anonymous', $roles)) {
-		app()->log('auth role:anonymous');
+		app()->log('用户角色:anonymous');
 		return true;
 	    }
 
@@ -26,13 +26,13 @@ class rbac_auth {
 	    }
 	    //如果用户是超级用户 直接通过认证
 	    if (in_array('administrator', $user_roles)) {
-		app()->log('auth role:administrator');
+		app()->log('用户角色:administrator');
 		return true;
 	    }
 	    //计算用户角色与模块角色的交集
 	    $common_roles = array_intersect($user_roles, $roles);
 	    if (!empty($common_roles)) {
-		app()->log('auth role:' . implode(' ', $common_roles));
+		app()->log('用户角色:' . implode(' ', $common_roles));
 		return true;
 	    } else {
 		return false;

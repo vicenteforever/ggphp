@@ -10,7 +10,7 @@ interface advice_interface {
 
     public function after($class, $method, $args, $return);
 
-    public function except($class, $method, $args, $except);
+    public function except($class, $method, $args, Exception $except);
 
     public function setting();
     

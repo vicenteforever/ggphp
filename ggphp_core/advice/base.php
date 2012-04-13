@@ -14,7 +14,7 @@ class advice_base implements advice_interface {
         
     }
 
-    public function except($class, $method, $args, $except) {
+    public function except($class, $method, $args, Exception $except) {
         
     }
 

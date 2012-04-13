@@ -29,12 +29,12 @@ class core_view {
                 $path = GG_DIR . str_replace('/', DS, "/view/template/{$view}.php");
             }
             if (!file_exists($path)) {
-                app()->log('view not exists:' . $view);
+                app()->log('视图不存在:'.$view, null, core_app::LOG_ERROR);
                 ob_clean();
                 return '';
             }
         }
-        app()->log('load view:' . $path);
+        app()->log('加载视图:'.addslashes($path));
         include($path);
         return ob_get_clean();
     }

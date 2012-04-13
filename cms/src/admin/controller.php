@@ -30,7 +30,9 @@ class admin_controller {
     }
 
     function do_migrate(){
-        return core_module::controller('controller_migrate', param(0));
+        $method = param(0);
+        array_shift($_REQUEST['arg']);
+        return core_module::controller('controller_migrate', $method);
     }
     
     private function homepage() {
