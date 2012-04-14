@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 实体对象，对应一条记录
+ * 实体对象类，对应数据库中的一条记录
  * @package orm
  * @author goodzsq@gmail.com
  */
@@ -38,13 +38,6 @@ class orm_entity {
     }
 
     /**
-     * 数据校验 
-     */
-    public function validate() {
-        
-    }
-
-    /**
      * 实体所属的模型
      * @return orm_model 
      */
@@ -53,19 +46,53 @@ class orm_entity {
     }
 
     /**
-     * 保存到持久对象 
-     * @return boolean
+     * 取出字段数据
+     * @param string $fieldName
+     * @return null 
+     */
+    public function data($fieldName){
+        if(isset($this->_data[$fieldName])){
+            return $this->_data[$fieldName];
+        }
+        else{
+            return null;
+        }
+    }
+    
+    /**
+     * 保存对象
+     * @return boolean 
      */
     public function save() {
-        return $this->_model->save($this);
+        $primary = $this->_model->primaryKey();
+        $primaryValue = $this->data($primary);
+        $table = $this->_model->getTableName();
+        if($this->loaded()){
+            $this->_model->adapter()->update($table, $this->_data, array($primary => $primaryValue));
+        } else {
+            $this->_model->adapter()->create($table, $data);
+        }
+        
     }
 
     /**
-     * 从持久对象中删除 
-     * @return boolean
+     * 删除对象
+     * @return boolean 
      */
     public function delete() {
-        return $this->_model->delete($this);
+        $primary = $this->_model->primaryKey();
+        $primaryValue = $this->data($primary);
+        $table = $this->_model->getTableName();
+        return $this->_adapter->delete($table, array($primary => $primaryValue));
+    }
+
+    /**
+     * 校验数据
+     * @param orm_entity $entity
+     * @return mixed 
+     */
+    public function validate() {
+        return $this->_fieldset->validate($entity);
     }
 
     /**
@@ -81,26 +108,22 @@ class orm_entity {
     }
 
     public function __get($name) {
-        $method_name = 'get_' . $name;
-        if (method_exists($this, $method_name)) {
-            return $this->$method_name();
-        } else {
-            if (isset($this->_data[$name])) {
-                return $this->_data[$name];
-            } else {
-                return null;
-            }
+        if (!$this->_model->fieldExists($name)) {
+            app()->log('字段取值失败:orm_entity->' . $name, null, core_app::LOG_WARN);
+            return null;
         }
+        $field = $this->_model->field($name);
+        return $field->getObject($this->_data[$name]);
     }
 
     public function __set($name, $value) {
-        $method_name = 'set_' . $name;
-        if (method_exists($this, $method_name)) {
-            $this->$method_name($value);
-        } else {
-            $this->_data[$name] = $value;
+        if (!$this->_model->fieldExists($name)) {
+            app()->log('字段赋值失败:orm_entity->' . $name, $value, core_app::LOG_WARN);
+            return;
         }
+        $field = $this->_model->field($name);
+        $key = $field->setValue($value);
+        $this->_data[$name] = $key;
     }
 
 }
-

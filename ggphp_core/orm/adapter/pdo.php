@@ -76,10 +76,10 @@ abstract class orm_adapter_pdo {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
             if ($stmt->execute($params)) {
-                app()->log("SQL执行语句成功:$sql", $params, core_app::LOG_INFO);
+                app()->log("SQL语句执行成功:$sql", $params, core_app::LOG_INFO);
                 return true;
             } else {
-                app()->log("SQL执行语句失败:$sql", $stmt, core_app::LOG_ERROR);
+                app()->log("SQL语句执行失败:$sql", $stmt, core_app::LOG_ERROR);
                 return false;
             }
         } else {
@@ -116,10 +116,10 @@ abstract class orm_adapter_pdo {
         $stmt = $this->connection()->prepare($sql);
         if ($stmt) {
             if ($stmt->execute($params)) {
-                app()->log("SQL查询语句成功:$sql", $params, core_app::LOG_INFO);
+                app()->log("SQL查询语句执行成功:[$sql] 返回行数:".$stmt->rowCount(), $params, core_app::LOG_INFO);
                 return $stmt;
             } else {
-                app()->log("SQL查询语句失败:$sql", $stmt, core_app::LOG_ERROR);
+                app()->log("SQL查询语句执行失败:$sql", $stmt, core_app::LOG_ERROR);
                 return false;
             }
         } else {

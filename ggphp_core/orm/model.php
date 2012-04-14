@@ -44,6 +44,10 @@ class orm_model {
         return $this->_fieldset;
     }
     
+    public function primaryKey(){
+        return $this->_fieldset->primaryKey();
+    }
+    
     /**
      *获取字段
      * @param string $fieldName
@@ -134,41 +138,6 @@ class orm_model {
         return $result;
     }
 
-    /**
-     * 保存对象
-     * @param orm_entity $entity
-     * @return boolean 
-     */
-    public function save(orm_entity $entity) {
-        $primary = $this->_fieldset->primaryKey();
-        $primaryValue = $entity->$primary;
-        if ($entity->loaded()) {
-            return $this->_adapter->update($this->_tableName, $entity->toArray(), array($primary => $primaryValue));
-        } else {
-            return $this->_adapter->create($this->_tableName, $entity->toArray());
-        }
-    }
-
-    /**
-     * 删除对象
-     * @param orm_entity $entity
-     * @return boolean 
-     */
-    public function delete(orm_entity $entity) {
-        $primary = $this->_fieldset->primaryKey();
-        $primaryValue = $entity->$primary;
-        return $this->_adapter->delete($this->_tableName, array($primary => $primaryValue));
-    }
-
-    /**
-     * 校验数据
-     * @param orm_entity $entity
-     * @return mixed 
-     */
-    public function validate(orm_entity $entity) {
-        return $this->_fieldset->validate($entity);
-    }
-    
     /**
      * 重建数据库 
      */

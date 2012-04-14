@@ -31,7 +31,6 @@ class util_console {
             return;
         }
 
-        $report = '<hr/>';
         $log = app()->log();
         $time = $log[0]['time'];
         $console = "";
@@ -59,7 +58,9 @@ class util_console {
         $code = <<<EOF
 <script type='text/javascript'>
 (function(){
+    if(window.console){
     $console
+    }
 })();
 </script>
 EOF;

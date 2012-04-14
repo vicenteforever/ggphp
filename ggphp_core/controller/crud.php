@@ -2,7 +2,7 @@
 
 /**
  * CRUD创建查询修改删除控制器
- * @package admin
+ * @package controller
  * @author goodzsq@gmail.com
  */
 abstract class controller_crud {
@@ -88,7 +88,8 @@ abstract class controller_crud {
         $buf .= util_html::a($url, '添加');
 
         $stmt = $this->_model->query();
-        $data = $stmt->fetchAll();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        print_r($data);
         $buf .= widget('table', $this->modelName(), $data)->render();
         return $buf;
         /*

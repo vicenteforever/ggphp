@@ -2,7 +2,7 @@
 
 /**
  * 数据库管理
- *
+ * @package controller
  * @author goodzsq@gmail.com
  */
 class controller_migrate {

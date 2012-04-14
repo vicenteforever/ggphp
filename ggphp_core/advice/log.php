@@ -7,12 +7,12 @@
 class advice_log extends advice_base {
 
     public function after($class, $method, $args, $return) {
-        app()->log("控制器结束", "$class::$method");
+        app()->log("控制器结束:$class::$method");
         return $return;
     }
 
     public function before($class, $method, $args) {
-        app()->log("控制器开始", "$class::$method");
+        app()->log("控制器开始:$class::$method");
     }
 
     public function except($class, $method, $args, Exception $except) {

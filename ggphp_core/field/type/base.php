@@ -55,13 +55,19 @@ abstract class field_type_base {
         }
         return $this->value;
     }
+    
+    public function getObject(){
+        
+    }
 
     /**
      * 设置字段的值
      * @param mixed $value 
      */
     public function setValue($value) {
+        app()->log('field setvalue:'.$value);
         $this->value = $value;
+        return $value;
     }
 
     /**
