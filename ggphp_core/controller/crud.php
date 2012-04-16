@@ -50,7 +50,7 @@ abstract class controller_crud {
         if ($entity->save()) {
             return array('status' => 'ok', 'redirect' => make_url('admin', $this->modelName(), 'index'));
         } else {
-            return array('status' => 'fail', 'message' => '保存数据失败');
+            return array('status' => 'fail', 'message' => '保存数据失败', 'data'=>app()->log());
         }
     }
 
@@ -89,7 +89,6 @@ abstract class controller_crud {
 
         $stmt = $this->_model->query();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        print_r($data);
         $buf .= widget('table', $this->modelName(), $data)->render();
         return $buf;
         /*

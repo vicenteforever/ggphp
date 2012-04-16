@@ -65,7 +65,7 @@ class orm_recordset {
             $entity = new orm_entity($this->_model);
             $entity->loaded(true);
             foreach($data as $key => $value){
-                $entity->$key = $value;
+                $entity->$key = $this->_model->field($key)->load($value);
             }
             return $entity;
         }

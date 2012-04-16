@@ -32,7 +32,9 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        throw new Exception("这是一个测试的异常");
+        $entity = orm('article')->load(14);
+        $entity->summary[] = 123;
+        return $entity->save();
     }
     
     function do_test2(){

@@ -12,8 +12,8 @@ class field_widget_hidden {
      * @param field_type_base $field
      * @return type 
      */
-    public function style_default(field_type_base $field) {
-        return "<input type='hidden' name='{$field->name}' value='{$field->getValue()}' />";
+    public function style_default(field_type_base $field, $value) {
+        return "<input type='hidden' name='{$field->name}' value='$value' />";
     }
 
 }

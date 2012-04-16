@@ -12,8 +12,8 @@ class field_widget_textarea {
      * @param field_type_base $field
      * @return string 
      */
-    public function style_default(field_type_base $field) {
-        return "<label>{$field->label}<textarea name='{$field->name}'>{$field->getValue()}</textarea><label class='tip' name='{$field->name}'></label></label>";
+    public function style_default(field_type_base $field, $value) {
+        return "<label>{$field->label}<textarea name='{$field->name}'>{$value}</textarea><label class='tip' name='{$field->name}'></label></label>";
     }
 
     /**
@@ -21,10 +21,10 @@ class field_widget_textarea {
      * @param field_type_base $field
      * @return string 
      */
-    public function style_tinymce(field_type_base $field) {
+    public function style_tinymce(field_type_base $field, $value) {
         $selector = ":input[name={$field->name}]";
         jquery_plugin()->tinymce($selector);
-        return self::style_default($field);
+        return self::style_default($field, $value);
     }
 
 

@@ -174,7 +174,10 @@ function output($str, $filters = null) {
  */
 function trace($obj) {
     $result = '';
-    if (is_string($obj)) {
+    if(is_null($obj)){
+        return 'NULL';
+    }
+    else if (is_string($obj)) {
         return $obj;
     } else if (is_bool($obj)) {
         if ($obj === true) {
@@ -385,7 +388,7 @@ function validator($rule) {
     if (!isset($validator[$rule])) {
         $className = 'field_validator_' . $rule;
         $object = new $className();
-        if ($object instanceof validator_interface) {
+        if ($object instanceof field_validator_interface) {
             $validator[$rule] = $object;
         } else {
             $validator[$rule] = '';

@@ -10,9 +10,6 @@ class orm_entity {
     /** @var boolean */
     protected $_loaded = false;
 
-    /** @var array */
-    protected $_data = array();
-
     /** @var orm_model */
     protected $_model;
 
@@ -46,33 +43,23 @@ class orm_entity {
     }
 
     /**
-     * 取出字段数据
-     * @param string $fieldName
-     * @return null 
-     */
-    public function data($fieldName){
-        if(isset($this->_data[$fieldName])){
-            return $this->_data[$fieldName];
-        }
-        else{
-            return null;
-        }
-    }
-    
-    /**
      * 保存对象
      * @return boolean 
      */
     public function save() {
         $primary = $this->_model->primaryKey();
-        $primaryValue = $this->data($primary);
+        $primaryValue = $this->$primary;
         $table = $this->_model->getTableName();
-        if($this->loaded()){
-            $this->_model->adapter()->update($table, $this->_data, array($primary => $primaryValue));
-        } else {
-            $this->_model->adapter()->create($table, $data);
+        $data = array();
+        foreach($this->_model->fieldset()->fields() as $name => $field){
+            $value = $field->save($this->$name);
+            $data[$name] = $value;
         }
-        
+        if ($this->loaded()) {
+            return $this->_model->adapter()->update($table, $data, array($primary => $primaryValue));
+        } else {
+            return $this->_model->adapter()->create($table, $data);
+        }
     }
 
     /**
@@ -81,7 +68,7 @@ class orm_entity {
      */
     public function delete() {
         $primary = $this->_model->primaryKey();
-        $primaryValue = $this->data($primary);
+        $primaryValue = $this->$primary;
         $table = $this->_model->getTableName();
         return $this->_adapter->delete($table, array($primary => $primaryValue));
     }
@@ -89,41 +76,26 @@ class orm_entity {
     /**
      * 校验数据
      * @param orm_entity $entity
-     * @return mixed 
+     * @return array 
      */
     public function validate() {
-        return $this->_fieldset->validate($entity);
+        $fieldset = $this->_model->fieldset();
+        $error = array();
+        foreach ($fieldset->fields() as $key => $field) {
+            $err = $field->validate($this);
+            if ($err !== true) {
+                $error[$key] = $err;
+            }
+        }
+        return $error;
     }
 
     /**
-     * 转换成数组
-     * @return array 
+     * 屏蔽错误
+     * @param type $name 
      */
-    public function toArray() {
-        return $this->_data;
-    }
-
-    public function __isset($key) {
-        return ($this->$key !== null) ? true : false;
-    }
-
     public function __get($name) {
-        if (!$this->_model->fieldExists($name)) {
-            app()->log('字段取值失败:orm_entity->' . $name, null, core_app::LOG_WARN);
-            return null;
-        }
-        $field = $this->_model->field($name);
-        return $field->getObject($this->_data[$name]);
-    }
-
-    public function __set($name, $value) {
-        if (!$this->_model->fieldExists($name)) {
-            app()->log('字段赋值失败:orm_entity->' . $name, $value, core_app::LOG_WARN);
-            return;
-        }
-        $field = $this->_model->field($name);
-        $key = $field->setValue($value);
-        $this->_data[$name] = $key;
+        return null;
     }
 
 }

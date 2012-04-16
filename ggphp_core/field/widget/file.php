@@ -12,14 +12,14 @@ class field_widget_file {
      * @param field_type_base $field
      * @return type 
      */
-    public function style_default(field_type_base $field){
-        if(empty($field->value)){
-            $field->value = util_string::token();
+    public function style_default(field_type_base $field, $value){
+        if(empty($value)){
+            $value = util_string::token();
         }
         $selector = ":input[name={$field->name}]";
-        $params = array('token'=>$field->value);
+        $params = array('token'=>$value);
         jquery_plugin()->uploadify($selector, abs_url($field->uploadurl), $params);
-        return "<label>{$field->label}<input type='hidden' id='{$field->name}' name='{$field->name}' value='{$field->value}'><label class='tip' name='{$field->name}' /></label></label>";        
+        return "<label>{$field->label}<input type='hidden' id='{$field->name}' name='{$field->name}' value='{$value}'><label class='tip' name='{$field->name}' /></label></label>";        
     }
 
 }

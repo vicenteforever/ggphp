@@ -6,7 +6,7 @@
  * @author goodzsq@gmail.com
  */
 interface field_validator_interface {
-    public function validate(field_type_base $field);
+    public function validate(field_type_base $field, $value);
     public function setting();
 }
 

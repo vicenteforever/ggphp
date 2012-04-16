@@ -12,8 +12,8 @@ class field_widget_text {
      * @param field_type_base $field
      * @return string 
      */
-    static public function style_default(field_type_base $field) {
-        return "<label>{$field->label}<input type='text' name={$field->name} value='{$field->getValue()}' /><label class='tip' name='{$field->name}'></label></label>";
+    static public function style_default(field_type_base $field, $value) {
+        return "<label>{$field->label}<input type='text' name={$field->name} value='$value' /><label class='tip' name='{$field->name}'></label></label>";
     }
 
     /**
@@ -24,7 +24,7 @@ class field_widget_text {
     static public function style_autocomplete(field_type_base $field) {
         $selector = ":input[name={$field->name}]";
         jquery_ui()->autocomplete($selector);
-        return "<label>{$field->label}<input type='text' name={$field->name} value='{$field->getValue()}'><label class='tip' name='{$field->name}'></label></label>";
+        return "<label>{$field->label}<input type='text' name={$field->name} value='$value'><label class='tip' name='{$field->name}'></label></label>";
     }
 
 }

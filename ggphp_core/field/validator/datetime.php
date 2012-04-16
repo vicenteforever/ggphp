@@ -7,8 +7,8 @@
  */
 class field_validator_datetime implements field_validator_interface {
 
-    public function validate(field_type_base $field) {
-        @list($date, $time) = explode(' ', trim($field->value));
+    public function validate(field_type_base $field, $value) {
+        @list($date, $time) = explode(' ', trim($value));
         //判断日期
         if (!preg_match("/^(\d{4})-?(\d{1,2})-?(\d{1,2})$/", $date, $match)) {
             return "非法的日期";

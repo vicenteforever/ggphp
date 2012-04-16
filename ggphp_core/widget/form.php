@@ -47,14 +47,14 @@ class widget_form extends widget_base {
         $fieldset = $entity->model()->fieldset();
         /* @var $field field_base */
         foreach ($fieldset->fields() as $k => $field) {
-            $field->setValue($entity->$k);
             if ($field->required) {
                 $required = ' *';
             } else {
                 $required = '';
             }
             //$buf .= widget('field', $this->_id, $field)->render() . "$required <br />\n";
-            $buf .= $field->widget() . "$required <br />\n";
+            $value = $entity->$k;
+            $buf .= $field->widget($value) . "$required <br />\n";
         }
         if ($captcha) {
             $buf .= $this->captcha();
