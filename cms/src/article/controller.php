@@ -32,21 +32,13 @@ class article_controller {
      * 测试
      */
     function do_test() {
-        $entity = orm('article')->load(14);
-        $entity->summary[] = 123;
-        return $entity->save();
-    }
-    
-    function do_test2(){
-        $model = orm('article');
-        
-        for($i=0;$i<10; $i++){
-            $entity = $model->get($i);
-            $entity->id=$i;
-            $entity->title = $i.'hello';
-            //$model->save($entity);
-        }
-        return 'ok';
+        $comment = orm('comment')->load(1);
+
+        $comment->owner->table = 'article';
+        $comment->owner->field = 'comment';
+        $comment->title = 'tetee';
+        $comment->content = 'sdf';
+        $comment->save();
     }
 
 }

@@ -2,7 +2,8 @@
 
 /**
  * 浏览器的输出
- * @package core
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_response {
 

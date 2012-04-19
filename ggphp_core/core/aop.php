@@ -3,6 +3,7 @@
 /**
  * AOP动态代理，对业务对象进行外部增强
  * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_aop {
 

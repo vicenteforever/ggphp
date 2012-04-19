@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * 应用程序配置
+ * @package core 
+ * @author goodzsq@gmail.com
+ */
 class core_config{
 
 	/**

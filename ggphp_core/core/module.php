@@ -2,7 +2,8 @@
 
 /**
  * 获取模块相关信息
- * @package core
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_module {
 

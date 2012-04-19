@@ -2,8 +2,8 @@
 
 /**
  * 内核测试文档
- * @package core
- * @author Administrator
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_test {
 

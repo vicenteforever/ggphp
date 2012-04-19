@@ -1,7 +1,7 @@
 <?php
 
 /**
- * file field
+ * 文件域字段
  * @package field
  * @author goodzsq@gmail.com
  */

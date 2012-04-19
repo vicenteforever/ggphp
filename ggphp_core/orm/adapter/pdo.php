@@ -79,7 +79,7 @@ abstract class orm_adapter_pdo {
                 app()->log("SQL语句执行成功:$sql", $params, core_app::LOG_INFO);
                 return true;
             } else {
-                app()->log("SQL语句执行失败:$sql", $stmt, core_app::LOG_ERROR);
+                app()->log("SQL语句执行失败:$sql", $stmt->errorInfo(), core_app::LOG_ERROR);
                 return false;
             }
         } else {

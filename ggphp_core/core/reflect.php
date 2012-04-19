@@ -1,9 +1,9 @@
 <?php
 
 /**
- * core_reflect
- * @package core
- * @author Administrator
+ * php反射对象
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_reflect {
 

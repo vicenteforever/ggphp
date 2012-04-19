@@ -2,7 +2,8 @@
 
 /**
  * http请求类
- * @package core
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_request {
 

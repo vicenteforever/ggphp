@@ -2,7 +2,8 @@
 
 /**
  * 多国语言支持
- * @package core
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_language {
 

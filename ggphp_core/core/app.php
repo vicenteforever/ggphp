@@ -2,7 +2,8 @@
 
 /**
  * 核心应用程序类 单例模式
- * @package core
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_app {
 

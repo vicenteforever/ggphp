@@ -2,7 +2,8 @@
 
 /**
  * PHP视图模板
- * @package core
+ * @package core 
+ * @author goodzsq@gmail.com
  */
 class core_view {
 

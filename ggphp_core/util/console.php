@@ -38,12 +38,14 @@ class util_console {
             $timespan = sprintf("%.4f", $v['time'] - $time);
             $time = $v['time'];
             $data = self::formatData($v['data']);
+            $message = addslashes($v['message']);
+            $message = str_replace("\n", "\\n", $message);
             if ($v['level'] == core_app::LOG_WARN) {
-                $console .= "console.warn('[$timespan] {$v['message']}');\n";
+                $console .= "console.warn('[$timespan] {$message}');\n";
             } else if ($v['level'] == core_app::LOG_ERROR) {
-                $console .= "console.error('[$timespan] {$v['message']}');\n";
+                $console .= "console.error('[$timespan] {$message}');\n";
             } else {
-                $console .= "console.info('[$timespan] {$v['message']}');\n";
+                $console .= "console.info('[$timespan] {$message}');\n";
             }
             if (!empty($data)) {
                 $console .= "console.log($data);\n";

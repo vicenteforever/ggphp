@@ -173,7 +173,7 @@ class orm_adapter_mysql extends orm_adapter_pdo {
         } elseif ($field->default !== null) {
             $syntax .= " DEFAULT '{$field->default}'";
         }
-        if ($field->primary && $field->serial) {
+        if ($field->index == 'primary' && $field->serial) {
             $syntax .= " AUTO_INCREMENT";
         }
         return $syntax;
