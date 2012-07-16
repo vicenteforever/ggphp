@@ -32,6 +32,7 @@ class article_controller {
      * 测试
      */
     function do_test() {
+        orm('')->adapter();
         $comment = orm('comment')->load(1);
 
         $comment->owner->table = 'article';

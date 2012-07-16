@@ -19,13 +19,16 @@ class orm_model {
     /** @var string entity实体类名称 */
     protected $_entityClassName = 'orm_entity';
 
-    public function __construct($tableName) {
-        $configData = config('app', 'orm');
-        $adapter = $configData['adapter'];
-        $database = $configData['database'];
-        $this->_adapter = new $adapter($database);
+    /**
+     * 构造函数
+     * @param string $tableName
+     * @param orm_adapter_pdo $adapter
+     * @param orm_fieldset $fieldset 
+     */
+    public function __construct($tableName, orm_adapter_pdo $adapter, orm_fieldset $fieldset) {
         $this->_tableName = $tableName;
-        $this->_fieldset = new orm_fieldset($tableName);
+        $this->_adapter = $adapter;
+        $this->_fieldset = $fieldset;
     }
 
     /**
@@ -139,11 +142,28 @@ class orm_model {
     }
 
     /**
-     * 重建数据库 
+     * 重建数据库
+     * @return boolean 
      */
     public function migrate(){
         return $this->_adapter->migrate($this->_fieldset);
     }
 
+    /**
+     * 清空所有数据
+     * @return boolean 
+     */
+    public function clearData(){
+        return $this->_adapter->truncateTable($this->_tableName);
+    }
+    
+    /**
+     * 删除表
+     * @return boolean 
+     */
+    public function drop(){
+        return $this->_adapter->dropTable($this->_tableName);
+    }
+    
 }
 

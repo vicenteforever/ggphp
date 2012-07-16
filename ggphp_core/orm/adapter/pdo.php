@@ -10,9 +10,6 @@ abstract class orm_adapter_pdo {
     /** @var PDO PDO数据库对象 */
     protected $_connection;
 
-    /** @var string 数据库名称 */
-    protected $_database;
-
     abstract public function getIndexFromTable($table);
 
     abstract public function getColumnsFromTable($table);
@@ -34,27 +31,32 @@ abstract class orm_adapter_pdo {
     abstract public function queryLimit($sql, $params, $limit, $offset);
 
     /**
-     * 根据配置文件获取一个pdo对象
-     * @param string $config
+     * 获取一个pdo数据库连接对象并缓存
+     * @staticvar PDO $pdo 数据库连接对象
+     * @param string $dsn 数据源名称
+     * @param string $username 用户名
+     * @param string $password 用户密码
+     * @param array $options 连接选项
      * @return \PDO 
      */
-    static public function pdo($config) {
+    static public function pdo($dsn, $username, $password, $options) {
         static $pdo;
-        if (!isset($pdo[$config])) {
-            $configData = config('database', $config);
-            $pdo[$config] = new PDO($configData['dsn'], $configData['username'], $configData['password'], $configData['options']);
+        $identity = "{$dsn}_{$username}";
+        if (!isset($pdo[$identity])) {
+            $pdo[$identity] = new PDO($dsn, $username, $password, $options);
         }
-        return $pdo[$config];
+        return $pdo[$identity];
     }
 
     /**
-     * 构造函数，创建对象时自动创建pdo对象
-     * @param stirng $config 数据库配置文件config/database.php的某个配置名称
+     * 构造函数
+     * @param string $dsn 数据源名称
+     * @param string $username 用户名
+     * @param string $password 用户密码
+     * @param array $options 连接选项
      */
-    public function __construct($config = 'default') {
-        $configData = config('database', $config);
-        $this->_database = $configData['database'];
-        $this->_connection = self::pdo($config);
+    public function __construct($dsn, $username, $password, $options) {
+        $this->_connection = self::pdo($dsn, $username, $password, $options);
     }
 
     /**
@@ -182,13 +184,14 @@ abstract class orm_adapter_pdo {
      * 重建表
      * @param string $table
      * @param orm_fieldset $fieldset 
+     * @return boolean
      */
     public function migrate(orm_fieldset $fieldset) {
         $table = $fieldset->table();
         if (!$this->tableExists($table)) {
-            $this->createTable($fieldset);
+            return $this->createTable($fieldset);
         } else {
-            $this->updateTable($fieldset);
+            return $this->updateTable($fieldset);
         }
     }
 

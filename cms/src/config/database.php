@@ -5,14 +5,14 @@ $config['default'] = array(
     'host' => 'localhost',
     'database' => 'ggcms',
     'username' => 'root',
-    'password' => 'root',
+    'password' => '',
     'options' => array(),
 );
 
 $config['test'] = array(
     'dsn' => 'mysql:host=localhost;dbname=test',
     'username' => 'root',
-    'password' => 'root',
+    'password' => '',
     'options' => array(),
 );
 

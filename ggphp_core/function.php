@@ -326,17 +326,25 @@ function redirect($url) {
 }
 
 /**
- * 取得orm模型对象
- * @staticvar orm_mapper $orm
- * @param string $table config/table配置文件名称
- * @return orm_mapper 
+ * 创建orm对象
+ * @staticvar orm_model $orm
+ * @param string $table
+ * @param string $config
+ * @return \orm_model 
  */
-function orm($table) {
+function orm($table, $config='') {
     static $orm;
-    if (!isset($orm[$table])) {
-        $orm[$table] = new orm_model($table);
+    $identity = "{$table}@{$config}";
+    if(empty($config)){
+        $config = 'default';
     }
-    return $orm[$table];
+    $configData = config('database', $config);
+    $adapter = new orm_adapter_mysql($configData['dsn'], $configData['username'], $configData['password'], $configData['options']);
+    $fieldset = new orm_fieldset($table);
+    if (!isset($orm[$identity])) {
+        $orm[$identity] = new orm_model($table, $adapter, $fieldset);
+    }
+    return $orm[$identity];
 }
 
 /**
