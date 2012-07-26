@@ -13,7 +13,10 @@ class orm_test {
         test()->assertEqual($model->migrate(), true, '重建表');
         
         $node = $model->load();
-        
+        $node->title = 'hello world';
+        $node->content = "content";
+        $node->save();
     }
+    
 }
 

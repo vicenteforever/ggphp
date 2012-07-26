@@ -76,14 +76,16 @@ class core_response {
         return $buffer;
     }
 
-    static function html($data) {
-        if (is_string($data)) {
+    static function html($title, $data) {
+        if(empty($title)){
             $controller = app()->getControllerName() . '_controller';
             $action = config('app', 'action_prefix') . '_' . app()->getActionName();
-            //$title = reflect($controller)->doc();
             $title = reflect($controller)->doc($action);
-            return view(array('title' => $title, 'content' => $data), 'html');
         }
+        if(!is_string($data)){
+            $data = trace($data);
+        }     
+        return view(array('title' => $title, 'content' => $data), 'html');
     }
     
     static function text($data){

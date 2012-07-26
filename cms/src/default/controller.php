@@ -15,10 +15,4 @@ class default_controller {
         return $buf;
     }
     
-    function do_test(){
-        $str = file_get_contents('i:\\test.mkv');
-        //$str1 = $str;
-        return 'sdf'.strlen($str);
-        //return util_string::base36('我是谁是我');
-    }
 }

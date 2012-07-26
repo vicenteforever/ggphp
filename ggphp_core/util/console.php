@@ -24,9 +24,6 @@ class util_console {
     }
 
     static public function display() {
-        if (app()->getPageType() != 'html') {
-            return;
-        }
         if (!config('app', 'debug')) {
             return;
         }

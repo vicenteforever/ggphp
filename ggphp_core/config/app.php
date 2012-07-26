@@ -13,6 +13,6 @@ return array(
     'input_filters' => array('xss'), //用户输入过滤器，过滤掉非法输入字符
     'upload_dir' => 'userfile',
     'common_path' => '/ggphp/common/', //通用资源文件
-    'advice' => array('log', 'layout'),
+    'advice' => array('log'),
     'orm' => array('adapter'=>'orm_adapter_mysql', 'database'=>'default'),
 );

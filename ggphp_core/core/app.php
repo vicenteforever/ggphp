@@ -13,7 +13,6 @@ class core_app {
 
     private $_controllerName;
     private $_actionName;
-    private $_pageType;
 
     private function __construct() {
         //设为私有方法禁止构造新实例
@@ -46,12 +45,7 @@ class core_app {
             $this->parseFromParam();
         }
         $result = core_module::controller("{$this->_controllerName}_controller", $this->_actionName);
-        $pageType = $this->getPageType();
-        if (method_exists(core_response::instance(), $pageType)) {
-            echo core_response::$pageType($result);
-        } else {
-            echo core_response::error("$pageType not exist");
-        }
+        echo $result;
         $this->log('application end');
     }
 
@@ -71,11 +65,8 @@ class core_app {
      * 从pathinfo中解析控制器和方法
      */
     private function parseFromPath() {
-        $path = core_request::path();
-        $path = str_replace('..', '', $path);
-        list($path, $this->_pageType) = $this->getBasenameAndType($path);
-        $_SERVER['PATH_INFO'] = $path;
-        $args = explode('/', $path);
+        $_SERVER['PATH_INFO'] = str_replace('..', '', core_request::path());
+        $args = explode('/', $_SERVER['PATH_INFO']);
         $defaultAction = config('app', 'default_action');
         $defaultController = config('app', 'default_controller');
         $action_prefix = config('app', 'action_prefix');
@@ -120,22 +111,6 @@ class core_app {
      */
     function getActionName() {
         return $this->_actionName;
-    }
-
-    /**
-     * 获取页面输出格式类型
-     * @return string 
-     */
-    function getPageType() {
-        return $this->_pageType;
-    }
-
-    /**
-     * 设置页面输出格式类型(html json xml ...)
-     * @param string $type 
-     */
-    function setPageType($type) {
-        $this->_pageType = $type;
     }
 
     /**

@@ -32,7 +32,6 @@ abstract class controller_crud {
      * 保存 
      */
     function do_save() {
-        app()->setPageType('json');
         $id = param('id');
         $entity = $this->_model->load(param('id'));
         foreach($_REQUEST as $key=>$value){
