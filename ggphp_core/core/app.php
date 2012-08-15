@@ -114,9 +114,12 @@ class core_app {
     }
 
     /**
-     * 记录系统日志
-     * @param mixed $data
+     * 记录或者获取系统日志
+     * @staticvar array $log
+     * @param string $message 系统消息
+     * @param mixed $data 数据
      * @param int $level 日志等级
+     * @return array 
      */
     function log($message = null, $data = null, $level = 0) {
         static $log = array();
@@ -141,26 +144,6 @@ class core_app {
             }
         }
         return false;
-    }
-
-    /**
-     * 分解字符串为基本名称和扩展名
-     * @param type $str
-     * @return type 
-     */
-    private function getBasenameAndType($str) {
-        $pos = strrpos($str, '.');
-        if ($pos === false) {
-            $basename = $str;
-            $ext = '';
-        } else {
-            $basename = substr($str, 0, $pos);
-            $ext = substr($str, $pos + 1);
-        }
-        if (empty($ext)) {
-            $ext = 'html';
-        }
-        return array($basename, $ext);
     }
 
 }

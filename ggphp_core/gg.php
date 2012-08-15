@@ -11,7 +11,6 @@ define("DS", DIRECTORY_SEPARATOR);
 
 //自动加载类
 class GGLoader {
-
     public static function load($className) {
         if (!preg_match("/^[_0-9a-zA-Z]+$/", $className)) {
             app()->log('自动加载非法的类名称', $className, core_app::LOG_ERROR);
@@ -31,7 +30,6 @@ class GGLoader {
             }
         }
     }
-
 }
 
 spl_autoload_register("GGLoader::load");
@@ -58,27 +56,28 @@ if (version_compare(PHP_VERSION, "5.3.0") < 0) {
     ini_set("magic_quotes_runtime", 0);
 }
 
+//
 //set_error_handler("handleError", E_ALL);
 //set_exception_handler("handleException");
-/*
- * 错误处理
- */
-function handleError() {
-    $args = func_get_args();
-    echo '<hr>error:';
-    print_r($args);
-    return;
-    die('[error]');
-}
-
-/*
- * 异常处理
- */
-
-function handleException() {
-    $args = func_get_args();
-    echo '<hr>exception:';
-    print_r($args);
-    return;
-    die('[exception]');
-}
+//
+///**
+// * 错误处理
+// */
+//function handleError() {
+//    $args = func_get_args();
+//    echo '<hr>error:';
+//    print_r($args);
+//    return;
+//    die('[error]');
+//}
+//
+///**
+// * 异常处理
+// */
+//function handleException() {
+//    $args = func_get_args();
+//    echo '<hr>exception:';
+//    print_r($args);
+//    return;
+//    die('[exception]');
+//}

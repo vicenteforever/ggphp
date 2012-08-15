@@ -1,7 +1,7 @@
 <?php
 
 /**
- * mysql数据库操作
+ * mysql数据库操作封装
  * @package database
  * @author goodzsq@gmail.com
  */
@@ -54,7 +54,7 @@ class database_mysql_db {
      * @param string $sql
      * @return database_mysql_result 
      */
-    function sqlQuery($sql) {echo $query;exit;
+    function sqlQuery($sql) {
         $sql = mysql_escape_string($sql);
         $rs = $this->sql($sql);
         return new database_mysql_result($rs);
@@ -67,7 +67,7 @@ class database_mysql_db {
      * @return database_mysql_result 
      */
     function sqlQueryCache($sql) {
-        static $result;
+        static $result = null;
         if (!isset($result[$sql])) {
             $result[$sql] = $this->sqlQuery($sql);
         }

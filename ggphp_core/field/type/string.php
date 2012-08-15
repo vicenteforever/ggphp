@@ -9,6 +9,6 @@
     public $type = 'string';
     public $length = 255;
     public $default = '';
-    public $widgetType = 'text';
+    public $widget = 'text';
     public $validators = array('string');
 }

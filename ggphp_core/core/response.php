@@ -17,7 +17,7 @@ class core_response {
     }
 
     static function instance() {
-        static $instance;
+        static $instance = null;
         if (!isset($instance)) {
             $instance = new self;
         }
@@ -132,18 +132,14 @@ class core_response {
         return $buffer;
     }
 
-    static function gzip($data, $contenttype) {
+    static function gzip($data, $contentType) {
         if (strstr($_SERVER["HTTP_ACCEPT_ENCODING"], "gzip")) {
-            header("Content-Type: {$data['Content-Type']}");
+            header("Content-Type: {$contentType}");
             header("Content-Encoding: gzip");
             header("Vary: Accept-Encoding");
             header("Content-Length: " . strlen($data['content']));
             return $data;
         }
-    }
-    
-    static function auto($data){
-        return 'render auto';
     }
 
 }

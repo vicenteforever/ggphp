@@ -11,6 +11,6 @@ class field_type_serial extends field_type_base {
     public $length = 11;
     public $index = 'primary';
     public $serial = true;
-    public $widgetType = 'hidden';
+    public $widget = 'hidden';
     
 }

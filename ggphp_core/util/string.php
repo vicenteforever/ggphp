@@ -9,8 +9,8 @@ class util_string {
 
     /**
      * 判断字符串是否为utf8
-     * @param string $string �����ַ�
-     * @return bool
+     * @param string $string
+     * @return boolean
      */
     static function is_utf8($string) {
         return preg_match('%^(?:

@@ -2,10 +2,10 @@
 
 /**
  * 文件上传类
- * @package upload
+ * @package util
  * @author goodzsq@gmail.com
  */
-class file_uploader {
+class util_uploader {
 
     static public $allowFileTypes = array('jpeg', 'jpg', 'gif', 'bmp', 'png', 'zip', 'rar');
     static public $maxFileSize = 8388608;

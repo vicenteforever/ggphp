@@ -16,7 +16,7 @@ class util_filter {
 	static function markdown($text) {
 		static $parser;
 		if (!isset($parser)) {
-			include(GG_DIR.'/lib/php-markdown/markdown.php');
+			include(GG_DIR.'/vendor/php-markdown/markdown.php');
 			$parser_class = MARKDOWN_PARSER_CLASS;
 			$parser = new $parser_class;
 		}
@@ -31,7 +31,7 @@ class util_filter {
 	static function textile($str) {
 		static $textile;
 		if (!isset($textile)) {
-			require_once(GG_DIR . '/lib/textile/classTextile.php');
+			require_once(GG_DIR . '/vendor/textile/classTextile.php');
 			$textile = new Textile();
 		}
 		return $textile->TextileThis($str);

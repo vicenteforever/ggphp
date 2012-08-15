@@ -19,8 +19,7 @@ abstract class field_type_base {
     public $serial = false;
     public $number = 1;
     public $hidden = false;
-    public $widgetType = 'string';
-    public $widgetStyle = 'default';
+    public $widget = 'string';
     public $validators = array();
 
     public function __construct(array $arr) {
@@ -34,33 +33,12 @@ abstract class field_type_base {
             $this->label = $this->name;
         }
 
-        //不必须填写的字符串 没设默认值的 [设置为空串]
+        //不必须填写的字符串并且没设默认值的=>[设置为空串]
         if ($this->type == 'string' && !$this->required && $this->default === null) {
             $this->default = '';
         }
     }
     
-    public function load($value){
-        return $value;
-    }
-    
-    public function save($value){
-        return $value;
-    }
-    
-    public function delete($value){
-        return;
-    }
-
-    /**
-     * 返回字段可选的值列表
-     * @param string $source
-     * @return array 
-     */
-    public function getList($source) {
-        return array();
-    }
-
     /**
      * 读取未设置属性时返回空值，用于屏蔽错误消息
      * @param string $name
@@ -72,17 +50,15 @@ abstract class field_type_base {
 
     /**
      * 字段校验
-     * @param orm_entity $entity
+     * @param mixed $value
      * @return mixed 校验通过返回true 校验失败返回错误消息字符串 
      */
-    public function validate(orm_entity $entity) {
-        $value = $entity->data($this->name);
+    public function validate($value) {
         if ($this->required && empty($value)) {
             return "{$this->label}必须填写";
         }
-        foreach ($this->validators as $key => $rule) {
+        foreach ($this->validators as $rule) {
             $validator = validator($rule);
-            //var_dump($validator);
             if (empty($validator)) {
                 return "校验器{$rule}不存在";
             }
@@ -93,19 +69,5 @@ abstract class field_type_base {
         }
         return true;
     }
-
-    public function widget($value) {
-        $className = "field_widget_{$this->widgetType}";
-        $methodName = "style_{$this->widgetStyle}";
-        try {
-            if (class_exists($className)) {
-                return call_user_func(array($className, $methodName), $this, $value);
-            } else {
-                return "$className 不存在";
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
+ 
 }

@@ -174,10 +174,9 @@ function output($str, $filters = null) {
  */
 function trace($obj) {
     $result = '';
-    if(is_null($obj)){
+    if (is_null($obj)) {
         return 'NULL';
-    }
-    else if (is_string($obj)) {
+    } else if (is_string($obj)) {
         return $obj;
     } else if (is_bool($obj)) {
         if ($obj === true) {
@@ -188,10 +187,9 @@ function trace($obj) {
     } else if (is_object($obj)) {
         if ($obj instanceof Exception) {
             $result = $obj->getMessage() . "\n" . $obj->getTraceAsString();
-        } 
-        else if($obj instanceof PDOStatement){
+        } else if ($obj instanceof PDOStatement) {
             $result = print_r($obj, true) . print_r($obj->errorInfo(), true);
-        }else {
+        } else {
             $result = print_r($obj, true);
         }
     } else if (is_array($obj)) {
@@ -306,11 +304,11 @@ function html($content, $title = null) {
 /**
  * 反射类
  * @staticvar core_reflect $reflect
- * @param type $className
+ * @param string $className
  * @return core_reflect 
  */
 function reflect($className) {
-    static $reflect;
+    static $reflect = null;
     if (!isset($reflect[$className])) {
         $reflect[$className] = new core_reflect($className);
     }
@@ -330,12 +328,12 @@ function redirect($url) {
  * @staticvar orm_model $orm
  * @param string $table
  * @param string $config
- * @return \orm_model 
+ * @return orm_model 
  */
-function orm($table, $config='') {
+function orm($table, $config = '') {
     static $orm;
     $identity = "{$table}@{$config}";
-    if(empty($config)){
+    if (empty($config)) {
         $config = 'default';
     }
     $configData = config('database', $config);
@@ -386,21 +384,59 @@ function serial() {
 }
 
 /**
- * 获取校验器
+ * 获取字段校验器
  * @param string $rule
- * @return validator_interface
+ * @return field_validator_interface or null
  * @throws Exception 
  */
 function validator($rule) {
-    static $validator;
+    static $validator = null;
     if (!isset($validator[$rule])) {
         $className = 'field_validator_' . $rule;
         $object = new $className();
         if ($object instanceof field_validator_interface) {
             $validator[$rule] = $object;
         } else {
-            $validator[$rule] = '';
+            throw new Exception("{$className} not exist");
         }
     }
     return $validator[$rule];
+}
+
+/**
+ * 获取rest资源对象
+ * @staticvar array $rest
+ * @param string $resourceName
+ * @return rest_interface
+ * @throws Exception 
+ */
+function rest($resourceName) {
+    static $rest = null;
+    if (!isset($rest[$resourceName])) {
+        $resourceClassName = 'rest_' . $resourceName;
+        $rest[$resourceName] = new $resourceClassName();
+        if (!($rest[$resourceName] instanceof rest_interface)) {
+            $rest[$resourceName] = null;
+            throw new Exception("资源[$resourceName]未实现[rest_interface]接口");
+        }
+    }
+    return $rest[$resourceName];
+}
+
+/**
+ * 根据资源名称获取字段集对象
+ * @staticvar array $fieldset
+ * @param string $resourceName
+ * @return field_collection 
+ */
+function fieldset($resourceName){
+    static $fieldset = null;
+    if(!isset($fieldset[$resourceName])){
+        $struct = rest($resourceName)->struct();
+        if(!is_array($struct)){
+            $struct = array();
+        }
+        $fieldset[$resourceName] = new field_collection($struct);
+    }
+    return $fieldset[$resourceName];
 }

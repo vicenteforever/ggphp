@@ -75,7 +75,7 @@ class core_request {
     
     /**
      * 判断请求是否为get方法
-     * @return bool
+     * @return boolean
      */
     static function isGet() {
         return self::method() == "GET";
@@ -83,7 +83,7 @@ class core_request {
 
     /**
      * 判断请求是否为post方法
-     * @return bool 
+     * @return boolean 
      */
     static function isPost() {
         return self::method() == "POST";
@@ -91,7 +91,7 @@ class core_request {
 
     /**
      * 判断请求是否为put方法
-     * @return bool 
+     * @return boolean 
      */
     static function isPut() {
         return self::method == "PUT";
@@ -117,7 +117,7 @@ class core_request {
      * @return string 
      */
     static function uri() {
-        static $uri;
+        static $uri = null;
         if (!isset($uri)) {
             if (isset($_SERVER["REQUEST_URI"])) {
                 if (util_string::is_utf8($_SERVER["REQUEST_URI"]))
@@ -138,7 +138,7 @@ class core_request {
      * @return string 
      */
     static function baseUrl() {
-        static $baseurl;
+        static $baseurl = null;
         if (!isset($baseurl)) {
             $baseurl = rtrim(str_replace('/index.php', '', $_SERVER["SCRIPT_NAME"]), '/') . '/';
         }
@@ -151,7 +151,7 @@ class core_request {
      * @return string 
      */
     static function fullPath() {
-        static $fullpath;
+        static $fullpath = null;
         if (!isset($fullpath)) {
             $fullpath = self::baseUrl() . self::path();
         }
@@ -160,16 +160,15 @@ class core_request {
 
     /**
      * 获取路径信息
-     * @staticvar string $path
      * @return string 
      */
-    static function path($path=null) {
+    static function path() {
         return trim(self::server("PATH_INFO"), '/');
     }
     
     /**
      * 获取提交的raw数据
-     * @return type 
+     * @return string 
      */
     static function input() {
         return file_get_contents("php://input");
@@ -186,7 +185,7 @@ class core_request {
 
     /**
      * 判断请求是否为ajax请求
-     * @return bool 
+     * @return boolean 
      */
     static function isAjax() {
         return self::server("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest";
@@ -194,7 +193,7 @@ class core_request {
 
     /**
      * 判断请求是否为flash请求
-     * @return bool 
+     * @return boolean 
      */
     static function isFlash() {
         return self::server("HTTP_USER_AGENT") == "Shockwave Flash";

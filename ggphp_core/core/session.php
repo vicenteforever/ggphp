@@ -16,7 +16,7 @@ class core_session {
      * @return core_session
      */
     static function instance() {
-        static $instance;
+        static $instance = null;
         if (!isset($instance)) {
             //保证只运行一次session_start
             session_start();

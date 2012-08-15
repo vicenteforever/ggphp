@@ -10,7 +10,7 @@ class rbac_auth {
     /**
      * rbac权限认证规则
      * @param array $roles
-     * @return bool true=认证通过, false=认证失败
+     * @return boolean true=认证通过, false=认证失败
      */
     static public function access($roles) {
 	if (empty($roles) || is_array($roles)) {

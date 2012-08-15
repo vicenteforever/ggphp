@@ -22,7 +22,11 @@ class unittest_case {
     private $_fail = 0;
     private $_total = 0;
     
-    function testModule($module, $desp='') {
+    /**
+     * 测试模型
+     * @param string $module 模块名称
+     */
+    function testModule($module) {
         $className = "{$module}_test";
         $methods = get_class_methods($className);
         $this->_result[$module] = array();
@@ -56,6 +60,12 @@ class unittest_case {
         $this->_result[$this->_module][] = array('status' => $status, 'msg' => $msg);
     }
 
+    /**
+     * 断言是否相等
+     * @param type $a
+     * @param type $b
+     * @param type $msg 
+     */
     function assertEqual($a, $b, $msg='') {
         if(empty($msg)){
             $msg = "[{$a}] == [{$b}]";
@@ -63,6 +73,10 @@ class unittest_case {
         $this->assert(($a == $b), $msg);
     }
     
+    /**
+     * 打印报告结果
+     * @return string 
+     */
     function report() {
         //print_r($this->_result);return;
         if($this->_fail>0){
@@ -86,5 +100,3 @@ class unittest_case {
     }
 
 }
-
-?>

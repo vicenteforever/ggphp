@@ -28,7 +28,7 @@ class orm_adapter_mysql extends orm_adapter_pdo {
     /**
      * 创建数据库
      * @param string $source 数据库名称
-     * @return bool 
+     * @return boolean 
      */
     public function createDatabase($source) {
         $sql = "CREATE DATABASE `$source` DEFAULT CHARACTER SET {$this->_charset} COLLATE {$this->_collate}";
