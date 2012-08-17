@@ -17265,7 +17265,12 @@ class rest_province implements rest_interface {
     }
 
     public function get($id) {
-        
+        if(isset($this->_data[$id])){
+            return $this->_data[$id];
+        }
+        else{
+            return null;
+        }
     }
 
     public function index() {
