@@ -1,9 +1,5 @@
 h1. ggphp framework
 
-目标：提供框架结构和思路，除了一些基本的规则，具体项目不耦合与核心框架，没有过多的框架限制，可以根据你自己的需求自由扩展
-实现：框架结构 url路由 AOP面向切面编程框架(日志、运行报告、权限认证) 分布式应用(memcache) nosql存储 单元测试
-集成：ORM(phpDataMapper) 图像处理(easyphpthumbnail) 模板(smarty) 格式化文本(textile, markdown)
-
 h2. 系统框架核心目录
 
 核心目录名为ggphp_core ，可放于系统任意位置，所有项目共用此目录，系统框架的根目录在程序中用常量GG_DIR表示，如果想实现所有应用通用的模块，请将代码放在此目录下。根据.htaccess存取规则，框架目录下的文件不可以被用户直接访问。
@@ -112,80 +108,34 @@ $user->load();
 
 h2. 视图(view)
 
-可直接使用php作为模板文件放到APP_DIR/app/view目录下
-框架将$data变量传递给模板文件，模板中可以直接使用此变量
-例如<?php echo $data['title']?>
-调用模板的方式为：
-view('模板名称.php', array('title'=>'mytitle', 'content'=>'mycontent'));
-模板的嵌套：
-$data['header'] = view('header');
-$data['body'] = view('body', $bodydata);
-$data['footer'] = view('footer');
-echo view('html', $data);
-模板搜索次序规则：
-1.APP_DIR/app/view/{current_controller_name}/{template_name}.php
-2.APP_DIR/app/view/{template_name}.php
-3.GG_DIR/view/{template_name}.php
-另外php模板可使用框架全部功能，当然你还可以使用你最熟悉的模板系统将其集成到框架中来。
+系统默认使用php语言实现模板，当然你还可以使用你最熟悉的模板系统将其集成到框架中来。
 
 
-h2. 灵活的配置文件
+h2. 配置文件
 
-配置文件同样分为和当前应用配置和框架基本配置，例如数据库的配置文件为APP_DIR/app/config/database.php 和 GG_DIR/config/database.php
-一个配置文件需要返回一个关联数组，读取配置的时候会将应用的配置与框架配置的进行关联数组合并，两个配置针对同一配置项目都进行设置的时候以应用配置为优先。
-通常情况下只读的配置文件直接使用php数组返回：
-<?php
-return array(
-	'x' => 'xxxxx',
-	'y' => 'yyyyy',
-	'z' => 'zzzzz',
-);
-?>
-
-当然你也可以在此文件中从一个持久化存储中读取文件并返回数组来实现多重多样的配置文件系统。例如：
-<?php
-//从文件中载入配置
-return storage('file', 'database')->load();
-?>
-
-配置文件的读取使用config函数：config($config_file, $key) 
-如果第二个参数不指定则返回此配置文件的数组。
-例如：
-从config/app.php中读取default_action
-$defaultController = config('app', 'default_controller');
-$defaultAction = config('app', 'default_action');
-读取config/database.php的test段数据库的配置(文件中可以存在多个数据库配置)：
-$config = config('database', 'test')
-$pdo = new PDO($config['DSN'], $config['username'], $config['password'], $config['driver_opts']);
+$config = config($configFile, $key);
 
 h2. 常用函数
 
-h3. 数据库
-
-使用pdo函数进行数据库链接 pdo($config_dbname)
-例如：
-pdo()->query($sql); //使用默认的default段数据库库配置
-pdo('test')->query($sql);//使用配置中的test段配置连接数据库
-pdo函数可多次调用，每个指定的配置仅在第一次调用的时候进行连接。其余的调用仅仅返回第一次创建的pdo对象。比设计模式中的单例模式更灵活。
+对一些常用类进行简洁化包装
 
 h2. 系统模块
 
 h3. 核心模块core
 
-# app
+GGPHP核心文件
 
-# module
+h3. REST
 
-# view
-
-# request
-
-# response
-
-# language 翻译文件：GG_DIR/language/{语言代码}.php 和 APP_DIR/language/{语言代码}.php
-与配置文件类似，若存在相同的条目，应用目录的翻译优先于框架目录的翻译
-翻译函数：t($str, $language);
-若不指定第二个参数,系统会读取当前会话中的当前语言变量来进行翻译。当前语言优先级为参数中的param('lang') > $_SESSION['lang'] > {浏览器当前语言}
+从资源的角度来观察整个网络,对资源的操作统一为查询、创建、修改、删除、索引
+定义资源类在rest目录下 需实现rest_interface接口 例如 class rest_user implement rest_interface
+php中获取资源对象的方法: rest($resourceName); 例如: rest('user')->get('goodzsq');
+url资源访问: 
+获取资源:      GET http://host/appname/rest/user/goodzsq 等价于 rest('user')->get('goodzsq');
+获取列表:      GET http://host/appname/rest/user/ 等价于 rest('user')->index('goodzsq');
+创建资源：     POST http://host/appname/rest/user/ 等价于 rest('user')->post($postdata);
+修改资源：     PUT http://host/appname/rest/user/goodzsq 等价于 rest('user')->put('goodzsq', $postdata);
+删除资源：     DELETE http://host/appname/rest/user/goodzsq 等价于 rest('user')->delete('goodzsq');
 
 h3. ORM
 
@@ -203,7 +153,7 @@ h3. Util
 
 常用函数集 banchmark file security string
 
-h3. Lib
+h3. Vendor
 
 集成的第三方类库 phpDataMapper easyphpthumbnail smarty textile
 

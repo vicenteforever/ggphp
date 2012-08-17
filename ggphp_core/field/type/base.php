@@ -38,7 +38,7 @@ abstract class field_type_base {
             $this->default = '';
         }
     }
-    
+
     /**
      * 读取未设置属性时返回空值，用于屏蔽错误消息
      * @param string $name
@@ -69,5 +69,13 @@ abstract class field_type_base {
         }
         return true;
     }
- 
+
+    public function toArray() {
+        $result = array();
+        foreach ($this as $key => $value) {
+            $result[$key] = $value;
+        }
+        return $result;
+    }
+
 }

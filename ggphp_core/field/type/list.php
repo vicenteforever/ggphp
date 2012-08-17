@@ -9,6 +9,6 @@ class field_type_list extends field_type_base {
 
     public $type = 'string';
     public $length = 255;
-    public $widget = 'list';
+    public $widget = 'select';
 
 }
