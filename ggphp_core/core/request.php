@@ -50,8 +50,8 @@ class core_request {
     static function param($key, $isFilter) {
         $value = '';
         if (is_integer($key)) {
-            if (isset($_REQUEST['arg'][$key])) {
-                $value = $_REQUEST['arg'][$key];
+            if (isset($_REQUEST['_arg'][$key])) {
+                $value = $_REQUEST['_arg'][$key];
             } else {
                 return null;
             }

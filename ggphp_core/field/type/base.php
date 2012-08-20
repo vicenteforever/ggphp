@@ -7,20 +7,20 @@
  */
 abstract class field_type_base {
 
-    public $name;
-    public $label;
-    public $type = 'string';
-    public $length = null;
-    public $unsigned = false;
-    public $allowNull = false;
-    public $required = false;
-    public $default = null;
-    public $index = null;
-    public $serial = false;
-    public $number = 1;
-    public $hidden = false;
-    public $widget = 'string';
-    public $validators = array();
+    public $name;                 //字段名称
+    public $label;                //字段标签
+    public $type = 'string';      //数据类型
+    public $length = null;        //长度
+    public $unsigned = false;     //是否为无符号整数
+    public $allowNull = false;    //是否允许为空
+    public $required = false;     //是否必须填写
+    public $default = null;       //默认值
+    public $index = null;         //是否为索引
+    public $serial = false;       //自动加一
+    public $widget = 'string';    //字段控件
+    public $validators = array(); //字段校验器集
+    public $isDatabase = true;    //是否为数据库字段
+    public $isHidden = false;     //是否隐藏控件
 
     public function __construct(array $arr) {
         foreach ($arr as $k => $v) {

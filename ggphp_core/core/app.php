@@ -94,7 +94,7 @@ class core_app {
 
         $this->_controllerName = $args[0];
         $this->_actionName = $args[1];
-        $_REQUEST['arg'] = array_slice($args, 2);
+        $_REQUEST['_arg'] = array_slice($args, 2);
     }
 
     /**

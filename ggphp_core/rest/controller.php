@@ -25,7 +25,7 @@ class rest_controller {
             if (!($this->resource instanceof rest_interface)) {
                 return error("资源[$resourceName]未实现[rest_interface]接口");
             }
-            $arg = implode('/', array_slice($_REQUEST['arg'], 1));
+            $arg = implode('/', array_slice($_REQUEST['_arg'], 1));
             $p = strrpos($arg, '.');
             if ($p === false) {
                 $id = $arg;
@@ -38,6 +38,7 @@ class rest_controller {
         } else {
             return error("资源[$resourceName]不存在");
         }
+        rest(123);
     }
 
     /**
@@ -52,6 +53,12 @@ class rest_controller {
         $method = strtoupper($method);
         $type = strtolower($type);
         $result = null;
+        //用隐藏字段_method来实现REST的PUT方法和DELETE方法
+        if($method=='POST' && isset($data['_method'])){
+            $method = strtoupper($data['_method']);
+        }
+        unset($data['_arg']);
+        unset($data['_method']);
         try {
             if ($method == 'GET') {
                 if (!empty($id)) {

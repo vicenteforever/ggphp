@@ -41,14 +41,14 @@ class image_captcha {
     /**
      * 交易验证码 
      */
-    static public function validate() {
+    static public function validate($value) {
         $captcha = session()->captcha;
-        if (!empty($captcha)) {
-            if ($captcha != param('captcha', false)) {
-                //验证码作废 必须重新生成
-                session()->captcha = util_string::token();
-                return 'fail';
-            }
+        if ($captcha == $value) {
+            return true;
+        } else {
+            //验证码作废 必须重新生成
+            session()->captcha = util_string::token();
+            return '验证码错误';
         }
     }
 
