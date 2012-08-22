@@ -34,11 +34,11 @@ class util_uploader {
     /**
      * 上传文件
      * @param string $fieldName 字段名称
-     * @param string $filename 目标文件
+     * @param string $targetDir 目标文件
      * @return array 上传文件信息
      * @throws Exception 上传失败扔出异常
      */
-    static public function upload($fieldName, $filename) {
+    static public function upload($fieldName, $targetDir) {
         if (empty($_FILES[$fieldName])) {
             $fileField['error'] = UPLOAD_ERR_FORM_SIZE;
         } else {
@@ -96,7 +96,9 @@ class util_uploader {
             }
         }
         if ($upload_succeed) {
-            if (move_uploaded_file($fileField["tmp_name"], $filename)) {
+            $md5 = md5_file($fileField["tmp_name"]);
+            $filename = $targetDir . DS . $md5;
+            if (file_exists($filename) || move_uploaded_file($fileField["tmp_name"], $filename)) {
                 $result = array();
                 $result['filename'] = $filename;
                 $result['name'] = $fileField['name'];
@@ -104,7 +106,7 @@ class util_uploader {
                 $result['mime'] = $fileField['type'];
                 $result['size'] = $fileField['size'];
                 $result['uploadtime'] = date('Y-m-d H:i:s');
-                $result['md5'] = md5_file($filename);
+                $result['md5'] = $md5;
                 return $result;
             } else {
                 $errorMsg = "{$fileField['name']} 文件上传失败！失败原因：本地文件系统读写权限出错！";

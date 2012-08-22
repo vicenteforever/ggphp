@@ -17273,7 +17273,7 @@ class rest_province implements rest_interface {
         }
     }
 
-    public function index() {
+    public function index($params = null) {
         return $this->_data;
     }
 

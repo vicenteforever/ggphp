@@ -56,5 +56,5 @@ class util_string {
         $hash = sprintf("%u", crc32($str));
         return base_convert($hash, 10, 36);
     }
-
+    
 }

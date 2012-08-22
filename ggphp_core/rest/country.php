@@ -264,15 +264,14 @@ class rest_country implements rest_interface {
     }
 
     public function get($id) {
-        if(isset($this->_data[$id])){
+        if (isset($this->_data[$id])) {
             return $this->_data[$id];
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    public function index() {
+    public function index($params = null) {
         return $this->_data;
     }
 

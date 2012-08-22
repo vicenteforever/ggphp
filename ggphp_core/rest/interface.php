@@ -19,7 +19,7 @@ interface rest_interface {
     public function delete($id);
     
     /* 获取资源列表数组 */
-    public function index();
+    public function index($params);
     
     /* 删除所有资源 */
     public function deleteAll();
