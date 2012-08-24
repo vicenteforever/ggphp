@@ -440,3 +440,7 @@ function fieldset($resourceName){
     }
     return $fieldset[$resourceName];
 }
+
+function debug($data){
+    app()->log('DEBUG:', $data);
+}

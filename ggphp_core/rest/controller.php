@@ -67,7 +67,7 @@ class rest_controller {
                     $result = $this->resource->index();
                 }
             } else if ($method == 'POST') {
-                $result = $this->resource->post($data);
+                $result = $this->resource->post($id, $data);
             } else if ($method == 'PUT') {
                 $result = $this->resource->put($id, $data);
             } else if ($method == 'DELETE') {

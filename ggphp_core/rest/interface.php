@@ -10,7 +10,7 @@ interface rest_interface {
     public function get($id);
     
     /* 创建资源 */
-    public function post($data);
+    public function post($id, $data);
     
     /* 修改资源 */
     public function put($id, $data);

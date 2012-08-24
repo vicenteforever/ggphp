@@ -39,7 +39,7 @@ abstract class orm_adapter_pdo {
      * @param array $options 连接选项
      * @return \PDO 
      */
-    static public function pdo($dsn, $username, $password, $options) {
+    static public function connect($dsn, $username, $password, $options) {
         static $pdo;
         $identity = "{$dsn}_{$username}";
         if (!isset($pdo[$identity])) {
@@ -56,7 +56,7 @@ abstract class orm_adapter_pdo {
      * @param array $options 连接选项
      */
     public function __construct($dsn, $username, $password, $options) {
-        $this->_connection = self::pdo($dsn, $username, $password, $options);
+        $this->_connection = self::connect($dsn, $username, $password, $options);
     }
 
     /**

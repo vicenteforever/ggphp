@@ -19,7 +19,7 @@ class util_console {
         } else if (is_null($obj)) {
             return '';
         } else {
-            return "'未知的格式:$obj'";
+            return $obj;
         }
     }
 

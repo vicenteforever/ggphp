@@ -17277,7 +17277,7 @@ class rest_province implements rest_interface {
         return $this->_data;
     }
 
-    public function post($data) {
+    public function post($id, $data) {
         
     }
 

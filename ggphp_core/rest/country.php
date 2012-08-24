@@ -275,7 +275,7 @@ class rest_country implements rest_interface {
         return $this->_data;
     }
 
-    public function post($data) {
+    public function post($id, $data) {
         
     }
 
