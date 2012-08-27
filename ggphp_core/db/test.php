@@ -1,19 +1,6 @@
 <?php
 
 /**
- * 获取数据库适配器
- * @staticvar array $db
- * @return db_manager
- */
-function manager($adapter) {
-    static $manager = null;
-    if (!isset($manager[$adapter])) {
-        $manager[$adapter] = new db_manager($adapter);
-    }
-    return $manager[$adapter];
-}
-
-/**
  * 数据库单元测试
  * @package db
  * @author goodzsq@gmail.com

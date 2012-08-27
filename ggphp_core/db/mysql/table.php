@@ -48,17 +48,28 @@ class db_mysql_table implements rest_interface {
         return db_mysql_helper::queryArray($sql, $this->_dbh);
     }
 
+    /**
+     * 创建一条新纪录
+     * @param stirng $id 主键的值
+     * @param array $data 插入的数据
+     * @return boolean 成功返回插入记录的id 失败返回false
+     */
     public function post($id, $data) {
         $keys = array();
         $values = array();
         foreach ($data as $key => $value) {
             $keys[] = $key;
-            $values[] = "'$value'";
+            $values[] = "'" . addslashes($value) . "'";
         }
         $keys = implode(' , ', $keys);
         $values = implode(' , ', $values);
         $sql = "INSERT INTO {$this->_table} ($keys) VALUES ($values)";
-        return db_mysql_helper::exec($sql, $this->_dbh);
+        if (db_mysql_helper::exec($sql, $this->_dbh)){
+            return mysql_insert_id($this->_dbh);
+        }
+        else{
+            return false;
+        }
     }
 
     public function put($id, $data) {
@@ -66,7 +77,7 @@ class db_mysql_table implements rest_interface {
 
         $values = array();
         foreach ($data as $key => $value) {
-            $values[] = "$key='$value'";
+            $values[] = "$key='" . addslashes($value) . "'";
         }
         $values = implode(' , ', $values);
         $sql = "UPDATE {$this->_table} SET $values WHERE $clause ";

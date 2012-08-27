@@ -195,6 +195,9 @@ function trace($obj) {
     } else if (is_array($obj)) {
         $result = print_r($obj, true);
     }
+    else{
+        $result = $obj . '';
+    }
     return "<pre>$result</pre>";
 }
 
@@ -441,6 +444,15 @@ function fieldset($resourceName){
     return $fieldset[$resourceName];
 }
 
-function debug($data){
-    app()->log('DEBUG:', $data);
+/**
+ * 获取数据库适配器
+ * @staticvar array $db
+ * @return db_manager
+ */
+function manager($adapter) {
+    static $manager = null;
+    if (!isset($manager[$adapter])) {
+        $manager[$adapter] = new db_manager($adapter);
+    }
+    return $manager[$adapter];
 }
