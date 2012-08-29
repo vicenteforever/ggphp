@@ -59,7 +59,7 @@ class core_session {
         }
         //如果用户session ID是伪造
         if ($_SESSION['user_agent'] != $user_agent) {
-            die('会话错误，请关闭浏览器重新打开页面');
+            //die("会话错误，请关闭浏览器重新打开页面 {$user_agent} : {$_SESSION['user_agent']}");
         }
     }
 

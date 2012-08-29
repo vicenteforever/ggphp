@@ -34,7 +34,7 @@ class db_mysql_table implements rest_interface {
      */
     public function get($id) {
         $clause = $this->getPrimaryClause($id);
-        $sql = "SELECT * FROM {$this->_table} WHERE {$clause}";
+        $sql = "SELECT * FROM `{$this->_table}` WHERE {$clause}";
         return db_mysql_helper::queryArray($sql, $this->_dbh);
     }
 
@@ -44,7 +44,7 @@ class db_mysql_table implements rest_interface {
         } else {
             $clause = 'true';
         }
-        $sql = "SELECT * FROM {$this->_table} WHERE $clause";
+        $sql = "SELECT * FROM `{$this->_table}` WHERE $clause";
         return db_mysql_helper::queryArray($sql, $this->_dbh);
     }
 
@@ -58,12 +58,15 @@ class db_mysql_table implements rest_interface {
         $keys = array();
         $values = array();
         foreach ($data as $key => $value) {
-            $keys[] = $key;
+            $keys[] = "`$key`";
+            if(is_array($value)){
+                $value = json_encode($value);
+            }
             $values[] = "'" . addslashes($value) . "'";
         }
         $keys = implode(' , ', $keys);
         $values = implode(' , ', $values);
-        $sql = "INSERT INTO {$this->_table} ($keys) VALUES ($values)";
+        $sql = "INSERT INTO `{$this->_table}` ($keys) VALUES ($values)";
         if (db_mysql_helper::exec($sql, $this->_dbh)){
             return mysql_insert_id($this->_dbh);
         }
@@ -77,10 +80,10 @@ class db_mysql_table implements rest_interface {
 
         $values = array();
         foreach ($data as $key => $value) {
-            $values[] = "$key='" . addslashes($value) . "'";
+            $values[] = "`$key`='" . addslashes($value) . "'";
         }
         $values = implode(' , ', $values);
-        $sql = "UPDATE {$this->_table} SET $values WHERE $clause ";
+        $sql = "UPDATE `{$this->_table}` SET $values WHERE $clause ";
         return db_mysql_helper::exec($sql, $this->_dbh);
     }
 

@@ -7,7 +7,6 @@
  */
 class script_jquery_ui {
 
-    //@todo goodzsq jquery ui wrapper
     const ver = '1.8.18';
 
     public function __construct() {

@@ -180,6 +180,7 @@ class db_mysql_database implements rest_interface {
     }
 
     private function modifyTable($table, array $fields) {
+        $result = true;
         //修改列属性
         $existsColumns = $this->getColumnsFromTable($table);
         $existsIndexs = $this->getIndexFromTable($table);
@@ -205,42 +206,43 @@ class db_mysql_database implements rest_interface {
 
         $syntax = "ALTER TABLE `$table` \n";
         $syntax .= implode(",\n", $columnsSyntax);
-        db_mysql_helper::exec($syntax, $this->_dbh);
+        $result = $result && db_mysql_helper::exec($syntax, $this->_dbh);
 
         //修改索引
         foreach ($fields as $key => $field) {
             //primary
             if ($field->index == 'primary') {
-                db_mysql_helper::exec("ALTER TABLE `$table` DROP PRIMARY KEY, ADD PRIMARY KEY(`{$field->name}`);", $this->_dbh);
+                $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` DROP PRIMARY KEY, ADD PRIMARY KEY(`{$field->name}`);", $this->_dbh);
             }
             //unique
             if ($field->index == 'unique') {
                 if (isset($existsIndexs[$key])) {
-                    db_mysql_helper::exec("ALTER TABLE `$table` DROP INDEX `$key` , ADD UNIQUE  `$key` (  `$key` )", $this->_dbh);
+                    $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` DROP INDEX `$key` , ADD UNIQUE  `$key` (  `$key` )", $this->_dbh);
                 } else {
-                    db_mysql_helper::exec("ALTER TABLE `$table` ADD UNIQUE  `$key` (  `$key` )", $this->_dbh);
+                    $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` ADD UNIQUE  `$key` (  `$key` )", $this->_dbh);
                 }
             }
             //index
             if ($field->index == 'index') {
                 if (isset($existsIndexs[$key])) {
-                    db_mysql_helper::exec("ALTER TABLE `$table` DROP INDEX `$key` , ADD INDEX  `$key` (  `$key` )", $this->_dbh);
+                    $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` DROP INDEX `$key` , ADD INDEX  `$key` (  `$key` )", $this->_dbh);
                 } else {
-                    db_mysql_helper::exec("ALTER TABLE `$table` ADD INDEX  `$key` (  `$key` )", $this->_dbh);
+                    $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` ADD INDEX  `$key` (  `$key` )", $this->_dbh);
                 }
             }
             //drop index
             if (isset($existsIndexs[$key]) && empty($field->index)) {
-                db_mysql_helper::exec("ALTER TABLE `$table` DROP INDEX `$key`", $this->_dbh);
+                $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` DROP INDEX `$key`", $this->_dbh);
             }
         }
 
         //删除多余的列
         foreach ($existsColumns as $key => $value) {
             if (!isset($fields[$key])) {
-                db_mysql_helper::exec("ALTER TABLE `$table` DROP `$key`", $this->_dbh);
+                $result = $result && db_mysql_helper::exec("ALTER TABLE `$table` DROP `$key`", $this->_dbh);
             }
         }
+        return $result;
     }
 
     /**

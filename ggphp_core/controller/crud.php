@@ -57,7 +57,6 @@ abstract class controller_crud {
      * 文件下载 
      */
     function do_download() {
-        //@todo goodzsq file download
         $id = param('id');
         response()->download($filename, $content);
     }
@@ -66,7 +65,6 @@ abstract class controller_crud {
      * 删除 
      */
     function do_delete() {
-        //@todo goodzsq record delete
         $id = param('id');
         $this->_model->delete(array('id' => $id));
         redirect(make_url('admin', $this->modelName(), 'index'));

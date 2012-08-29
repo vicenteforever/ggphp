@@ -89,7 +89,7 @@ class util_uploader {
             if ($upload_succeed) {
                 $fileExt = self::ext($fileField['name']);
                 if (!in_array($fileExt, self::$allowFileTypes)) {
-                    $errorMsg = "文件上传失败！失败原因：文件类型[{$fileField['name']}]{$fileExt}不被允许！";
+                    $errorMsg = "文件上传失败！失败原因：文件类型{$fileExt}不被允许！";
                     $errorCode = -104;
                     $upload_succeed = false;
                 }
