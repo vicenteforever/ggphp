@@ -16,7 +16,12 @@ class db_mysql_helper {
         } else {
             app()->log("SQL ERROR: $error", core_app::LOG_ERROR);
         }
-        return $rs;
+        if($rs){
+            return $rs;
+        }
+        else{
+            throw new Exception(mysql_error($dbh));
+        }
     }
 
     static function query($sql, $dbh) {
@@ -28,7 +33,12 @@ class db_mysql_helper {
         } else {
             app()->log("SQL ERROR: $error", core_app::LOG_ERROR);
         }
-        return $rs;
+        if($rs){
+            return $rs;
+        }
+        else{
+            throw new Exception(mysql_error($dbh));
+        }
     }
 
     static function rsToArray($rs, $key = null) {
