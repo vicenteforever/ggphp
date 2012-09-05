@@ -29,13 +29,19 @@ class db_mysql_table implements rest_interface {
 
     /**
      * 获取数据
-     * @param type $id 
+     * @param string $id 
      * @return rest_interface
      */
     public function get($id) {
         $clause = $this->getPrimaryClause($id);
         $sql = "SELECT * FROM `{$this->_table}` WHERE {$clause}";
-        return db_mysql_helper::queryArray($sql, $this->_dbh);
+        $data = db_mysql_helper::queryArray($sql, $this->_dbh);
+        if(isset($data[0])){
+            return $data[0];
+        }
+        else{
+            throw new Exception('not found record');
+        }
     }
 
     public function index($params = null) {
