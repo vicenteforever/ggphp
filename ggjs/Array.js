@@ -117,5 +117,3 @@ GG.Array.merge = function(){
     }
     return GG.Array.unique(array)
 }
-
-GG.Array.me
