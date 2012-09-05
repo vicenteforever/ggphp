@@ -8,3 +8,9 @@ function require(className){
 	$.ajaxSetup({ cache : true });
 	$('head').append(js);
 }
+
+function callback(fn){
+    if (typeof fn == 'function'){
+        return fn.apply();
+    }
+}

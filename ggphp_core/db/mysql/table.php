@@ -29,18 +29,21 @@ class db_mysql_table implements rest_interface {
 
     /**
      * 获取数据
-     * @param string $id 
+     * @param string|array $id 
      * @return rest_interface
      */
     public function get($id) {
         $clause = $this->getPrimaryClause($id);
         $sql = "SELECT * FROM `{$this->_table}` WHERE {$clause}";
         $data = db_mysql_helper::queryArray($sql, $this->_dbh);
-        if(isset($data[0])){
-            return $data[0];
-        }
-        else{
-            throw new Exception('not found record');
+        if (count($data) > 0) {
+            if (is_array($id)) {
+                return $data;
+            } else {
+                return $data[0];
+            }
+        } else {
+            throw new Exception("$table");
         }
     }
 
@@ -66,7 +69,7 @@ class db_mysql_table implements rest_interface {
         //如何数据类型是数组类型则进行json编码成字符串之后存储
         foreach ($data as $key => $value) {
             $keys[] = "`$key`";
-            if(is_array($value)){
+            if (is_array($value)) {
                 $value = json_encode($value);
             }
             $values[] = "'" . addslashes($value) . "'";
@@ -74,19 +77,20 @@ class db_mysql_table implements rest_interface {
         $keys = implode(' , ', $keys);
         $values = implode(' , ', $values);
         $sql = "INSERT INTO `{$this->_table}` ($keys) VALUES ($values)";
-        if (db_mysql_helper::exec($sql, $this->_dbh)){
+        if (db_mysql_helper::exec($sql, $this->_dbh)) {
             return mysql_insert_id($this->_dbh);
-        }
-        else{
+        } else {
             return false;
         }
     }
 
     public function put($id, $data) {
         $clause = $this->getPrimaryClause($id);
-
         $values = array();
         foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $value = json_encode($value);
+            }
             $values[] = "`$key`='" . addslashes($value) . "'";
         }
         $values = implode(' , ', $values);
@@ -99,17 +103,17 @@ class db_mysql_table implements rest_interface {
     }
 
     private function getPrimaryClause($id) {
+        $primary = db_mysql_helper::getPrimary($this->_table, $this->_dbh);
         if (is_array($id)) {
-            $clause = array();
-            foreach ($id as $key => $value) {
-                $clause[] = "$key = '$value'";
+            $conds = array();
+            foreach ($id as $i) {
+                $conds[] = "`$primary` = '$i'";
             }
-            $where = implode(' AND ', $clause);
+            $clause = implode(' OR ', $conds);
         } else {
-            $primary = db_mysql_helper::getPrimary($this->_table, $this->_dbh);
-            $where = "{$primary[0]} = '$id'";
+            $clause = "`$primary` = '$id'";
         }
-        return $where;
+        return $clause;
     }
 
 }

@@ -66,9 +66,9 @@ class db_mysql_helper {
         if (!isset($primary[$identity])) {
             $sql = "SHOW INDEX FROM $table WHERE Key_name='PRIMARY'";
             $rs = self::query($sql, $dbh);
-            $result = array();
-            while ($row = mysql_fetch_assoc($rs)) {
-                $result[] = $row['Column_name'];
+            $result = '';
+            if ($row = mysql_fetch_assoc($rs)) {
+                $result = $row['Column_name'];
             }
             $primary[$identity] = $result;
         }
