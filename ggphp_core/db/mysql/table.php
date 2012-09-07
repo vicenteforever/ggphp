@@ -43,7 +43,7 @@ class db_mysql_table implements rest_interface {
                 return $data[0];
             }
         } else {
-            throw new Exception("$table");
+            throw new Exception("{$this->_table}/$id not found");
         }
     }
 

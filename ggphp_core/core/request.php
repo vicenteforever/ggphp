@@ -72,7 +72,7 @@ class core_request {
             return $value;
         }
     }
-    
+
     /**
      * 判断请求是否为get方法
      * @return boolean
@@ -133,16 +133,21 @@ class core_request {
     }
 
     /**
-     * 获取应用程序的baseurl
+     * 设置或者获取应用程序的baseurl
      * @staticvar string $baseurl
+     * @param string $url 
      * @return string 
      */
-    static function baseUrl() {
+    static function baseUrl($url = null) {
         static $baseurl = null;
-        if (!isset($baseurl)) {
-            $baseurl = rtrim(str_replace('/index.php', '', $_SERVER["SCRIPT_NAME"]), '/') . '/';
+        if (isset($url)) {
+            $baseurl = $url;
+        } else {
+            if (!isset($baseurl)) {
+                $baseurl = rtrim(str_replace('/index.php', '', $_SERVER["SCRIPT_NAME"]), '/') . '/';
+            }
+            return $baseurl;
         }
-        return $baseurl;
     }
 
     /**
@@ -165,7 +170,7 @@ class core_request {
     static function path() {
         return trim(self::server("PATH_INFO"), '/');
     }
-    
+
     /**
      * 获取提交的raw数据
      * @return string 
@@ -204,10 +209,9 @@ class core_request {
      * @return type 
      */
     static function isRewrite() {
-        if($_SERVER['REDIRECT_STATUS']==200){
+        if ($_SERVER['REDIRECT_STATUS'] == 200) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
@@ -220,7 +224,7 @@ class core_request {
      * @param mixed $params string or array
      * @return string 
      */
-    static function makeUrl($controller='', $action='', $path='', $params='') {
+    static function makeUrl($controller = '', $action = '', $path = '', $params = '') {
         $param_str = '';
         if (!empty($params)) {
             if (is_array($params)) {
@@ -253,5 +257,5 @@ class core_request {
         }
         return $url . $param_str;
     }
-    
+
 }

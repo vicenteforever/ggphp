@@ -19,6 +19,7 @@ abstract class field_type_base {
     public $serial = false;       //自动加一
     public $widget = 'string';    //字段控件
     public $validators = array(); //字段校验器集
+    public $encoder = '';      //字段编码器
     public $isDatabase = true;    //是否为数据库字段
     public $isHidden = false;     //是否隐藏控件
 
@@ -58,7 +59,7 @@ abstract class field_type_base {
             return "{$this->label}必须填写";
         }
         foreach ($this->validators as $rule) {
-            $validator = validator($rule);
+            $validator = self::validator($rule);
             if (empty($validator)) {
                 return "校验器{$rule}不存在";
             }
@@ -70,6 +71,42 @@ abstract class field_type_base {
         return true;
     }
 
+    public function encode($value) {
+        if(!empty($this->encoder)) {
+            $encoder = self::encoder($this->encoder);
+            return $encoder->encode($value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function decode($value) {
+        if(!empty($this->encoder)) {
+            $encoder = self::encoder($this->encoder);
+            return $encoder->decode($value);
+        } else {
+            return $value;
+        }
+    }
+    
+    public function save($oldData, $newData, $options){
+        if(!empty($this->storage)) {
+            $storage = self::storage($this->storage);
+            return $storage->save($oldData, $newData, $options);
+        } else {
+            return $newData;
+        }        
+    }
+    
+    public function load($data, $options){
+        if(!empty($this->storage)) {
+            $storage = self::storage($this->storage);
+            return $storage->load($data, $options);
+        } else {
+            return $data;
+        }         
+    }
+
     public function toArray() {
         $result = array();
         foreach ($this as $key => $value) {
@@ -78,4 +115,63 @@ abstract class field_type_base {
         return $result;
     }
 
+    /**
+     * 获取字段校验器
+     * @param string $rule
+     * @return field_validator_interface
+     * @throws Exception 
+     */
+    static public function validator($rule) {
+        static $validator = null;
+        if (!isset($validator[$rule])) {
+            $className = 'field_validator_' . $rule;
+            $object = new $className();
+            if ($object instanceof field_validator_interface) {
+                $validator[$rule] = $object;
+            } else {
+                throw new Exception("{$className} not exist");
+            }
+        }
+        return $validator[$rule];
+    }
+
+    /**
+     * 获取字段存取器
+     * @param string $rule
+     * @return field_encoder_interface
+     * @throws Exception 
+     */
+    static public function encoder($rule) {
+        static $encoder = null;
+        if (!isset($encoder[$rule])) {
+            $className = 'field_encoder_' . $rule;
+            $object = new $className();
+            if ($object instanceof field_encoder_interface) {
+                $encoder[$rule] = $object;
+            } else {
+                throw new Exception("{$className} not exist");
+            }
+        }
+        return $encoder[$rule];
+    }
+
+    /**
+     * 获取字段存储器
+     * @param string $rule 
+     * @return field_storage_interface
+     * @throw Exception
+     */
+    static public function storage($rule){
+        static $storage = null;
+        if (!isset($storage[$rule])) {
+            $className = 'field_storage_' . $rule;
+            $object = new $className();
+            if ($object instanceof field_storage_interface) {
+                $storage[$rule] = $object;
+            } else {
+                throw new Exception("{$className} not exist");
+            }
+        }
+        return $storage[$rule];        
+    }
 }

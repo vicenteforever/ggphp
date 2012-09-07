@@ -97,4 +97,66 @@ class field_collection {
         return $this->_primaryKey;
     }
 
+    public function encode($data) {
+        foreach ($data as $key => $value) {
+            $field = $this->field($key);
+            if (!empty($field)) {
+                $data[$key] = $field->encode($value);
+            }
+        }
+        return $data;
+    }
+
+    public function decode($data) {
+        foreach ($data as $key => $value) {
+            $field = $this->field($key);
+            if (!empty($field)) {
+                $data[$key] = $field->decode($value);
+            }
+        }
+        return $data;
+    }
+
+    public function load($data, $options) {
+        foreach ($data as $key => $value) {
+            $field = $this->field($key);
+            if (!empty($field)) {
+                $data[$key] = $field->load($value, $options);
+            }
+        }
+        return $data;
+    }
+
+    public function save($oldData, $newData, $options) {
+        if(!isset($options) || !is_array($options)){
+            $options = array();
+        }
+        foreach ($newData as $key => $newValue) {
+            $field = $this->field($key);
+            if (!empty($field)) {
+                $oldValue = isset($oldData[$key]) ? $oldData[$key] : null;
+                $options['field'] = $key;
+                $data[$key] = $field->save($oldValue, $newValue, $options);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 校验字段集
+     * @param array $data
+     * @return array 
+     */
+    public function validate($data) {
+        $result = array();
+        foreach ($this->_fields as $key => $field) {
+            $value = isset($data[$key]) ? $data[$key] : null;
+            $error = $field->validate($value);
+            if ($error !== true) {
+                $result[$key] = $error;
+            }
+        }
+        return $result;
+    }
+
 }

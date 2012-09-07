@@ -264,11 +264,12 @@ function full_path() {
 }
 
 /**
- * 获取当前应用的baseurl
+ * 设置或获取当前应用的baseurl
+ * @param string $url 
  * @return string
  */
-function base_url() {
-    return core_request::baseUrl();
+function base_url($url=null) {
+    return core_request::baseUrl($url);
 }
 
 /**
@@ -349,28 +350,6 @@ function orm($table, $config = '') {
 }
 
 /**
- * 获取mysql对象
- * @staticvar database_mysql_adapter $mysql
- * @param string $configName
- * @return database_mysql_db 
- */
-function mydb($configName = 'default') {
-    static $mysql;
-    if (!isset($mysql[$configName])) {
-        $data = config('mysql', $configName);
-        $target = new database_mysql_db(
-                        $data['server'],
-                        $data['username'],
-                        $data['password'],
-                        $data['dbname'],
-                        $data['charset']
-        );
-        $mysql[$configName] = new core_aop($target);
-    }
-    return $mysql[$configName];
-}
-
-/**
  * 取得response对象
  * @return core_response 
  */
@@ -384,26 +363,6 @@ function response() {
 function serial() {
     static $serial = 0;
     return $serial++;
-}
-
-/**
- * 获取字段校验器
- * @param string $rule
- * @return field_validator_interface or null
- * @throws Exception 
- */
-function validator($rule) {
-    static $validator = null;
-    if (!isset($validator[$rule])) {
-        $className = 'field_validator_' . $rule;
-        $object = new $className();
-        if ($object instanceof field_validator_interface) {
-            $validator[$rule] = $object;
-        } else {
-            throw new Exception("{$className} not exist");
-        }
-    }
-    return $validator[$rule];
 }
 
 /**
@@ -427,32 +386,25 @@ function rest($resourceName) {
 }
 
 /**
- * 根据资源名称获取字段集对象
- * @staticvar array $fieldset
- * @param string $resourceName
- * @return field_collection 
- */
-function fieldset($resourceName){
-    static $fieldset = null;
-    if(!isset($fieldset[$resourceName])){
-        $struct = rest($resourceName)->struct();
-        if(!is_array($struct)){
-            $struct = array();
-        }
-        $fieldset[$resourceName] = new field_collection($struct);
-    }
-    return $fieldset[$resourceName];
-}
-
-/**
  * 获取数据库适配器
  * @staticvar array $db
  * @return db_manager
  */
-function manager($adapter) {
+function dbmanager($adapter) {
     static $manager = null;
     if (!isset($manager[$adapter])) {
         $manager[$adapter] = new db_manager($adapter);
     }
     return $manager[$adapter];
+}
+
+/**
+ * 获取默认数据库连接
+ * @return rest_interface
+ */
+function db(){
+    if(!function_exists('mydb')){
+        throw new Exception('function mydb not exist');
+    }
+    return mydb();
 }
