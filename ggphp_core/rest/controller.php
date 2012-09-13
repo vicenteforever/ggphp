@@ -95,6 +95,9 @@ class rest_controller {
                 }
             }
             $status = 200;
+        }catch(exception_validate $exc){
+            $result = $exc->getValidateError();
+            $status = 500;
         } catch (Exception $exc) {
             $result = $exc->getMessage();
             $status = 500;
