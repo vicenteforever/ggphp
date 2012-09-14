@@ -19,9 +19,10 @@ abstract class field_type_base {
     public $serial = false;       //自动加一
     public $widget = 'string';    //字段控件
     public $validators = array(); //字段校验器集
-    public $encoder = '';      //字段编码器
+    public $encoder = '';         //字段编码器
     public $isDatabase = true;    //是否为数据库字段
     public $isHidden = false;     //是否隐藏控件
+    public $storage = null;       //
 
     public function __construct(array $arr) {
         foreach ($arr as $k => $v) {
@@ -72,7 +73,7 @@ abstract class field_type_base {
     }
 
     public function encode($value) {
-        if(!empty($this->encoder)) {
+        if (!empty($this->encoder)) {
             $encoder = self::encoder($this->encoder);
             return $encoder->encode($value);
         } else {
@@ -81,30 +82,39 @@ abstract class field_type_base {
     }
 
     public function decode($value) {
-        if(!empty($this->encoder)) {
+        if (!empty($this->encoder)) {
             $encoder = self::encoder($this->encoder);
             return $encoder->decode($value);
         } else {
             return $value;
         }
     }
-    
-    public function save($oldData, $newData, $options){
-        if(!empty($this->storage)) {
+
+    public function save($oldData, $newData, $options) {
+        if (!empty($this->storage)) {
             $storage = self::storage($this->storage);
             return $storage->save($oldData, $newData, $options);
         } else {
             return $newData;
-        }        
+        }
     }
-    
-    public function load($data, $options){
-        if(!empty($this->storage)) {
+
+    public function load($data, $options) {
+        if (!empty($this->storage)) {
             $storage = self::storage($this->storage);
             return $storage->load($data, $options);
         } else {
             return $data;
-        }         
+        }
+    }
+
+    public function delete($data) {
+        if (!empty($this->storage)) {
+            $storage = self::storage($this->storage);
+            return $storage->delete($data);
+        } else {
+            return true;
+        }
     }
 
     public function toArray() {
@@ -161,7 +171,7 @@ abstract class field_type_base {
      * @return field_storage_interface
      * @throw Exception
      */
-    static public function storage($rule){
+    static public function storage($rule) {
         static $storage = null;
         if (!isset($storage[$rule])) {
             $className = 'field_storage_' . $rule;
@@ -172,6 +182,7 @@ abstract class field_type_base {
                 throw new Exception("{$className} not exist");
             }
         }
-        return $storage[$rule];        
+        return $storage[$rule];
     }
+
 }

@@ -10,4 +10,7 @@ interface field_storage_interface {
     public function save($oldData, $newData, $options);
     
     public function load($data, $options);
+    
+    public function delete($data);
+    
 }

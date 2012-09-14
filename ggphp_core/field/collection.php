@@ -141,6 +141,16 @@ class field_collection {
         }
         return $data;
     }
+    
+    public function delete($data){
+         foreach ($data as $key => $value) {
+            $field = $this->field($key);
+            if (!empty($field)) {
+                $data[$key] = $field->delete($value);
+            }
+        }
+        return $data;
+    }
 
     /**
      * 校验字段集

@@ -31,25 +31,4 @@ class util_file {
         return preg_match('/^(((?:\.)(?!\.))|\w)+$/', $filename);
     }
 
-    /**
-     * 获取子目录信息
-     * @param string $dir
-     * @return array 
-     */
-    static function subdir($dir) {
-        $result = array();
-        if (is_dir($dir)) {
-            $list = scandir($dir);
-            foreach ($list as $file) {
-                if ($file != '.' && $file != '..') {
-                    $path = $dir . DS . $file;
-                    if (is_dir($path)) {
-                        $result[$file] = $path;
-                    }
-                }
-            }
-        }
-        return $result;
-    }
-
 }

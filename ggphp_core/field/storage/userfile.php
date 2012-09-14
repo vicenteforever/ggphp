@@ -22,4 +22,7 @@ class field_storage_userfile implements field_storage_interface {
         }
     }
 
+    public function delete($data){
+        return rest('userfile')->delete($data);
+    }
 }
