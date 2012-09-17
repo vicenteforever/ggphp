@@ -27,7 +27,6 @@ class util_console {
         if (!config('app', 'debug')) {
             return;
         }
-
         $log = app()->log();
         $time = $log[0]['time'];
         $console = "";

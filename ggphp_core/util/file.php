@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 文件名处理常用函数
+ * 文件处理函数
  * @package util
  * @author goodzsq@gmail.com
  */
